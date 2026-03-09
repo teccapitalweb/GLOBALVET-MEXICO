@@ -29,6 +29,8 @@
   }
   .hero-shell { padding: .8rem; border-radius: 28px; }
   .hero-copy { padding: 1rem; }
+  .hero-brand-panel { flex-direction: column; align-items: flex-start; }
+  .hero-brand-panel img { width: 96px; height: 96px; }
   .hero-visual { min-height: 380px; }
   .desktop-card { inset: 0 2rem 2rem 0; }
   .tablet-card { width: 155px; }
@@ -41,6 +43,8 @@
   .topbar { display: none; }
   .hero { padding-top: 2.4rem; }
   .hero-copy h1, .page-hero h1 { font-size: 2.2rem; }
+  .hero-brand-panel { padding: .8rem; border-radius: 20px; }
+  .hero-brand-panel img { width: 88px; height: 88px; }
   .section-heading h2, .feature-panel h3, .cta-box h2, .contact-card h2, .contact-form h2 { font-size: 1.85rem; }
   .btn { width: 100%; }
   .hero-actions, .cta-actions { width: 100%; }
