@@ -367,13 +367,18 @@ h1, h2, h3, h4 { font-weight: 800; }
   position: relative;
 }
 .benefit-card::before {
-  content: '';
+  content: '✔';
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, rgba(95,69,200,.18), rgba(169,143,255,.24));
+  background: rgba(95,69,200,.14);
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 .timeline-step {
   position: relative;
@@ -436,6 +441,7 @@ h1, h2, h3, h4 { font-weight: 800; }
     linear-gradient(180deg, #ffffff, #f5f8ff);
 }
 .cta-actions { display: flex; gap: .85rem; flex-wrap: wrap; }
+.cta-actions .btn { min-width: 220px; }
 .toolbar { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.5rem; }
 .filter-btn {
   border: 1px solid var(--line);
