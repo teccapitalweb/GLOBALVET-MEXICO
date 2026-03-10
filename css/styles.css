@@ -297,6 +297,26 @@ h1, h2, h3, h4 { font-weight: 800; }
   display: grid;
   gap: 1.45rem;
 }
+/* Equal-height course cards */
+.course-grid {
+  align-items: stretch;
+}
+.course-card {
+  display: flex;
+  flex-direction: column;
+}
+.course-card .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.course-card .card-body p {
+  flex: 1;
+}
+.course-card .text-link {
+  margin-top: auto;
+  padding-top: 1rem;
+}
 .card-grid.three, .course-grid, .benefit-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .course-grid.catalog { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .feature-grid.three { grid-template-columns: repeat(3, minmax(0,1fr)); }
