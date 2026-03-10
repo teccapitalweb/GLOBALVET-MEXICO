@@ -310,12 +310,17 @@ h1, h2, h3, h4 { font-weight: 800; }
   flex-direction: column;
   flex: 1;
 }
-.course-card .card-body p {
+.course-card .card-body > p {
   flex: 1;
 }
-.course-card .text-link {
+.course-card .meta-row {
   margin-top: auto;
-  padding-top: 1rem;
+}
+.course-card .cert-note {
+  margin-top: .95rem;
+}
+.course-card .text-link {
+  margin-top: 1rem;
 }
 .card-grid.three, .course-grid, .benefit-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .course-grid.catalog { grid-template-columns: repeat(3, minmax(0,1fr)); }
