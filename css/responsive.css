@@ -6,9 +6,9 @@
 }
 
 @media (max-width: 820px) {
-  .topbar-inner, .header-inner, .cta-box { flex-direction: column; align-items: flex-start; }
+  .topbar-inner, .cta-box { flex-direction: column; align-items: flex-start; }
+  .header-inner { position: relative; min-height: 88px; flex-direction: row; align-items: center; justify-content: flex-start; }
   .nav-toggle { display: inline-block; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
-  .header-inner { position: relative; min-height: 88px; align-items: center; justify-content: flex-start; }
   .brand { align-self: center; margin-left: 0; }
   .nav-menu {
     position: absolute;
