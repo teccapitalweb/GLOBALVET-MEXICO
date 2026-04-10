@@ -3,468 +3,531 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Club — GlobalVet</title>
+  <title>Club GlobalVet — Mi área</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css">
-  <link rel="stylesheet" href="../css/responsive.css">
-  <script defer src="../js/script.js"></script>
   <style>
-    :root {
-      --d-bg: #f0f4fa;
-      --d-dark: #0d1f35;
-      --d-teal: #0a7c6e;
-      --d-teal-2: #12a896;
-      --d-gold: #e8a020;
-      --d-line: #dce6ef;
-      --d-muted: #5b7080;
-      --d-surface: #ffffff;
-      --ff: 'Space Grotesk', system-ui, sans-serif;
-      --ffb: 'DM Sans', system-ui, sans-serif;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    .dash-page { font-family: var(--ffb); background: var(--d-bg); min-height: 100vh; color: var(--d-dark); }
-    .dash-page h1,h2,h3,h4 { font-family: var(--ff); margin: 0; }
-    .dash-page p { margin: 0 0 .8rem; }
-    .dash-page a { text-decoration: none; color: inherit; }
-
-    /* Loading screen */
-    .dash-loading {
-      position: fixed; inset: 0; background: #fff;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
-      z-index: 999;
-    }
-    .dash-loading-spinner {
-      width: 44px; height: 44px; border: 3.5px solid var(--d-line);
-      border-top-color: var(--d-teal); border-radius: 50%;
-      animation: dspin .8s linear infinite;
-    }
-    @keyframes dspin { to { transform: rotate(360deg); } }
-    .dash-loading p { font-family: var(--ff); font-size: .92rem; color: var(--d-muted); }
-
-    /* Sidebar + main layout */
-    .dash-layout { display: flex; min-height: calc(100vh - 82px); }
-
-    .dash-sidebar {
-      width: 260px; flex-shrink: 0;
-      background: var(--d-dark);
-      padding: 1.8rem 1.2rem;
-      display: flex; flex-direction: column; gap: .3rem;
-      position: sticky; top: 82px; height: calc(100vh - 82px); overflow-y: auto;
-    }
-    .dash-sidebar-label {
-      font-size: .68rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: rgba(255,255,255,.3);
-      padding: .6rem .8rem .3rem; margin-top: .5rem;
-    }
-    .dash-nav-item {
-      display: flex; align-items: center; gap: .7rem;
-      padding: .7rem .9rem; border-radius: 12px; cursor: pointer;
-      font-size: .88rem; font-weight: 600; color: rgba(255,255,255,.6);
-      transition: background .15s, color .15s; border: none; background: none; width: 100%; text-align: left;
-    }
-    .dash-nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.9); }
-    .dash-nav-item.active { background: var(--d-teal); color: #fff; }
-    .dash-nav-item svg { flex-shrink: 0; opacity: .8; }
-
-    .dash-sidebar-footer {
-      margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.08);
-    }
-    .dash-logout-btn {
-      display: flex; align-items: center; gap: .7rem;
-      padding: .7rem .9rem; border-radius: 12px; cursor: pointer;
-      font-size: .88rem; font-weight: 600; color: rgba(255,100,100,.7);
-      transition: background .15s, color .15s; border: none; background: none; width: 100%;
-    }
-    .dash-logout-btn:hover { background: rgba(255,100,100,.1); color: #ff6464; }
-
-    /* Main content */
-    .dash-main { flex: 1; padding: 2.5rem 2rem; overflow-x: hidden; }
-    .dash-panel { display: none; }
-    .dash-panel.active { display: block; }
-
-    /* Bienvenida */
-    .dash-welcome {
-      background: linear-gradient(135deg, var(--d-dark) 0%, #1a4a6b 100%);
-      border-radius: 20px; padding: 1.8rem 2rem; margin-bottom: 2rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-    }
-    .dash-welcome h2 { color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: .25rem; }
-    .dash-welcome p { color: rgba(255,255,255,.65); font-size: .88rem; margin: 0; }
-    .dash-welcome-badge {
-      background: rgba(232,160,32,.2); border: 1px solid rgba(232,160,32,.4);
-      color: #f5c842; font-size: .78rem; font-weight: 700; padding: .35rem .9rem;
-      border-radius: 50px; white-space: nowrap;
-    }
-
-    /* Stats row */
-    .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    .dash-stat {
-      background: var(--d-surface); border-radius: 16px; padding: 1.2rem 1.3rem;
-      border: 1px solid var(--d-line);
-    }
-    .dash-stat-num { font-family: var(--ff); font-size: 1.9rem; font-weight: 700; color: var(--d-dark); line-height: 1; margin-bottom: .2rem; }
-    .dash-stat-label { font-size: .8rem; color: var(--d-muted); }
-
-    /* Cards grid */
-    .dash-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
-    .dash-section-title span { font-size: .78rem; color: var(--d-muted); font-weight: 400; }
-    .dash-content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .dash-content-card {
-      background: var(--d-surface); border-radius: 16px; overflow: hidden;
-      border: 1px solid var(--d-line); transition: transform .2s, box-shadow .2s;
-    }
-    .dash-content-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(13,31,53,.1); }
-    .dash-card-thumb {
-      height: 120px; display: flex; align-items: center; justify-content: center; font-size: 2rem;
-    }
-    .dash-card-thumb.t1 { background: linear-gradient(135deg, #0d2f45, #0a7c6e); }
-    .dash-card-thumb.t2 { background: linear-gradient(135deg, #0d1f35, #1a4a6b); }
-    .dash-card-thumb.t3 { background: linear-gradient(135deg, #2d1060, #5f45c8); }
-    .dash-card-thumb.t4 { background: linear-gradient(135deg, #3d1a00, #8a4500); }
-    .dash-card-body { padding: 1.1rem; }
-    .dash-card-tag {
-      font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
-      color: var(--d-teal); margin-bottom: .3rem;
-    }
-    .dash-card-title { font-family: var(--ff); font-size: .93rem; font-weight: 700; margin-bottom: .3rem; }
-    .dash-card-meta { font-size: .78rem; color: var(--d-muted); }
-    .dash-card-badge {
-      display: inline-block; font-size: .7rem; font-weight: 700; padding: .15rem .5rem;
-      border-radius: 50px; margin-left: .4rem;
-    }
-    .badge-nuevo { background: var(--d-dark); color: #fff; }
-    .badge-live  { background: rgba(232,160,32,.15); color: #9a5f00; }
-
-    /* Perfil */
-    .dash-profile-card {
-      background: var(--d-surface); border-radius: 20px; padding: 1.8rem;
-      border: 1px solid var(--d-line); max-width: 560px;
-    }
-    .dash-profile-avatar {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--d-teal), var(--d-teal-2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; margin-bottom: 1.2rem; font-family: var(--ff); font-weight: 700; color: #fff;
-    }
-    .dash-profile-row { display: flex; flex-direction: column; gap: .2rem; margin-bottom: 1rem; }
-    .dash-profile-label { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--d-muted); }
-    .dash-profile-val { font-size: .95rem; font-weight: 600; color: var(--d-dark); }
-    .dash-plan-chip {
-      display: inline-flex; align-items: center; gap: .4rem;
-      background: #f5fdf8; border: 1.5px solid rgba(10,124,110,.25);
-      color: var(--d-teal); font-size: .82rem; font-weight: 700;
-      padding: .35rem .8rem; border-radius: 50px;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .dash-sidebar { width: 220px; }
-      .dash-stats { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 700px) {
-      .dash-layout { flex-direction: column; }
-      .dash-sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: .8rem; gap: .4rem; }
-      .dash-sidebar-label { display: none; }
-      .dash-nav-item { padding: .55rem .8rem; font-size: .8rem; }
-      .dash-main { padding: 1.5rem 1rem; }
-      .dash-stats { grid-template-columns: 1fr 1fr; }
-    }
+    :root{--bg:#f3f4f8;--surface:#fff;--dark:#1a1040;--purple:#4f35b3;--purple2:#6c4fd6;--plight:#ede9ff;--teal:#0a7c6e;--green:#1e8a50;--red:#d94040;--gold:#e8a020;--muted:#6b7280;--line:#e5e7eb;--sw:200px;--rw:260px;--ff:'Space Grotesk',system-ui,sans-serif;--ffb:'DM Sans',system-ui,sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--ffb);background:var(--bg);color:var(--dark);line-height:1.55}
+    a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--ffb)}
+    #dashLoading{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:9999}
+    .lspin{width:40px;height:40px;border:3px solid #e5e7eb;border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #dashLoading p{font-family:var(--ff);font-size:.9rem;color:var(--muted)}
+    .tnav{position:fixed;top:0;left:0;right:0;height:52px;background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;z-index:100;gap:1rem}
+    .tnav-l{display:flex;align-items:center;gap:.7rem}
+    .tnav-logo{display:flex;align-items:center;gap:.55rem}
+    .tnav-logo img{width:28px;height:28px;border-radius:8px;object-fit:cover}
+    .tnav-logo span{font-family:var(--ff);font-size:.95rem;font-weight:700;color:#fff}
+    .tnav-badge{background:var(--purple);color:#fff;font-size:.68rem;font-weight:700;padding:.18rem .6rem;border-radius:50px;letter-spacing:.04em;text-transform:uppercase}
+    .tnav-r{display:flex;align-items:center;gap:.9rem}
+    .tnav-bell{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;border:none;color:rgba(255,255,255,.7);transition:background .15s}
+    .tnav-bell:hover{background:rgba(255,255,255,.18)}
+    .ndot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:#ff6b6b;border-radius:50%;border:1.5px solid var(--dark)}
+    .tnav-user{display:flex;align-items:center;gap:.6rem}
+    .tnav-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0}
+    .tnav-ui{line-height:1.2}
+    .tnav-name{font-family:var(--ff);font-size:.82rem;font-weight:700;color:#fff}
+    .tnav-status{font-size:.7rem;color:#a8f0c6}
+    .tnav-out{background:none;border:none;color:rgba(255,255,255,.55);font-size:.82rem;font-weight:600;transition:color .15s}
+    .tnav-out:hover{color:#ff8080}
+    .dlayout{display:flex;min-height:100vh;padding-top:52px}
+    .sidebar{width:var(--sw);flex-shrink:0;background:var(--surface);border-right:1px solid var(--line);position:fixed;top:52px;left:0;bottom:0;overflow-y:auto;padding:1rem .7rem;display:flex;flex-direction:column;gap:.15rem}
+    .slabel{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;padding:.7rem .6rem .25rem;margin-top:.3rem}
+    .nbtn{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:10px;border:none;background:none;font-size:.84rem;font-weight:600;color:var(--muted);width:100%;text-align:left;transition:background .15s,color .15s;position:relative}
+    .nbtn:hover{background:var(--bg);color:var(--dark)}
+    .nbtn.active{background:var(--plight);color:var(--purple)}
+    .nbtn svg{flex-shrink:0}
+    .nbadge{margin-left:auto;background:var(--purple);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .42rem;border-radius:50px}
+    .nbadge.red{background:var(--red)}.nbadge.org{background:var(--gold);color:#1a1000}.nbadge.gray{background:#6b7280}
+    .ndotb{width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;flex-shrink:0}
+    .dmain{margin-left:var(--sw);margin-right:var(--rw);flex:1;padding:1.6rem 1.8rem;min-width:0}
+    .panel{display:none}.panel.active{display:block}
+    .rp{width:var(--rw);flex-shrink:0;position:fixed;top:52px;right:0;bottom:0;overflow-y:auto;padding:1rem .9rem;display:flex;flex-direction:column;gap:.8rem;background:var(--surface);border-left:1px solid var(--line)}
+    .rpc{background:var(--bg);border-radius:14px;padding:1rem 1.1rem;border:1px solid var(--line)}
+    .rpc.dk{background:var(--dark);border-color:transparent}
+    .rplbl{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;display:flex;align-items:center;gap:.35rem}
+    .rpc.dk .rplbl{color:rgba(255,255,255,.45)}
+    .rpst{font-family:var(--ff);font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.15rem}
+    .rpsm{font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:.8rem}
+    .cd{display:flex;gap:.4rem;margin-bottom:.8rem}
+    .cdb{flex:1;background:rgba(255,255,255,.08);border-radius:8px;padding:.4rem .3rem;text-align:center}
+    .cdn{font-family:var(--ff);font-size:1.1rem;font-weight:700;color:#fff;line-height:1}
+    .cdl{font-size:.58rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em}
+    .rpbtn{width:100%;padding:.6rem;border-radius:10px;border:none;font-family:var(--ff);font-size:.78rem;font-weight:700;cursor:pointer;transition:opacity .15s}
+    .rpbtn:hover{opacity:.88}
+    .rpbtn.cal{background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;gap:.4rem}
+    .rpbtn.wa{background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .rpbtn.pu{background:var(--purple);color:#fff}
+    .rpbtn.go{background:linear-gradient(135deg,#f5c842,#e8a020);color:#1a1000}
+    .rpwad{font-size:.75rem;color:var(--muted);margin-bottom:.6rem}
+    .rpbt{font-family:var(--ff);font-size:.88rem;font-weight:700;margin-bottom:.2rem}
+    .rpbd{font-size:.75rem;color:var(--muted);margin-bottom:.6rem}
+    .actr{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem}
+    .actl{font-size:.78rem;color:var(--muted);width:48px;flex-shrink:0}
+    .actbw{flex:1;background:#e5e7eb;border-radius:50px;height:5px;overflow:hidden}
+    .actb{height:100%;border-radius:50px}
+    .actv{font-size:.75rem;font-weight:700;color:var(--dark);width:28px;text-align:right}
+    .addbtns{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}
+    .addbtn{font-size:.72rem;font-weight:700;padding:.3rem .65rem;border-radius:50px;border:none;cursor:pointer;transition:opacity .15s}
+    .addbtn:hover{opacity:.8}
+    .rpcl{font-family:var(--ff);font-size:.82rem;font-weight:700;color:#f5c842;margin-bottom:.15rem;display:flex;align-items:center;gap:.4rem}
+    .rpct{font-family:var(--ff);font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.15rem}
+    .rpcd{font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:.7rem}
+    .hbanner{background:linear-gradient(135deg,#2d1a7a 0%,#4f35b3 50%,#6c4fd6 100%);border-radius:18px;padding:1.5rem 1.8rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+    .hbanner::before{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+    .hbanner::after{content:'GLOBALVET';position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-family:var(--ff);font-size:2.8rem;font-weight:700;color:rgba(255,255,255,.06);pointer-events:none}
+    .htitle{font-family:var(--ff);font-size:1.35rem;font-weight:700;color:#fff;margin-bottom:.2rem}
+    .hsub{font-size:.84rem;color:rgba(255,255,255,.65);margin-bottom:.9rem}
+    .hstats{display:flex;gap:.6rem;flex-wrap:wrap}
+    .hstat{background:rgba(255,255,255,.12);border-radius:10px;padding:.45rem .7rem;text-align:center;min-width:56px}
+    .hstn{font-family:var(--ff);font-size:1.1rem;font-weight:700;color:#fff;line-height:1}
+    .hstl{font-size:.62rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.04em}
+    .stitle{font-family:var(--ff);font-size:.97rem;font-weight:700;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;color:var(--dark)}
+    .scnt{font-size:.8rem;color:var(--muted);font-weight:400;margin-left:auto}
+    .clist{background:var(--surface);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:1.5rem}
+    .crow{display:flex;align-items:center;gap:1rem;padding:.85rem 1.2rem;border-bottom:1px solid var(--line);transition:background .15s;cursor:pointer}
+    .crow:last-child{border-bottom:none}
+    .crow:hover{background:#fafbff}
+    .cthumb{width:46px;height:46px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .tp{background:linear-gradient(135deg,#2d1a7a,#6c4fd6)}
+    .tt{background:linear-gradient(135deg,#0d2f45,#0a7c6e)}
+    .tw{background:linear-gradient(135deg,#3d1a00,#8a4500)}
+    .tg{background:linear-gradient(135deg,#374151,#6b7280)}
+    .tgo{background:linear-gradient(135deg,#7a4f00,#e8a020)}
+    .tn{background:linear-gradient(135deg,#0d1f35,#1a4a6b)}
+    .cinfo{flex:1;min-width:0}
+    .ctitle{font-size:.9rem;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.1rem}
+    .cmeta{font-size:.76rem;color:var(--muted)}
+    .cacts{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+    .tag{font-size:.68rem;font-weight:700;padding:.18rem .55rem;border-radius:50px;white-space:nowrap;letter-spacing:.03em}
+    .tn2{background:var(--dark);color:#fff}.tv{background:#e5e7eb;color:#6b7280}.tpr{background:rgba(232,160,32,.15);color:#9a5f00}.td{background:rgba(10,124,110,.12);color:var(--teal)}
+    .cabt{display:flex;align-items:center;gap:.3rem;font-size:.78rem;font-weight:700;color:var(--purple);background:none;border:none;white-space:nowrap}
+    .cabt.dl{color:var(--teal)}
+    .fsec{background:var(--surface);border-radius:16px;border:1px solid var(--line);padding:1.4rem 1.6rem;margin-bottom:1rem}
+    .fst{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+    .frow{display:flex;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--line);gap:1rem}
+    .frow:last-child{border-bottom:none}
+    .flbl{font-size:.84rem;color:var(--muted);width:120px;flex-shrink:0}
+    .finput{flex:1;border:none;outline:none;font-family:var(--ffb);font-size:.9rem;color:var(--dark);background:transparent;padding:.2rem 0}
+    .finput:focus{color:var(--purple)}
+    .fval{flex:1;font-size:.9rem;font-weight:600;color:var(--dark)}
+    .bsave{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:.65rem 1.4rem;font-family:var(--ff);font-size:.85rem;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:.8rem}
+    .bsave:hover{opacity:.88}
+    .atbl{width:100%}
+    .atbl tr{border-bottom:1px solid var(--line)}
+    .atbl tr:last-child{border-bottom:none}
+    .atbl td{padding:.65rem 0;font-size:.88rem}
+    .atbl td:first-child{color:var(--muted)}
+    .atbl td:last-child{text-align:right;font-weight:700}
+    .pdr{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+    .pdr:last-child{border-bottom:none}
+    .pdl{color:var(--muted)}
+    .pdv{font-weight:700}
+    .pdv.gr{color:var(--green)}.pdv.pu{color:var(--purple)}
+    .selw{width:100%;padding:.6rem .9rem;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.88rem;color:var(--dark);background:var(--bg);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2rem;cursor:pointer}
+    .selw:focus{border-color:var(--purple)}
+    .sellbl{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;display:block}
+    .selg{margin-bottom:.9rem}
+    .brow{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.3rem}
+    .bact{padding:.65rem 1.3rem;border-radius:10px;border:none;font-family:var(--ff);font-size:.85rem;font-weight:700;cursor:pointer;transition:opacity .15s}
+    .bact:hover{opacity:.88}
+    .bact.pu{background:var(--purple);color:#fff}.bact.ro{background:#fff;color:var(--red);border:1.5px solid var(--red)}.bact.re{background:var(--red);color:#fff}
+    .hrow{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+    .hrow:last-child{border-bottom:none}
+    .hmes{color:var(--muted)}.hmto{font-weight:700;color:var(--green)}
+    .wbox{background:#fff8f0;border:1px solid #fed7aa;border-radius:12px;padding:1rem 1.2rem}
+    .wt{font-family:var(--ff);font-size:.9rem;font-weight:700;color:#92400e;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+    .wd{font-size:.82rem;color:#78350f;margin-bottom:.8rem}
+    .tgrow{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--line)}
+    .tgrow:last-child{border-bottom:none}
+    .tglbl{font-size:.88rem;color:var(--dark)}
+    .tgl{position:relative;width:42px;height:24px;background:#d1d5db;border-radius:50px;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
+    .tgl.on{background:var(--purple)}
+    .tgl::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+    .tgl.on::after{transform:translateX(18px)}
+    .dbox{background:#fff0f0;border:1px solid #fecaca;border-radius:12px;padding:1rem 1.2rem}
+    .dt{font-family:var(--ff);font-size:.9rem;font-weight:700;color:var(--red);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+    .dd{font-size:.82rem;color:#7f1d1d;margin-bottom:.7rem}
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;padding:.75rem 1.4rem;border-radius:50px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:500;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast.green{background:var(--teal)}
+    @media(max-width:1100px){:root{--rw:220px}}
+    @media(max-width:900px){.rp{display:none}.dmain{margin-right:0}}
+    @media(max-width:680px){.sidebar{display:none}.dmain{margin-left:0;padding:1rem}}
   </style>
 </head>
 <body>
 
-<!-- Loading pantalla -->
-<div class="dash-loading" id="dashLoading">
-  <div class="dash-loading-spinner"></div>
-  <p>Cargando tu Club GlobalVet…</p>
-</div>
+<div id="dashLoading"><div class="lspin"></div><p>Cargando tu Club GlobalVet…</p></div>
 
-<!-- NAV -->
-<div class="topbar">
-  <div class="container topbar-inner">
-    <span>Club GlobalVet — Área de miembros</span>
-    <div class="topbar-links">
-      <a href="mailto:globalvetmexico@gmail.com">globalvetmexico@gmail.com</a>
+<nav class="tnav" id="topNav" style="display:none;">
+  <div class="tnav-l">
+    <div class="tnav-logo">
+      <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+      <span>Club GlobalVet</span>
     </div>
+    <span class="tnav-badge">Miembro</span>
+  </div>
+  <div class="tnav-r">
+    <button class="tnav-bell"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="ndot"></div></button>
+    <div class="tnav-user">
+      <div class="tnav-av" id="topAv">?</div>
+      <div class="tnav-ui"><div class="tnav-name" id="topName">—</div><div class="tnav-status">Miembro activo</div></div>
+    </div>
+    <button class="tnav-out" onclick="handleLogout()">Salir</button>
+  </div>
+</nav>
+
+<div class="dlayout" id="dashLayout" style="display:none;">
+
+  <aside class="sidebar">
+    <div class="slabel">Principal</div>
+    <button class="nbtn active" onclick="sp('inicio',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio</button>
+    <button class="nbtn" onclick="sp('videos',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videos<span class="nbadge">3</span></button>
+    <button class="nbtn" onclick="sp('sesiones',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sesiones en vivo<div class="ndotb"></div></button>
+    <button class="nbtn" onclick="sp('pdfs',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDFs<span class="nbadge red">2</span></button>
+    <div class="slabel">Biblioteca</div>
+    <button class="nbtn" onclick="sp('abril',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Abril 2026<span class="nbadge org">8</span></button>
+    <button class="nbtn" onclick="sp('marzo',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Marzo 2026<span class="nbadge gray">6</span></button>
+    <div class="slabel">Mi cuenta</div>
+    <button class="nbtn" onclick="sp('perfil',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mi perfil</button>
+    <button class="nbtn" onclick="sp('suscripcion',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Suscripción</button>
+    <button class="nbtn" onclick="sp('config',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</button>
+  </aside>
+
+  <main class="dmain">
+
+    <!-- INICIO -->
+    <div class="panel active" id="panel-inicio">
+      <div class="hbanner">
+        <div>
+          <div class="htitle" id="heroTitle">¡Hola! 👋</div>
+          <div class="hsub">Tienes 3 contenidos nuevos esta semana en Club GlobalVet</div>
+          <div class="hstats">
+            <div class="hstat"><div class="hstn">10</div><div class="hstl">Cursos</div></div>
+            <div class="hstat"><div class="hstn">8</div><div class="hstl">PDFs</div></div>
+            <div class="hstat"><div class="hstn">4</div><div class="hstl">Lives</div></div>
+            <div class="hstat"><div class="hstn" id="mesesN">1°</div><div class="hstl">Mes</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="stitle">⭐ Nuevo esta semana <span class="scnt">3 nuevos</span></div>
+      <div class="clist">
+        <div class="crow" onclick="ov('endo')"><div class="cthumb tp">🎥</div><div class="cinfo"><div class="ctitle">Endocrinología canina básica</div><div class="cmeta">Endocrinología veterinaria · MVZ. Pariz Emmanuel Lores Morales</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow"><div class="cthumb tg">📄</div><div class="cinfo"><div class="ctitle">Protocolo de primeros auxilios veterinarios</div><div class="cmeta">PDF descargable · 6 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando PDF…')">↓ Abrir</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('hema')"><div class="cthumb tt">🎥</div><div class="cinfo"><div class="ctitle">Hematología clínica en pequeñas especies</div><div class="cmeta">Hematología veterinaria · Del laboratorio al diagnóstico</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+      </div>
+      <div class="stitle">📚 Biblioteca completa</div>
+      <div class="clist">
+        <div class="crow" onclick="ov('med')"><div class="cthumb tn">🐾</div><div class="cinfo"><div class="ctitle">Medicina veterinaria</div><div class="cmeta">Formación continua · Atención integral del paciente</div></div><div class="cacts"><span class="tag tv">Visto</span></div></div>
+        <div class="crow"><div class="cthumb tg">📡</div><div class="cinfo"><div class="ctitle">Q&A Endocrinología con Dr. Juárez</div><div class="cmeta">Mié 23 · 8:00 PM · En vivo</div></div><div class="cacts"><span class="tag tpr">Próximo</span></div></div>
+        <div class="crow" onclick="ov('onco')"><div class="cthumb tw">🎥</div><div class="cinfo"><div class="ctitle">Bases de oncología veterinaria</div><div class="cmeta">Oncología veterinaria · MVZ. Erika Arroyo León</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow"><div class="cthumb tg">📄</div><div class="cinfo"><div class="ctitle">Guía manejo clínico en práctica diaria</div><div class="cmeta">PDF · 4 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+        <div class="crow" onclick="ov('etol')"><div class="cthumb tt">🐕</div><div class="cinfo"><div class="ctitle">Etología aplicada</div><div class="cmeta">Conducta animal · Evaluación profesional</div></div><div class="cacts"><span class="tag tv">Visto</span></div></div>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="panel" id="panel-videos">
+      <div class="stitle">🎬 Videos de cursos GlobalVet</div>
+      <div class="clist">
+        <div class="crow" onclick="ov('endo')"><div class="cthumb tp">🎥</div><div class="cinfo"><div class="ctitle">Endocrinología canina básica</div><div class="cmeta">MVZ. Pariz Emmanuel Lores Morales</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('hema')"><div class="cthumb tt">🎥</div><div class="cinfo"><div class="ctitle">Hematología clínica en pequeñas especies</div><div class="cmeta">Del laboratorio al diagnóstico veterinario</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('onco')"><div class="cthumb tw">🎥</div><div class="cinfo"><div class="ctitle">Bases de oncología veterinaria</div><div class="cmeta">MVZ. Erika Arroyo León</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('med')"><div class="cthumb tn">🐾</div><div class="cinfo"><div class="ctitle">Medicina veterinaria</div><div class="cmeta">Formación continua · Atención integral del paciente</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow" onclick="ov('etol')"><div class="cthumb tt">🐕</div><div class="cinfo"><div class="ctitle">Etología aplicada</div><div class="cmeta">Conducta animal · Evaluación profesional</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow" onclick="ov('fisio')"><div class="cthumb tp">🦴</div><div class="cinfo"><div class="ctitle">Fisioterapia veterinaria post-quirúrgica</div><div class="cmeta">Dra. Mendez · 55 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
+        <div class="crow" onclick="ov('radio')"><div class="cthumb tn">📡</div><div class="cinfo"><div class="ctitle">Radiología digital: lectura e interpretación básica</div><div class="cmeta">Dr. Reyes · 61 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
+      </div>
+    </div>
+
+    <!-- SESIONES -->
+    <div class="panel" id="panel-sesiones">
+      <div class="stitle">📡 Sesiones en vivo GlobalVet</div>
+      <div class="clist">
+        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📡</div><div class="cinfo"><div class="ctitle">Q&A Endocrinología con Dr. Juárez</div><div class="cmeta">Mié 23 · 8:00 PM · En vivo</div></div><div class="cacts"><span class="tag tpr">Próximo</span></div></div>
+        <div class="crow" onclick="ov('qaciru')"><div class="cthumb tg" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Q&A Cirugía — Dra. Sánchez</div><div class="cmeta">Sesión grabada · Marzo · 55 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow" onclick="ov('qabien')"><div class="cthumb tt" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Bienestar animal — Dr. Torres</div><div class="cmeta">Sesión grabada · Febrero · 48 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
+      </div>
+    </div>
+
+    <!-- PDFs -->
+    <div class="panel" id="panel-pdfs">
+      <div class="stitle">📄 PDFs y material educativo</div>
+      <div class="clist">
+        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Protocolo de primeros auxilios veterinarios</div><div class="cmeta">PDF descargable · 6 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Guía manejo clínico en práctica diaria</div><div class="cmeta">PDF · 4 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📋</div><div class="cinfo"><div class="ctitle">Checklist preoperatorio — Cirugía de tejidos blandos</div><div class="cmeta">PDF · 3 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+        <div class="crow"><div class="cthumb tgo" style="font-size:.9rem">🏆</div><div class="cinfo"><div class="ctitle">Certificado educación continua — Marzo 2026</div><div class="cmeta">8 horas de actualización · GlobalVet México</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando certificado…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+      </div>
+    </div>
+
+    <!-- ABRIL -->
+    <div class="panel" id="panel-abril">
+      <div class="stitle">📅 Abril 2026</div>
+      <div class="clist">
+        <div class="crow" onclick="ov('endo')"><div class="cthumb tp">🎥</div><div class="cinfo"><div class="ctitle">Endocrinología canina básica</div><div class="cmeta">MVZ. Pariz Emmanuel Lores Morales</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow"><div class="cthumb tg">📡</div><div class="cinfo"><div class="ctitle">Q&A Endocrinología con Dr. Juárez</div><div class="cmeta">Live · Mié 23 · 8:00 PM</div></div><div class="cacts"><span class="tag tpr">Próximo</span></div></div>
+        <div class="crow"><div class="cthumb tg">📄</div><div class="cinfo"><div class="ctitle">Protocolo de primeros auxilios veterinarios</div><div class="cmeta">PDF · 6 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('hema')"><div class="cthumb tt">🎥</div><div class="cinfo"><div class="ctitle">Hematología clínica en pequeñas especies</div><div class="cmeta">Hematología veterinaria</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tn2">Nuevo</span></div></div>
+        <div class="crow" onclick="ov('onco')"><div class="cthumb tw">🎥</div><div class="cinfo"><div class="ctitle">Bases de oncología veterinaria</div><div class="cmeta">MVZ. Erika Arroyo León</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
+      </div>
+    </div>
+
+    <!-- MARZO -->
+    <div class="panel" id="panel-marzo">
+      <div class="stitle">📅 Marzo 2026</div>
+      <div class="clist">
+        <div class="crow" onclick="ov('qaciru')"><div class="cthumb tg">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Q&A Cirugía — Dra. Sánchez</div><div class="cmeta">Sesión grabada · 55 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow" onclick="ov('med')"><div class="cthumb tn">🐾</div><div class="cinfo"><div class="ctitle">Medicina veterinaria</div><div class="cmeta">Video · Formación continua</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow"><div class="cthumb tg">📄</div><div class="cinfo"><div class="ctitle">Guía manejo clínico en práctica diaria</div><div class="cmeta">PDF · 4 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+        <div class="crow" onclick="ov('etol')"><div class="cthumb tt">🐕</div><div class="cinfo"><div class="ctitle">Etología aplicada</div><div class="cmeta">Video · Conducta animal</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
+        <div class="crow"><div class="cthumb tgo">🏆</div><div class="cinfo"><div class="ctitle">Certificado educación continua — Marzo 2026</div><div class="cmeta">8 horas de actualización</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando certificado…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="panel" id="panel-perfil">
+      <div class="stitle">👤 Mi perfil</div>
+      <div class="fsec">
+        <div class="fst">Información personal</div>
+        <div class="frow"><span class="flbl">Nombre</span><input class="finput" id="pNombre" type="text" placeholder="Tu nombre"></div>
+        <div class="frow"><span class="flbl">Email</span><div class="fval" id="pEmail">—</div></div>
+        <div class="frow"><span class="flbl">WhatsApp</span><input class="finput" id="pWa" type="tel" placeholder="+52 000 000 0000"></div>
+        <div class="frow"><span class="flbl">Especialidad</span><input class="finput" id="pEsp" type="text" placeholder="Tu especialidad"></div>
+        <div class="frow"><span class="flbl">Ciudad</span><input class="finput" id="pCiudad" type="text" placeholder="Tu ciudad"></div>
+        <div class="frow"><span class="flbl">Miembro desde</span><div class="fval" id="pFecha">—</div></div>
+        <button class="bsave" onclick="savePerfil()">Guardar perfil</button>
+      </div>
+      <div class="fsec">
+        <div class="fst">Mi actividad total</div>
+        <table class="atbl">
+          <tr><td>Videos vistos</td><td>7 de 10</td></tr>
+          <tr><td>PDFs descargados</td><td>3 de 4</td></tr>
+          <tr><td>Lives asistidos</td><td>2 de 4</td></tr>
+          <tr><td>Certificados</td><td>1 (Marzo 2026)</td></tr>
+          <tr><td>Meses miembro</td><td id="pMeses">1</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUSCRIPCIÓN -->
+    <div class="panel" id="panel-suscripcion">
+      <div class="stitle">💳 Mi suscripción</div>
+      <div class="fsec">
+        <div class="fst">Detalles del plan</div>
+        <div class="pdr"><span class="pdl">Plan</span><span class="pdv" id="subPlan">Club GlobalVet México — Miembro</span></div>
+        <div class="pdr"><span class="pdl">Precio mensual</span><span class="pdv">$199 MXN/mes</span></div>
+        <div class="pdr"><span class="pdl">Estado</span><span class="pdv gr">✓ Activa</span></div>
+        <div class="pdr"><span class="pdl">Próximo cobro</span><span class="pdv">1 de mayo, 2026</span></div>
+        <div class="pdr"><span class="pdl">Método de pago</span><span class="pdv">Transferencia / OXXO</span></div>
+        <div class="pdr"><span class="pdl">Meses pagados</span><span class="pdv pu" id="subMeses">2</span></div>
+      </div>
+      <div class="fsec">
+        <div class="fst">Selecciona plan</div>
+        <div class="selg"><label class="sellbl">Plan</label><select class="selw"><option>Club GlobalVet México — Miembro | $199 MXN/mes</option><option>Club GlobalVet México — Anual | $1,788 MXN/año</option></select></div>
+        <div class="brow">
+          <button class="bact pu" onclick="st('✅ Escríbenos para actualizar tu suscripción')">Activar / actualizar suscripción</button>
+          <button class="bact ro" onclick="st('⚠️ Escríbenos a globalvetmexico@gmail.com para cancelar')">Cancelar mi membresía</button>
+        </div>
+      </div>
+      <div class="fsec">
+        <div class="fst">Historial de pagos</div>
+        <div class="hrow"><span class="hmes">Abril 2026</span><span class="hmto">$199 · Pagado</span></div>
+        <div class="hrow"><span class="hmes">Marzo 2026</span><span class="hmto">$199 · Pagado</span></div>
+      </div>
+      <div class="wbox">
+        <div class="wt">⚠️ Cancelar membresía</div>
+        <div class="wd">Si cancelas, perderás acceso a los videos, PDFs, sesiones en vivo y a la comunidad de WhatsApp de GlobalVet México. Si regresas después, pagarás el precio vigente.</div>
+        <button class="bact re" onclick="st('Escríbenos a globalvetmexico@gmail.com para cancelar')">Cancelar mi membresía</button>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="panel" id="panel-config">
+      <div class="stitle">⚙️ Configuración</div>
+      <div class="fsec">
+        <div class="fst">🔔 Notificaciones</div>
+        <div class="tgrow"><span class="tglbl">Notificarme por WhatsApp cuando hay contenido nuevo</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgrow"><span class="tglbl">Recordatorio de sesión en vivo (24h antes)</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgrow"><span class="tglbl">Email con resumen semanal del Club GlobalVet</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgrow"><span class="tglbl">Notificaciones de nuevos cursos y descuentos</span><button class="tgl" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="fsec">
+        <div class="fst">🌐 Preferencias</div>
+        <div class="selg"><label class="sellbl">Zona horaria</label><select class="selw"><option>América/México_City (GMT-6)</option><option>América/Monterrey (GMT-6)</option><option>América/Tijuana (GMT-8)</option></select></div>
+        <div class="selg"><label class="sellbl">Idioma</label><select class="selw"><option>Español</option><option>English</option></select></div>
+        <button class="bsave" onclick="st('✅ Cambios guardados')">Guardar cambios</button>
+      </div>
+      <div class="fsec">
+        <div class="fst">🔒 Privacidad</div>
+        <div class="tgrow"><span class="tglbl">Mostrar mi nombre en el grupo de WhatsApp</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgrow"><span class="tglbl">Permitir que otros miembros me contacten</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="dbox">
+        <div class="dt">🗑️ Eliminar cuenta</div>
+        <div class="dd">Esto eliminará tu cuenta permanentemente, incluyendo todo tu progreso, certificados y acceso al Club GlobalVet México.</div>
+        <button class="bact re" onclick="confirmDelete()">Eliminar mi cuenta</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="rp">
+    <div class="rpc dk">
+      <div class="rplbl">📅 Próxima sesión</div>
+      <div class="rpst">Q&A Endocrinología</div>
+      <div class="rpsm">Dr. Juárez · 23 de abril · 8:00 PM</div>
+      <div class="cd">
+        <div class="cdb"><div class="cdn" id="cdD">00</div><div class="cdl">Días</div></div>
+        <div class="cdb"><div class="cdn" id="cdH">00</div><div class="cdl">Hrs</div></div>
+        <div class="cdb"><div class="cdn" id="cdM">00</div><div class="cdl">Min</div></div>
+      </div>
+      <button class="rpbtn cal" onclick="st('📅 Evento agregado al calendario')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Agregar a calendario
+      </button>
+    </div>
+    <div class="rpc">
+      <div class="rplbl">💬 Comunidad WhatsApp</div>
+      <div class="rpwad">Conecta con otros veterinarios del Club GlobalVet</div>
+      <a href="https://wa.me/5212381500864?text=Hola%2C%20soy%20miembro%20del%20Club%20GlobalVet" target="_blank" class="rpbtn wa">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.138.563 4.14 1.535 5.874L0 24l6.29-1.508A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.814 9.814 0 01-5.058-1.4l-.361-.214-3.735.896.944-3.653-.235-.374A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        Abrir comunidad de WhatsApp
+      </a>
+    </div>
+    <div class="rpc">
+      <div class="rplbl">🎁 Beneficio exclusivo</div>
+      <div class="rpbt">20% de descuento</div>
+      <div class="rpbd">En todos los cursos de GlobalVet México</div>
+      <button class="rpbtn pu" onclick="sp('videos',null)">Ver cursos disponibles</button>
+    </div>
+    <div class="rpc">
+      <div class="rplbl">📊 Mi actividad</div>
+      <div class="actr"><span class="actl">Videos</span><div class="actbw"><div class="actb" style="width:70%;background:var(--purple)"></div></div><span class="actv">7/10</span></div>
+      <div class="actr"><span class="actl">PDFs</span><div class="actbw"><div class="actb" style="width:75%;background:var(--gold)"></div></div><span class="actv">3/4</span></div>
+      <div class="actr"><span class="actl">Lives</span><div class="actbw"><div class="actb" style="width:50%;background:var(--red)"></div></div><span class="actv">2/4</span></div>
+      <div class="addbtns">
+        <button class="addbtn" style="background:rgba(79,53,179,.12);color:var(--purple)" onclick="sp('videos',null)">+ Video</button>
+        <button class="addbtn" style="background:rgba(232,160,32,.12);color:#9a5f00" onclick="sp('pdfs',null)">+ PDF</button>
+        <button class="addbtn" style="background:rgba(217,64,64,.12);color:var(--red)" onclick="sp('sesiones',null)">+ Live</button>
+      </div>
+    </div>
+    <div class="rpc dk">
+      <div class="rpcl">🏆 Certificado Abril</div>
+      <div class="rpct">Educación continua</div>
+      <div class="rpcd">Completa 3/4 videos + 1 live</div>
+      <button class="rpbtn go" onclick="st('📥 Descargando certificado…')">Ver mi progreso</button>
+    </div>
+    <div class="rpc">
+      <div class="rplbl">📩 Contacto GlobalVet</div>
+      <a href="mailto:globalvetmexico@gmail.com" style="font-size:.8rem;color:var(--purple);font-weight:700;">globalvetmexico@gmail.com</a>
+    </div>
+  </aside>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="vm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#111;border-radius:18px;width:100%;max-width:780px;overflow:hidden;position:relative;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:#1a1040;">
+      <div style="font-family:var(--ff);font-weight:700;color:#fff;font-size:.95rem;" id="vmTitle">Video</div>
+      <button onclick="cv()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;">✕</button>
+    </div>
+    <div style="background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;" id="vmBox">
+      <div style="text-align:center;color:rgba(255,255,255,.4);">
+        <div style="font-size:3rem;margin-bottom:.5rem;">▶</div>
+        <div style="font-size:.85rem;">Agrega la URL del video en Firestore</div>
+        <div style="font-size:.75rem;margin-top:.3rem;color:rgba(255,255,255,.25);">colección: contenido → campo: videoUrl</div>
+      </div>
+    </div>
+    <div style="padding:.9rem 1.2rem;background:#1a1040;"><div style="font-size:.8rem;color:rgba(255,255,255,.45);" id="vmMeta">GlobalVet México</div></div>
   </div>
 </div>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="../index.html">
-      <img src="../assets/logo/globalvet-logo.jpg" alt="Logo GlobalVet México">
-      <span><strong>GlobalVet</strong> México</span>
-    </a>
-    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="nav-menu">
-      <a href="../index.html">Inicio</a>
-      <a href="cursos.html">Cursos</a>
-      <a href="club.html" class="active">Club</a>
-      <a href="contacto.html">Contacto</a>
-      <span id="navUserName" style="font-size:.85rem;font-weight:700;color:var(--primary);"></span>
-      <button onclick="handleLogout()" style="background:none;border:1.5px solid #dde4ef;border-radius:50px;padding:.4rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;color:#5d6b82;">Salir</button>
-    </nav>
-  </div>
-</header>
 
-<div class="dash-page" id="dashPage" style="display:none;">
-  <div class="dash-layout">
+<div class="toast" id="toastEl"></div>
 
-    <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-sidebar-label">Principal</div>
-      <button class="dash-nav-item active" onclick="showPanel('inicio')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Inicio
-      </button>
-      <button class="dash-nav-item" onclick="showPanel('videos')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-        Videos del Club
-      </button>
-      <button class="dash-nav-item" onclick="showPanel('recursos')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Recursos PDF
-      </button>
-      <button class="dash-nav-item" onclick="showPanel('casos')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Casos Clínicos
-      </button>
-      <div class="dash-sidebar-label">Cuenta</div>
-      <button class="dash-nav-item" onclick="showPanel('perfil')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Mi Perfil
-      </button>
-      <div class="dash-sidebar-footer">
-        <button class="dash-logout-btn" onclick="handleLogout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Cerrar sesión
-        </button>
-      </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="dash-main">
-
-      <!-- Panel: Inicio -->
-      <div class="dash-panel active" id="panel-inicio">
-        <div class="dash-welcome">
-          <div>
-            <h2>¡Bienvenido, <span id="welcomeName">miembro</span>! 🐾</h2>
-            <p>Aquí está tu contenido exclusivo del Club GlobalVet.</p>
-          </div>
-          <div class="dash-welcome-badge" id="welcomePlan">⭐ Plan Mensual</div>
-        </div>
-
-        <div class="dash-stats">
-          <div class="dash-stat">
-            <div class="dash-stat-num">4</div>
-            <div class="dash-stat-label">Videos esta semana</div>
-          </div>
-          <div class="dash-stat">
-            <div class="dash-stat-num">80+</div>
-            <div class="dash-stat-label">Videos en biblioteca</div>
-          </div>
-          <div class="dash-stat">
-            <div class="dash-stat-num">47</div>
-            <div class="dash-stat-label">Miembros activos</div>
-          </div>
-        </div>
-
-        <div class="dash-section-title">Nuevo esta semana <span>Semana 14 · Abril 2026</span></div>
-        <div class="dash-content-grid">
-          <div class="dash-content-card">
-            <div class="dash-card-thumb t1">🎥</div>
-            <div class="dash-card-body">
-              <div class="dash-card-tag">Video · Caso clínico</div>
-              <div class="dash-card-title">Diagnóstico diferencial: vómito crónico en felinos</div>
-              <div class="dash-card-meta">Dr. Morales · 12 min <span class="dash-card-badge badge-nuevo">Nuevo</span></div>
-            </div>
-          </div>
-          <div class="dash-content-card">
-            <div class="dash-card-thumb t2">📄</div>
-            <div class="dash-card-body">
-              <div class="dash-card-tag">PDF · Protocolo</div>
-              <div class="dash-card-title">Los 5 errores en anestesia local más comunes</div>
-              <div class="dash-card-meta">6 páginas descargables</div>
-            </div>
-          </div>
-          <div class="dash-content-card">
-            <div class="dash-card-thumb t4">🔴</div>
-            <div class="dash-card-body">
-              <div class="dash-card-tag">Sesión en vivo</div>
-              <div class="dash-card-title">Q&A Cirugía de tejidos blandos — traigan sus casos</div>
-              <div class="dash-card-meta">Jueves 9:00 PM <span class="dash-card-badge badge-live">En vivo</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dash-section-title">Continuar viendo</div>
-        <div class="dash-content-grid">
-          <div class="dash-content-card">
-            <div class="dash-card-thumb t2">🩺</div>
-            <div class="dash-card-body">
-              <div class="dash-card-tag">Video · Cirugía</div>
-              <div class="dash-card-title">Protocolo de anestesia en pacientes de alto riesgo</div>
-              <div class="dash-card-meta">Dr. Juárez · 38 min</div>
-            </div>
-          </div>
-          <div class="dash-content-card">
-            <div class="dash-card-thumb t3">🦴</div>
-            <div class="dash-card-body">
-              <div class="dash-card-tag">Video · Rehabilitación</div>
-              <div class="dash-card-title">Técnicas de fisioterapia post-quirúrgica</div>
-              <div class="dash-card-meta">Dra. Mendez · 55 min</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel: Videos -->
-      <div class="dash-panel" id="panel-videos">
-        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Biblioteca de Videos 🎥</h2>
-        <div class="dash-content-grid">
-          <div class="dash-content-card"><div class="dash-card-thumb t1">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Bioquímica clínica</div><div class="dash-card-title">Interpretación de perfil bioquímico en perros y gatos</div><div class="dash-card-meta">Dr. Morales · 42 min</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t2">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Cirugía</div><div class="dash-card-title">Protocolo de anestesia en pacientes de alto riesgo</div><div class="dash-card-meta">Dr. Juárez · 38 min</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t3">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Rehabilitación</div><div class="dash-card-title">Técnicas de fisioterapia post-quirúrgica</div><div class="dash-card-meta">Dra. Mendez · 55 min</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t4">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Bienestar animal</div><div class="dash-card-title">Manejo del estrés en consulta: herramientas prácticas</div><div class="dash-card-meta">Dr. García · 29 min</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t1">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Neonatología</div><div class="dash-card-title">Primeras 72 horas críticas en neonatos</div><div class="dash-card-meta">Dra. López · 47 min</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t2">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Diagnóstico</div><div class="dash-card-title">Radiología digital: lectura e interpretación básica</div><div class="dash-card-meta">Dr. Reyes · 61 min</div></div></div>
-        </div>
-      </div>
-
-      <!-- Panel: Recursos -->
-      <div class="dash-panel" id="panel-recursos">
-        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Recursos PDF 📄</h2>
-        <div class="dash-content-grid">
-          <div class="dash-content-card"><div class="dash-card-thumb t2" style="font-size:2.5rem;">📄</div><div class="dash-card-body"><div class="dash-card-tag">Protocolo</div><div class="dash-card-title">Los 5 errores en anestesia local más comunes</div><div class="dash-card-meta">6 páginas · Descargable</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t1" style="font-size:2.5rem;">📋</div><div class="dash-card-body"><div class="dash-card-tag">Guía clínica</div><div class="dash-card-title">Tabla de referencia: dosis analgésicas por especie</div><div class="dash-card-meta">4 páginas · Descargable</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t4" style="font-size:2.5rem;">📊</div><div class="dash-card-body"><div class="dash-card-tag">Referencia</div><div class="dash-card-title">Valores hematológicos normales caninos y felinos</div><div class="dash-card-meta">3 páginas · Descargable</div></div></div>
-        </div>
-      </div>
-
-      <!-- Panel: Casos -->
-      <div class="dash-panel" id="panel-casos">
-        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Casos Clínicos 🩺</h2>
-        <div class="dash-content-grid">
-          <div class="dash-content-card"><div class="dash-card-thumb t1">🐕</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Digestivo</div><div class="dash-card-title">Diagnóstico diferencial: vómito crónico en felinos</div><div class="dash-card-meta">Resuelto por Dr. Morales</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t3">🐈</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Ortopedia</div><div class="dash-card-title">Fractura expuesta en perro: manejo de urgencia</div><div class="dash-card-meta">Resuelto por Dra. Mendez</div></div></div>
-          <div class="dash-content-card"><div class="dash-card-thumb t2">🐾</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Neonatología</div><div class="dash-card-title">Cachorro sin reflejo de succión: protocolo</div><div class="dash-card-meta">Resuelto por Dra. López</div></div></div>
-        </div>
-      </div>
-
-      <!-- Panel: Perfil -->
-      <div class="dash-panel" id="panel-perfil">
-        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Mi Perfil</h2>
-        <div class="dash-profile-card">
-          <div class="dash-profile-avatar" id="profileAvatar">?</div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">Nombre completo</span>
-            <span class="dash-profile-val" id="profileNombre">—</span>
-          </div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">Correo electrónico</span>
-            <span class="dash-profile-val" id="profileEmail">—</span>
-          </div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">WhatsApp</span>
-            <span class="dash-profile-val" id="profileWa">—</span>
-          </div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">Especialidad</span>
-            <span class="dash-profile-val" id="profileEsp">—</span>
-          </div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">Membresía activa</span>
-            <span class="dash-plan-chip" id="profilePlan">⭐ Plan Mensual</span>
-          </div>
-          <div class="dash-profile-row">
-            <span class="dash-profile-label">Miembro desde</span>
-            <span class="dash-profile-val" id="profileFecha">—</span>
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </div>
-</div>
-
-<!-- ===================== FIREBASE ===================== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",
-    authDomain: "club-global-vet.firebaseapp.com",
-    projectId: "club-global-vet",
-    storageBucket: "club-global-vet.firebasestorage.app",
-    messagingSenderId: "448888067634",
-    appId: "1:448888067634:web:96adc6b03ba3248f4f0e2b"
-  };
+  const cfg = {apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",authDomain:"club-global-vet.firebaseapp.com",projectId:"club-global-vet",storageBucket:"club-global-vet.firebasestorage.app",messagingSenderId:"448888067634",appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"};
+  const app=initializeApp(cfg), auth=getAuth(app), db=getFirestore(app);
+  let cu=null, pd={};
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      // No hay sesión → redirigir al login
-      window.location.href = 'club-registro.html?tab=login';
-      return;
-    }
-
-    // Cargar perfil de Firestore
-    let perfil = {};
-    try {
-      const snap = await getDoc(doc(db, 'usuarios', user.uid));
-      if (snap.exists()) perfil = snap.data();
-    } catch(e) { console.warn('Firestore:', e); }
-
-    const nombre    = perfil.nombre    || user.displayName || 'Miembro';
-    const email     = perfil.email     || user.email       || '—';
-    const wa        = perfil.whatsapp  || '—';
-    const esp       = perfil.especialidad || '—';
-    const planLabel = perfil.planLabel || 'Plan Mensual';
-    const fecha     = perfil.fechaRegistro?.toDate
-      ? perfil.fechaRegistro.toDate().toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' })
-      : 'Reciente';
-
-    // Rellenar UI
-    const initials = nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    document.getElementById('profileAvatar').textContent = initials;
-    document.getElementById('welcomeName').textContent   = nombre.split(' ')[0];
-    document.getElementById('welcomePlan').textContent   = '⭐ ' + planLabel;
-    document.getElementById('navUserName').textContent   = nombre.split(' ')[0];
-    document.getElementById('profileNombre').textContent = nombre;
-    document.getElementById('profileEmail').textContent  = email;
-    document.getElementById('profileWa').textContent     = wa;
-    document.getElementById('profileEsp').textContent    = esp;
-    document.getElementById('profilePlan').textContent   = '⭐ ' + planLabel;
-    document.getElementById('profileFecha').textContent  = fecha;
-
-    // Ocultar loading, mostrar dashboard
-    document.getElementById('dashLoading').style.display = 'none';
-    document.getElementById('dashPage').style.display    = 'block';
+  onAuthStateChanged(auth, async user=>{
+    if(!user){window.location.href='club-registro.html?tab=login';return;}
+    cu=user;
+    try{const s=await getDoc(doc(db,'usuarios',user.uid));if(s.exists())pd=s.data();}catch(e){}
+    const nom=pd.nombre||user.displayName||'Miembro';
+    const eml=pd.email||user.email||'';
+    const wa=pd.whatsapp||''; const esp=pd.especialidad||''; const ciu=pd.ciudad||'';
+    const pl=pd.planLabel||'Plan Mensual';
+    const fec=pd.fechaRegistro?.toDate?pd.fechaRegistro.toDate().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'}):'Reciente';
+    let mes=1;
+    if(pd.fechaRegistro?.toDate){const d=Date.now()-pd.fechaRegistro.toDate().getTime();mes=Math.max(1,Math.floor(d/(1000*60*60*24*30)));}
+    const ini=nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topAv').textContent=ini;
+    document.getElementById('topName').textContent=nom;
+    document.getElementById('heroTitle').textContent=`¡Hola, ${nom.split(' ')[0]}! 👋`;
+    document.getElementById('mesesN').textContent=mes+'°';
+    document.getElementById('pNombre').value=nom;
+    document.getElementById('pEmail').textContent=eml;
+    document.getElementById('pWa').value=wa;
+    document.getElementById('pEsp').value=esp;
+    document.getElementById('pCiudad').value=ciu;
+    document.getElementById('pFecha').textContent=fec;
+    document.getElementById('pMeses').textContent=mes;
+    document.getElementById('subPlan').textContent='Club GlobalVet México — '+pl;
+    document.getElementById('subMeses').textContent=mes;
+    document.getElementById('dashLoading').style.display='none';
+    document.getElementById('topNav').style.display='flex';
+    document.getElementById('dashLayout').style.display='flex';
+    startCD();
   });
 
-  // Logout
-  window.handleLogout = async function() {
-    await signOut(auth);
-    window.location.href = 'club.html';
+  window.savePerfil=async()=>{
+    if(!cu)return;
+    const u={nombre:document.getElementById('pNombre').value.trim(),whatsapp:document.getElementById('pWa').value.trim(),especialidad:document.getElementById('pEsp').value.trim(),ciudad:document.getElementById('pCiudad').value.trim()};
+    try{await updateDoc(doc(db,'usuarios',cu.uid),u);document.getElementById('topName').textContent=u.nombre;document.getElementById('topAv').textContent=u.nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();window.st('✅ Perfil guardado',true);}catch(e){window.st('❌ Error al guardar');}
   };
 
-  // Cambiar paneles
-  window.showPanel = function(id) {
-    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.dash-nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
-    event.currentTarget.classList.add('active');
+  window.handleLogout=async()=>{await signOut(auth);window.location.href='club.html';};
+
+  window.confirmDelete=async()=>{
+    if(!confirm('¿Estás seguro? Esto eliminará tu cuenta permanentemente.'))return;
+    try{if(cu)await deleteUser(cu);window.location.href='club.html';}catch(e){window.st('Re-inicia sesión antes de eliminar tu cuenta.');}
   };
+
+  function startCD(){
+    const t=new Date('2026-04-23T20:00:00-06:00');
+    function u(){const d=t-Date.now();if(d<=0){['cdD','cdH','cdM'].forEach(i=>document.getElementById(i).textContent='00');return;}document.getElementById('cdD').textContent=String(Math.floor(d/86400000)).padStart(2,'0');document.getElementById('cdH').textContent=String(Math.floor((d%86400000)/3600000)).padStart(2,'0');document.getElementById('cdM').textContent=String(Math.floor((d%3600000)/60000)).padStart(2,'0');}
+    u();setInterval(u,60000);
+  }
 </script>
 
+<script>
+  function sp(id,btn){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+    const p=document.getElementById('panel-'+id);if(p)p.classList.add('active');
+    if(btn)btn.classList.add('active');
+  }
+  function st(msg,green){
+    const t=document.getElementById('toastEl');t.textContent=msg;
+    t.className='toast show'+(green?' green':'');
+    setTimeout(()=>t.classList.remove('show'),3500);
+  }
+  window.st=st;
+  const vd={endo:{t:'Endocrinología canina básica',m:'MVZ. Pariz Emmanuel Lores Morales · Endocrinología veterinaria'},hema:{t:'Hematología clínica en pequeñas especies',m:'Del laboratorio al diagnóstico veterinario'},onco:{t:'Bases de oncología veterinaria',m:'MVZ. Erika Arroyo León · Oncología veterinaria'},med:{t:'Medicina veterinaria',m:'Formación continua · Atención integral del paciente'},etol:{t:'Etología aplicada',m:'Conducta animal · Evaluación profesional'},fisio:{t:'Fisioterapia veterinaria post-quirúrgica',m:'Dra. Mendez · Rehabilitación · 55 min'},radio:{t:'Radiología digital: lectura e interpretación básica',m:'Dr. Reyes · Diagnóstico · 61 min'},qaciru:{t:'Grabación: Q&A Cirugía — Dra. Sánchez',m:'Sesión grabada · Marzo · 55 min'},qabien:{t:'Grabación: Bienestar animal — Dr. Torres',m:'Sesión grabada · Febrero · 48 min'}};
+  function ov(id){const v=vd[id];if(!v)return;document.getElementById('vmTitle').textContent=v.t;document.getElementById('vmMeta').textContent=v.m;document.getElementById('vm').style.display='flex';}
+  function cv(){document.getElementById('vm').style.display='none';}
+  window.ov=ov;window.cv=cv;
+  document.getElementById('vm').addEventListener('click',function(e){if(e.target===this)cv();});
+</script>
 </body>
 </html>
