@@ -431,20 +431,35 @@
 </div>
 
 <!-- VIDEO MODAL -->
-<div id="vm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:#111;border-radius:18px;width:100%;max-width:780px;overflow:hidden;position:relative;">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:#1a1040;">
-      <div style="font-family:var(--ff);font-weight:700;color:#fff;font-size:.95rem;" id="vmTitle">Video</div>
-      <button onclick="cv()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;">✕</button>
-    </div>
-    <div style="background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;" id="vmBox">
-      <div style="text-align:center;color:rgba(255,255,255,.4);">
-        <div style="font-size:3rem;margin-bottom:.5rem;">▶</div>
-        <div style="font-size:.85rem;">Agrega la URL del video en Firestore</div>
-        <div style="font-size:.75rem;margin-top:.3rem;color:rgba(255,255,255,.25);">colección: contenido → campo: videoUrl</div>
+<!-- ===== MODAL VIDEO YOUTUBE ===== -->
+<div id="vm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#12103a;border-radius:20px;width:100%;max-width:860px;overflow:hidden;position:relative;">
+
+    <!-- Header del modal -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.08);">
+      <div>
+        <div style="font-family:var(--ff);font-weight:700;color:#fff;font-size:.97rem;margin-bottom:.15rem;" id="vmTitle">Video</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.4);" id="vmMeta">GlobalVet México</div>
       </div>
+      <button onclick="cv()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
     </div>
-    <div style="padding:.9rem 1.2rem;background:#1a1040;"><div style="font-size:.8rem;color:rgba(255,255,255,.45);" id="vmMeta">GlobalVet México</div></div>
+
+    <!-- Reproductor YouTube -->
+    <div style="background:#000;position:relative;padding-top:56.25%;" id="vmBox">
+      <iframe id="ytFrame"
+        style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+        src=""
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- Selector de sesiones -->
+    <div style="padding:.9rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem;">
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;" id="vmSessions"></div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.3);">Club GlobalVet México</div>
+    </div>
+
   </div>
 </div>
 
@@ -523,11 +538,105 @@
     setTimeout(()=>t.classList.remove('show'),3500);
   }
   window.st=st;
-  const vd={endo:{t:'Endocrinología canina básica',m:'MVZ. Pariz Emmanuel Lores Morales · Endocrinología veterinaria'},hema:{t:'Hematología clínica en pequeñas especies',m:'Del laboratorio al diagnóstico veterinario'},onco:{t:'Bases de oncología veterinaria',m:'MVZ. Erika Arroyo León · Oncología veterinaria'},med:{t:'Medicina veterinaria',m:'Formación continua · Atención integral del paciente'},etol:{t:'Etología aplicada',m:'Conducta animal · Evaluación profesional'},fisio:{t:'Fisioterapia veterinaria post-quirúrgica',m:'Dra. Mendez · Rehabilitación · 55 min'},radio:{t:'Radiología digital: lectura e interpretación básica',m:'Dr. Reyes · Diagnóstico · 61 min'},qaciru:{t:'Grabación: Q&A Cirugía — Dra. Sánchez',m:'Sesión grabada · Marzo · 55 min'},qabien:{t:'Grabación: Bienestar animal — Dr. Torres',m:'Sesión grabada · Febrero · 48 min'}};
-  function ov(id){const v=vd[id];if(!v)return;document.getElementById('vmTitle').textContent=v.t;document.getElementById('vmMeta').textContent=v.m;document.getElementById('vm').style.display='flex';}
-  function cv(){document.getElementById('vm').style.display='none';}
-  window.ov=ov;window.cv=cv;
-  document.getElementById('vm').addEventListener('click',function(e){if(e.target===this)cv();});
+  // ===== BIBLIOTECA DE VIDEOS CON YOUTUBE =====
+  const vd = {
+    endo: {
+      t: 'Endocrinología canina básica',
+      m: 'MVZ. Pariz Emmanuel Lores Morales · Endocrinología veterinaria',
+      sessions: [
+        { label: 'Sesión 1', ytId: 'FZD2xrncqb0' },
+        { label: 'Sesión 2', ytId: 'nDwizCDDgTY' }
+      ]
+    },
+    onco: {
+      t: 'Bases de oncología veterinaria',
+      m: 'MVZ. Erika Arroyo León · Oncología veterinaria',
+      sessions: [
+        { label: 'Sesión 1', ytId: 'byGO0J4mgok' },
+        { label: 'Sesión 2', ytId: 'RXegH8Qk5Pw' },
+        { label: 'Sesión 3', ytId: 'Ao0gXgSdb54' }
+      ]
+    },
+    hema: {
+      t: 'Hematología clínica en pequeñas especies',
+      m: 'Del laboratorio al diagnóstico veterinario',
+      sessions: [
+        { label: 'Sesión 1', ytId: 'de8WtzUByQA' },
+        { label: 'Sesión 2', ytId: 'NhTHkGDCUmA' }
+      ]
+    },
+    med:    { t: 'Medicina veterinaria',                      m: 'Formación continua · Atención integral del paciente', sessions: [] },
+    etol:   { t: 'Etología aplicada',                         m: 'Conducta animal · Evaluación profesional',            sessions: [] },
+    fisio:  { t: 'Fisioterapia veterinaria post-quirúrgica',  m: 'Dra. Mendez · Rehabilitación · 55 min',              sessions: [] },
+    radio:  { t: 'Radiología digital: lectura e interpretación básica', m: 'Dr. Reyes · Diagnóstico · 61 min',         sessions: [] },
+    qaciru: { t: 'Grabación: Q&A Cirugía — Dra. Sánchez',    m: 'Sesión grabada · Marzo · 55 min',                    sessions: [] },
+    qabien: { t: 'Grabación: Bienestar animal — Dr. Torres',  m: 'Sesión grabada · Febrero · 48 min',                  sessions: [] }
+  };
+
+  let currentVideoId = null;
+
+  function loadYT(ytId) {
+    if (!ytId) return;
+    currentVideoId = ytId;
+    document.getElementById('ytFrame').src =
+      'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0&modestbranding=1';
+  }
+
+  function buildSessionBtns(sessions, activeIdx) {
+    const container = document.getElementById('vmSessions');
+    container.innerHTML = '';
+    if (!sessions || sessions.length === 0) {
+      container.innerHTML = '<span style="font-size:.75rem;color:rgba(255,255,255,.3);">Próximamente más sesiones</span>';
+      return;
+    }
+    sessions.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = s.label;
+      btn.style.cssText = `
+        padding:.35rem .85rem; border-radius:50px; border:1.5px solid;
+        font-family:var(--ff); font-size:.78rem; font-weight:700; cursor:pointer;
+        transition:background .15s, color .15s;
+        ${i === activeIdx
+          ? 'background:#5f45c8;color:#fff;border-color:#5f45c8;'
+          : 'background:transparent;color:rgba(255,255,255,.55);border-color:rgba(255,255,255,.2);'}
+      `;
+      btn.onclick = () => {
+        loadYT(s.ytId);
+        buildSessionBtns(sessions, i);
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  function ov(id) {
+    const v = vd[id];
+    if (!v) return;
+
+    document.getElementById('vmTitle').textContent = v.t;
+    document.getElementById('vmMeta').textContent  = v.m;
+    document.getElementById('vm').style.display   = 'flex';
+
+    if (v.sessions && v.sessions.length > 0) {
+      loadYT(v.sessions[0].ytId);
+      buildSessionBtns(v.sessions, 0);
+    } else {
+      // Video sin sesiones aún
+      document.getElementById('ytFrame').src = '';
+      document.getElementById('vmSessions').innerHTML =
+        '<span style="font-size:.78rem;color:rgba(255,255,255,.4);">Video próximamente disponible</span>';
+    }
+  }
+
+  function cv() {
+    document.getElementById('vm').style.display = 'none';
+    document.getElementById('ytFrame').src = ''; // detener reproducción
+  }
+
+  window.ov = ov;
+  window.cv = cv;
+  document.getElementById('vm').addEventListener('click', function(e) {
+    if (e.target === this) cv();
+  });
 </script>
 </body>
 </html>
