@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Club — GlobalVet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <script defer src="../js/script.js"></script>
+  <style>
+    :root {
+      --d-bg: #f0f4fa;
+      --d-dark: #0d1f35;
+      --d-teal: #0a7c6e;
+      --d-teal-2: #12a896;
+      --d-gold: #e8a020;
+      --d-line: #dce6ef;
+      --d-muted: #5b7080;
+      --d-surface: #ffffff;
+      --ff: 'Space Grotesk', system-ui, sans-serif;
+      --ffb: 'DM Sans', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    .dash-page { font-family: var(--ffb); background: var(--d-bg); min-height: 100vh; color: var(--d-dark); }
+    .dash-page h1,h2,h3,h4 { font-family: var(--ff); margin: 0; }
+    .dash-page p { margin: 0 0 .8rem; }
+    .dash-page a { text-decoration: none; color: inherit; }
+
+    /* Loading screen */
+    .dash-loading {
+      position: fixed; inset: 0; background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+      z-index: 999;
+    }
+    .dash-loading-spinner {
+      width: 44px; height: 44px; border: 3.5px solid var(--d-line);
+      border-top-color: var(--d-teal); border-radius: 50%;
+      animation: dspin .8s linear infinite;
+    }
+    @keyframes dspin { to { transform: rotate(360deg); } }
+    .dash-loading p { font-family: var(--ff); font-size: .92rem; color: var(--d-muted); }
+
+    /* Sidebar + main layout */
+    .dash-layout { display: flex; min-height: calc(100vh - 82px); }
+
+    .dash-sidebar {
+      width: 260px; flex-shrink: 0;
+      background: var(--d-dark);
+      padding: 1.8rem 1.2rem;
+      display: flex; flex-direction: column; gap: .3rem;
+      position: sticky; top: 82px; height: calc(100vh - 82px); overflow-y: auto;
+    }
+    .dash-sidebar-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.3);
+      padding: .6rem .8rem .3rem; margin-top: .5rem;
+    }
+    .dash-nav-item {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .7rem .9rem; border-radius: 12px; cursor: pointer;
+      font-size: .88rem; font-weight: 600; color: rgba(255,255,255,.6);
+      transition: background .15s, color .15s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .dash-nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.9); }
+    .dash-nav-item.active { background: var(--d-teal); color: #fff; }
+    .dash-nav-item svg { flex-shrink: 0; opacity: .8; }
+
+    .dash-sidebar-footer {
+      margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .dash-logout-btn {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .7rem .9rem; border-radius: 12px; cursor: pointer;
+      font-size: .88rem; font-weight: 600; color: rgba(255,100,100,.7);
+      transition: background .15s, color .15s; border: none; background: none; width: 100%;
+    }
+    .dash-logout-btn:hover { background: rgba(255,100,100,.1); color: #ff6464; }
+
+    /* Main content */
+    .dash-main { flex: 1; padding: 2.5rem 2rem; overflow-x: hidden; }
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+
+    /* Bienvenida */
+    .dash-welcome {
+      background: linear-gradient(135deg, var(--d-dark) 0%, #1a4a6b 100%);
+      border-radius: 20px; padding: 1.8rem 2rem; margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .dash-welcome h2 { color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: .25rem; }
+    .dash-welcome p { color: rgba(255,255,255,.65); font-size: .88rem; margin: 0; }
+    .dash-welcome-badge {
+      background: rgba(232,160,32,.2); border: 1px solid rgba(232,160,32,.4);
+      color: #f5c842; font-size: .78rem; font-weight: 700; padding: .35rem .9rem;
+      border-radius: 50px; white-space: nowrap;
+    }
+
+    /* Stats row */
+    .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .dash-stat {
+      background: var(--d-surface); border-radius: 16px; padding: 1.2rem 1.3rem;
+      border: 1px solid var(--d-line);
+    }
+    .dash-stat-num { font-family: var(--ff); font-size: 1.9rem; font-weight: 700; color: var(--d-dark); line-height: 1; margin-bottom: .2rem; }
+    .dash-stat-label { font-size: .8rem; color: var(--d-muted); }
+
+    /* Cards grid */
+    .dash-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+    .dash-section-title span { font-size: .78rem; color: var(--d-muted); font-weight: 400; }
+    .dash-content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .dash-content-card {
+      background: var(--d-surface); border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--d-line); transition: transform .2s, box-shadow .2s;
+    }
+    .dash-content-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(13,31,53,.1); }
+    .dash-card-thumb {
+      height: 120px; display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    }
+    .dash-card-thumb.t1 { background: linear-gradient(135deg, #0d2f45, #0a7c6e); }
+    .dash-card-thumb.t2 { background: linear-gradient(135deg, #0d1f35, #1a4a6b); }
+    .dash-card-thumb.t3 { background: linear-gradient(135deg, #2d1060, #5f45c8); }
+    .dash-card-thumb.t4 { background: linear-gradient(135deg, #3d1a00, #8a4500); }
+    .dash-card-body { padding: 1.1rem; }
+    .dash-card-tag {
+      font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--d-teal); margin-bottom: .3rem;
+    }
+    .dash-card-title { font-family: var(--ff); font-size: .93rem; font-weight: 700; margin-bottom: .3rem; }
+    .dash-card-meta { font-size: .78rem; color: var(--d-muted); }
+    .dash-card-badge {
+      display: inline-block; font-size: .7rem; font-weight: 700; padding: .15rem .5rem;
+      border-radius: 50px; margin-left: .4rem;
+    }
+    .badge-nuevo { background: var(--d-dark); color: #fff; }
+    .badge-live  { background: rgba(232,160,32,.15); color: #9a5f00; }
+
+    /* Perfil */
+    .dash-profile-card {
+      background: var(--d-surface); border-radius: 20px; padding: 1.8rem;
+      border: 1px solid var(--d-line); max-width: 560px;
+    }
+    .dash-profile-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--d-teal), var(--d-teal-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem; font-family: var(--ff); font-weight: 700; color: #fff;
+    }
+    .dash-profile-row { display: flex; flex-direction: column; gap: .2rem; margin-bottom: 1rem; }
+    .dash-profile-label { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--d-muted); }
+    .dash-profile-val { font-size: .95rem; font-weight: 600; color: var(--d-dark); }
+    .dash-plan-chip {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #f5fdf8; border: 1.5px solid rgba(10,124,110,.25);
+      color: var(--d-teal); font-size: .82rem; font-weight: 700;
+      padding: .35rem .8rem; border-radius: 50px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .dash-sidebar { width: 220px; }
+      .dash-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .dash-layout { flex-direction: column; }
+      .dash-sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: .8rem; gap: .4rem; }
+      .dash-sidebar-label { display: none; }
+      .dash-nav-item { padding: .55rem .8rem; font-size: .8rem; }
+      .dash-main { padding: 1.5rem 1rem; }
+      .dash-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading pantalla -->
+<div class="dash-loading" id="dashLoading">
+  <div class="dash-loading-spinner"></div>
+  <p>Cargando tu Club GlobalVet…</p>
+</div>
+
+<!-- NAV -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <span>Club GlobalVet — Área de miembros</span>
+    <div class="topbar-links">
+      <a href="mailto:globalvetmexico@gmail.com">globalvetmexico@gmail.com</a>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo/globalvet-logo.jpg" alt="Logo GlobalVet México">
+      <span><strong>GlobalVet</strong> México</span>
+    </a>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav-menu">
+      <a href="../index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="club.html" class="active">Club</a>
+      <a href="contacto.html">Contacto</a>
+      <span id="navUserName" style="font-size:.85rem;font-weight:700;color:var(--primary);"></span>
+      <button onclick="handleLogout()" style="background:none;border:1.5px solid #dde4ef;border-radius:50px;padding:.4rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;color:#5d6b82;">Salir</button>
+    </nav>
+  </div>
+</header>
+
+<div class="dash-page" id="dashPage" style="display:none;">
+  <div class="dash-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-sidebar-label">Principal</div>
+      <button class="dash-nav-item active" onclick="showPanel('inicio')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Inicio
+      </button>
+      <button class="dash-nav-item" onclick="showPanel('videos')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Videos del Club
+      </button>
+      <button class="dash-nav-item" onclick="showPanel('recursos')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Recursos PDF
+      </button>
+      <button class="dash-nav-item" onclick="showPanel('casos')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Casos Clínicos
+      </button>
+      <div class="dash-sidebar-label">Cuenta</div>
+      <button class="dash-nav-item" onclick="showPanel('perfil')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mi Perfil
+      </button>
+      <div class="dash-sidebar-footer">
+        <button class="dash-logout-btn" onclick="handleLogout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="dash-main">
+
+      <!-- Panel: Inicio -->
+      <div class="dash-panel active" id="panel-inicio">
+        <div class="dash-welcome">
+          <div>
+            <h2>¡Bienvenido, <span id="welcomeName">miembro</span>! 🐾</h2>
+            <p>Aquí está tu contenido exclusivo del Club GlobalVet.</p>
+          </div>
+          <div class="dash-welcome-badge" id="welcomePlan">⭐ Plan Mensual</div>
+        </div>
+
+        <div class="dash-stats">
+          <div class="dash-stat">
+            <div class="dash-stat-num">4</div>
+            <div class="dash-stat-label">Videos esta semana</div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-num">80+</div>
+            <div class="dash-stat-label">Videos en biblioteca</div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-num">47</div>
+            <div class="dash-stat-label">Miembros activos</div>
+          </div>
+        </div>
+
+        <div class="dash-section-title">Nuevo esta semana <span>Semana 14 · Abril 2026</span></div>
+        <div class="dash-content-grid">
+          <div class="dash-content-card">
+            <div class="dash-card-thumb t1">🎥</div>
+            <div class="dash-card-body">
+              <div class="dash-card-tag">Video · Caso clínico</div>
+              <div class="dash-card-title">Diagnóstico diferencial: vómito crónico en felinos</div>
+              <div class="dash-card-meta">Dr. Morales · 12 min <span class="dash-card-badge badge-nuevo">Nuevo</span></div>
+            </div>
+          </div>
+          <div class="dash-content-card">
+            <div class="dash-card-thumb t2">📄</div>
+            <div class="dash-card-body">
+              <div class="dash-card-tag">PDF · Protocolo</div>
+              <div class="dash-card-title">Los 5 errores en anestesia local más comunes</div>
+              <div class="dash-card-meta">6 páginas descargables</div>
+            </div>
+          </div>
+          <div class="dash-content-card">
+            <div class="dash-card-thumb t4">🔴</div>
+            <div class="dash-card-body">
+              <div class="dash-card-tag">Sesión en vivo</div>
+              <div class="dash-card-title">Q&A Cirugía de tejidos blandos — traigan sus casos</div>
+              <div class="dash-card-meta">Jueves 9:00 PM <span class="dash-card-badge badge-live">En vivo</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-section-title">Continuar viendo</div>
+        <div class="dash-content-grid">
+          <div class="dash-content-card">
+            <div class="dash-card-thumb t2">🩺</div>
+            <div class="dash-card-body">
+              <div class="dash-card-tag">Video · Cirugía</div>
+              <div class="dash-card-title">Protocolo de anestesia en pacientes de alto riesgo</div>
+              <div class="dash-card-meta">Dr. Juárez · 38 min</div>
+            </div>
+          </div>
+          <div class="dash-content-card">
+            <div class="dash-card-thumb t3">🦴</div>
+            <div class="dash-card-body">
+              <div class="dash-card-tag">Video · Rehabilitación</div>
+              <div class="dash-card-title">Técnicas de fisioterapia post-quirúrgica</div>
+              <div class="dash-card-meta">Dra. Mendez · 55 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Videos -->
+      <div class="dash-panel" id="panel-videos">
+        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Biblioteca de Videos 🎥</h2>
+        <div class="dash-content-grid">
+          <div class="dash-content-card"><div class="dash-card-thumb t1">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Bioquímica clínica</div><div class="dash-card-title">Interpretación de perfil bioquímico en perros y gatos</div><div class="dash-card-meta">Dr. Morales · 42 min</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t2">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Cirugía</div><div class="dash-card-title">Protocolo de anestesia en pacientes de alto riesgo</div><div class="dash-card-meta">Dr. Juárez · 38 min</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t3">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Rehabilitación</div><div class="dash-card-title">Técnicas de fisioterapia post-quirúrgica</div><div class="dash-card-meta">Dra. Mendez · 55 min</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t4">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Bienestar animal</div><div class="dash-card-title">Manejo del estrés en consulta: herramientas prácticas</div><div class="dash-card-meta">Dr. García · 29 min</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t1">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Neonatología</div><div class="dash-card-title">Primeras 72 horas críticas en neonatos</div><div class="dash-card-meta">Dra. López · 47 min</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t2">🎥</div><div class="dash-card-body"><div class="dash-card-tag">Diagnóstico</div><div class="dash-card-title">Radiología digital: lectura e interpretación básica</div><div class="dash-card-meta">Dr. Reyes · 61 min</div></div></div>
+        </div>
+      </div>
+
+      <!-- Panel: Recursos -->
+      <div class="dash-panel" id="panel-recursos">
+        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Recursos PDF 📄</h2>
+        <div class="dash-content-grid">
+          <div class="dash-content-card"><div class="dash-card-thumb t2" style="font-size:2.5rem;">📄</div><div class="dash-card-body"><div class="dash-card-tag">Protocolo</div><div class="dash-card-title">Los 5 errores en anestesia local más comunes</div><div class="dash-card-meta">6 páginas · Descargable</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t1" style="font-size:2.5rem;">📋</div><div class="dash-card-body"><div class="dash-card-tag">Guía clínica</div><div class="dash-card-title">Tabla de referencia: dosis analgésicas por especie</div><div class="dash-card-meta">4 páginas · Descargable</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t4" style="font-size:2.5rem;">📊</div><div class="dash-card-body"><div class="dash-card-tag">Referencia</div><div class="dash-card-title">Valores hematológicos normales caninos y felinos</div><div class="dash-card-meta">3 páginas · Descargable</div></div></div>
+        </div>
+      </div>
+
+      <!-- Panel: Casos -->
+      <div class="dash-panel" id="panel-casos">
+        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Casos Clínicos 🩺</h2>
+        <div class="dash-content-grid">
+          <div class="dash-content-card"><div class="dash-card-thumb t1">🐕</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Digestivo</div><div class="dash-card-title">Diagnóstico diferencial: vómito crónico en felinos</div><div class="dash-card-meta">Resuelto por Dr. Morales</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t3">🐈</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Ortopedia</div><div class="dash-card-title">Fractura expuesta en perro: manejo de urgencia</div><div class="dash-card-meta">Resuelto por Dra. Mendez</div></div></div>
+          <div class="dash-content-card"><div class="dash-card-thumb t2">🐾</div><div class="dash-card-body"><div class="dash-card-tag">Caso real · Neonatología</div><div class="dash-card-title">Cachorro sin reflejo de succión: protocolo</div><div class="dash-card-meta">Resuelto por Dra. López</div></div></div>
+        </div>
+      </div>
+
+      <!-- Panel: Perfil -->
+      <div class="dash-panel" id="panel-perfil">
+        <h2 style="margin-bottom:1.5rem;font-size:1.3rem;">Mi Perfil</h2>
+        <div class="dash-profile-card">
+          <div class="dash-profile-avatar" id="profileAvatar">?</div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">Nombre completo</span>
+            <span class="dash-profile-val" id="profileNombre">—</span>
+          </div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">Correo electrónico</span>
+            <span class="dash-profile-val" id="profileEmail">—</span>
+          </div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">WhatsApp</span>
+            <span class="dash-profile-val" id="profileWa">—</span>
+          </div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">Especialidad</span>
+            <span class="dash-profile-val" id="profileEsp">—</span>
+          </div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">Membresía activa</span>
+            <span class="dash-plan-chip" id="profilePlan">⭐ Plan Mensual</span>
+          </div>
+          <div class="dash-profile-row">
+            <span class="dash-profile-label">Miembro desde</span>
+            <span class="dash-profile-val" id="profileFecha">—</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== FIREBASE ===================== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",
+    authDomain: "club-global-vet.firebaseapp.com",
+    projectId: "club-global-vet",
+    storageBucket: "club-global-vet.firebasestorage.app",
+    messagingSenderId: "448888067634",
+    appId: "1:448888067634:web:96adc6b03ba3248f4f0e2b"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // No hay sesión → redirigir al login
+      window.location.href = 'club-registro.html?tab=login';
+      return;
+    }
+
+    // Cargar perfil de Firestore
+    let perfil = {};
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', user.uid));
+      if (snap.exists()) perfil = snap.data();
+    } catch(e) { console.warn('Firestore:', e); }
+
+    const nombre    = perfil.nombre    || user.displayName || 'Miembro';
+    const email     = perfil.email     || user.email       || '—';
+    const wa        = perfil.whatsapp  || '—';
+    const esp       = perfil.especialidad || '—';
+    const planLabel = perfil.planLabel || 'Plan Mensual';
+    const fecha     = perfil.fechaRegistro?.toDate
+      ? perfil.fechaRegistro.toDate().toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' })
+      : 'Reciente';
+
+    // Rellenar UI
+    const initials = nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('profileAvatar').textContent = initials;
+    document.getElementById('welcomeName').textContent   = nombre.split(' ')[0];
+    document.getElementById('welcomePlan').textContent   = '⭐ ' + planLabel;
+    document.getElementById('navUserName').textContent   = nombre.split(' ')[0];
+    document.getElementById('profileNombre').textContent = nombre;
+    document.getElementById('profileEmail').textContent  = email;
+    document.getElementById('profileWa').textContent     = wa;
+    document.getElementById('profileEsp').textContent    = esp;
+    document.getElementById('profilePlan').textContent   = '⭐ ' + planLabel;
+    document.getElementById('profileFecha').textContent  = fecha;
+
+    // Ocultar loading, mostrar dashboard
+    document.getElementById('dashLoading').style.display = 'none';
+    document.getElementById('dashPage').style.display    = 'block';
+  });
+
+  // Logout
+  window.handleLogout = async function() {
+    await signOut(auth);
+    window.location.href = 'club.html';
+  };
+
+  // Cambiar paneles
+  window.showPanel = function(id) {
+    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dash-nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  };
+</script>
+
+</body>
+</html>

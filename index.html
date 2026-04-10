@@ -11,53 +11,6 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/responsive.css">
   <script defer src="js/script.js"></script>
-  <style>
-    /* ── Club GlobalVet button styles ── */
-    .nav-club-btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, #3b2b86, #7b5cff);
-      color: #fff !important;
-      font-weight: 800 !important;
-      font-size: .85rem;
-      padding: 7px 16px;
-      border-radius: 99px;
-      text-decoration: none;
-      transition: transform .2s, box-shadow .2s;
-      box-shadow: 0 4px 16px rgba(59,43,134,.35);
-    }
-    .nav-club-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,43,134,.45); }
-    .nav-club-pulse {
-      display: inline-block;
-      width: 7px; height: 7px;
-      background: #f8e438;
-      border-radius: 50%;
-      animation: clubPulse 1.6s ease-in-out infinite;
-    }
-    @keyframes clubPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .5; transform: scale(1.5); }
-    }
-    .btn-club-hero {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #3b2b86, #7b5cff);
-      color: #fff;
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 14px 28px;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 8px 28px rgba(59,43,134,.4);
-      transition: transform .2s, box-shadow .2s;
-      border: 2px solid rgba(255,255,255,.2);
-    }
-    .btn-club-hero:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(59,43,134,.55); }
-    .btn-club-hero span { font-size: 1.1rem; }
-  </style>
 </head>
 <body>
 <div class="topbar">
@@ -86,9 +39,9 @@
       <a href="pages/testimonios.html">Testimonios</a>
       <a href="pages/galeria.html">Galería</a>
       <a href="pages/contacto.html">Contacto</a>
-      <!-- MODIFICADO: enlace Club GlobalVet en nav mejorado -->
-      <a href="pages/club.html" class="nav-club-btn">
-        <span class="nav-club-pulse"></span>⭐ Club GlobalVet
+      <a class="btn-club" href="pages/club.html" aria-label="Club GlobalVet">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Club GlobalVet
       </a>
       <a class="btn btn-primary nav-cta" href="https://wa.me/5212381500864" target="_blank" rel="noopener">WhatsApp</a>
     </nav>
@@ -114,10 +67,6 @@
         <div class="hero-actions">
           <a class="btn btn-primary" href="pages/cursos.html">Ver cursos</a>
           <a class="btn btn-secondary" href="pages/servicios.html">Explorar servicios</a>
-          <!-- MODIFICADO: botón Club GlobalVet en hero mejorado -->
-          <a class="btn btn-club-hero" href="pages/club.html">
-            <span>⭐</span> Únete al Club GlobalVet
-          </a>
           <a class="btn btn-secondary" href="https://wa.me/5212381500864" target="_blank" rel="noopener">Escribir por WhatsApp</a>
         </div>
         <div class="hero-metrics">
@@ -137,6 +86,35 @@
     </div>
   </div>
 </section>
+
+
+<!-- MODIFICADO: Banner Club GlobalVet -->
+<section class="section" style="padding:2.8rem 0;background:linear-gradient(135deg,#1e1060 0%,#3b2b86 50%,#5f45c8 100%);">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:1.2rem;">
+        <div style="width:56px;height:56px;background:rgba(247,201,72,.18);border:2px solid rgba(247,201,72,.5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;">⭐</div>
+        <div>
+          <div style="color:#f7c948;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.2rem;">Membresía exclusiva</div>
+          <h3 style="color:#fff;font-size:1.2rem;font-weight:800;margin:0 0 .2rem;">Club GlobalVet — Formación continua ilimitada</h3>
+          <p style="color:rgba(255,255,255,.7);font-size:.87rem;margin:0;">Videos clínicos, cursos exclusivos, casos reales y comunidad profesional activa.</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.78rem;padding:.3rem .7rem;border-radius:50px;">📹 +80 videos</span>
+          <span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.78rem;padding:.3rem .7rem;border-radius:50px;">🎓 Cursos exclusivos</span>
+          <span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.78rem;padding:.3rem .7rem;border-radius:50px;">👥 Comunidad activa</span>
+        </div>
+        <button class="btn-club" data-open-club style="animation:club-pulse 2.4s ease-in-out infinite;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Ver Club
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FIN Banner Club GlobalVet -->
 
 <section class="section empresas-section narrow">
   <div class="container">
