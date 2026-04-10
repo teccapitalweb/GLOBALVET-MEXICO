@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Club GlobalVet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f2f4f9; --white:#fff; --dark:#12103a; --purple:#4f35b3;
+      --purple2:#6c4fd6; --plight:#ede9ff; --teal:#0a7c6e; --green:#1e8a50;
+      --red:#d94040; --gold:#e8a020; --muted:#6b7280; --line:#e5e7eb;
+      --ff:'Space Grotesk',system-ui,sans-serif; --ffb:'DM Sans',system-ui,sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--ffb);background:var(--bg);color:var(--dark);line-height:1.55}
+    a{text-decoration:none;color:inherit} button{cursor:pointer;font-family:var(--ffb)}
+
+    /* ===== LOGIN ===== */
+    #loginScreen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background: radial-gradient(ellipse at 60% 0%,rgba(95,69,200,.18) 0%,transparent 55%),
+                  radial-gradient(ellipse at 0% 80%,rgba(59,43,134,.12) 0%,transparent 50%),
+                  linear-gradient(180deg,#eceeff 0%,#f2f4f9 100%);
+      padding:1rem;
+    }
+    .login-card {
+      background:#fff; border-radius:24px; padding:2.4rem 2.2rem;
+      width:100%; max-width:400px;
+      box-shadow:0 24px 60px rgba(18,16,58,.12);
+    }
+    .login-brand {
+      display:flex; align-items:center; justify-content:center;
+      gap:.6rem; margin-bottom:1.5rem;
+    }
+    .login-brand img{width:34px;height:34px;border-radius:9px;object-fit:cover}
+    .login-brand span{font-family:var(--ff);font-size:.95rem;font-weight:700}
+    .login-title{font-family:var(--ff);font-size:1.3rem;font-weight:700;text-align:center;margin-bottom:.25rem}
+    .login-sub{font-size:.83rem;color:var(--muted);text-align:center;margin-bottom:1.6rem}
+    .login-label{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem}
+    .login-input{width:100%;padding:.72rem .95rem;background:#f8fbff;border:1.5px solid var(--line);border-radius:12px;font-family:var(--ffb);font-size:.9rem;color:var(--dark);outline:none;margin-bottom:.9rem;transition:border-color .2s}
+    .login-input:focus{border-color:var(--purple)}
+    .login-btn{width:100%;padding:.88rem;background:var(--dark);color:#fff;font-family:var(--ff);font-weight:700;font-size:.95rem;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s}
+    .login-btn:hover{opacity:.88}
+    .login-error{background:#fff0f0;border:1px solid #fecaca;border-radius:10px;padding:.65rem .9rem;font-size:.83rem;color:var(--red);margin-bottom:.8rem;display:none}
+    .login-error.show{display:block}
+
+    /* ===== DASHBOARD ADMIN ===== */
+    #adminScreen{display:none}
+    .admin-top {
+      background:var(--dark); height:52px; display:flex; align-items:center;
+      justify-content:space-between; padding:0 1.5rem; position:sticky; top:0; z-index:100;
+    }
+    .admin-top-left{display:flex;align-items:center;gap:.7rem}
+    .admin-top-logo{display:flex;align-items:center;gap:.55rem}
+    .admin-top-logo img{width:28px;height:28px;border-radius:8px;object-fit:cover}
+    .admin-top-logo span{font-family:var(--ff);font-size:.92rem;font-weight:700;color:#fff}
+    .admin-badge{background:var(--red);color:#fff;font-size:.68rem;font-weight:700;padding:.18rem .6rem;border-radius:50px;letter-spacing:.04em;text-transform:uppercase}
+    .admin-top-right{display:flex;align-items:center;gap:.8rem}
+    .admin-user{font-family:var(--ff);font-size:.82rem;font-weight:600;color:rgba(255,255,255,.6)}
+    .admin-logout-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:.8rem;font-weight:600;padding:.3rem .8rem;border-radius:50px;cursor:pointer;transition:all .15s}
+    .admin-logout-btn:hover{border-color:rgba(255,100,100,.5);color:#ff8080}
+
+    .admin-layout{display:flex;min-height:calc(100vh - 52px)}
+
+    /* Sidebar */
+    .admin-sidebar{width:210px;flex-shrink:0;background:var(--white);border-right:1px solid var(--line);padding:1rem .7rem;display:flex;flex-direction:column;gap:.15rem;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto}
+    .aslbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;padding:.7rem .6rem .25rem}
+    .asbtn{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:10px;border:none;background:none;font-size:.84rem;font-weight:600;color:var(--muted);width:100%;text-align:left;transition:background .15s,color .15s}
+    .asbtn:hover{background:var(--bg);color:var(--dark)}
+    .asbtn.active{background:var(--plight);color:var(--purple)}
+    .asbtn svg{flex-shrink:0}
+    .asbadge{margin-left:auto;background:var(--purple);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .42rem;border-radius:50px}
+
+    /* Main */
+    .admin-main{flex:1;padding:2rem 2.2rem;min-width:0}
+    .apanel{display:none}.apanel.active{display:block}
+    .apage-title{font-family:var(--ff);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+
+    /* Stats row */
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+    .stat-card{background:var(--white);border-radius:16px;padding:1.3rem 1.4rem;border:1px solid var(--line)}
+    .stat-num{font-family:var(--ff);font-size:2rem;font-weight:700;color:var(--dark);line-height:1;margin-bottom:.2rem}
+    .stat-lbl{font-size:.8rem;color:var(--muted)}
+    .stat-card.purple .stat-num{color:var(--purple)}
+    .stat-card.green  .stat-num{color:var(--green)}
+    .stat-card.red    .stat-num{color:var(--red)}
+
+    /* Tabla miembros */
+    .table-wrap{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:1.5rem}
+    .table-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;border-bottom:1px solid var(--line)}
+    .table-title{font-family:var(--ff);font-size:.95rem;font-weight:700}
+    .table-search{padding:.45rem .85rem;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.84rem;outline:none;width:220px;transition:border-color .2s}
+    .table-search:focus{border-color:var(--purple)}
+    table{width:100%;border-collapse:collapse}
+    th{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:.75rem 1.4rem;text-align:left;border-bottom:1px solid var(--line);background:#fafbff}
+    td{padding:.8rem 1.4rem;font-size:.87rem;border-bottom:1px solid var(--line)}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#fafbff}
+    .member-name{font-weight:700;color:var(--dark)}
+    .member-email{font-size:.78rem;color:var(--muted)}
+    .status-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .65rem;border-radius:50px}
+    .status-active  {background:rgba(30,138,80,.1);color:var(--green)}
+    .status-pending {background:rgba(232,160,32,.12);color:#7a4800}
+    .status-inactive{background:#f3f4f6;color:#9ca3af}
+    .plan-chip{font-size:.75rem;font-weight:700;padding:.18rem .55rem;border-radius:50px;background:var(--plight);color:var(--purple)}
+    .action-btn{padding:.32rem .75rem;border-radius:8px;font-size:.75rem;font-weight:700;border:none;cursor:pointer;transition:opacity .15s;margin-right:.3rem}
+    .action-btn:hover{opacity:.8}
+    .btn-activate  {background:rgba(30,138,80,.1);color:var(--green)}
+    .btn-deactivate{background:rgba(217,64,64,.1);color:var(--red)}
+
+    /* Panel Videos */
+    .video-form{background:var(--white);border-radius:16px;border:1px solid var(--line);padding:1.6rem;margin-bottom:1.5rem}
+    .video-form-title{font-family:var(--ff);font-size:.95rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+    .fg-full{grid-column:1/-1}
+    .field-label{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem}
+    .field-input{width:100%;padding:.65rem .9rem;background:#f8fbff;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.88rem;color:var(--dark);outline:none;transition:border-color .2s}
+    .field-input:focus{border-color:var(--purple);background:#fff}
+    .field-select{width:100%;padding:.65rem .9rem;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.88rem;color:var(--dark);background:#f8fbff;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2rem}
+    .field-select:focus{border-color:var(--purple)}
+    .btn-add-video{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:.75rem 1.6rem;font-family:var(--ff);font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:.5rem}
+    .btn-add-video:hover{opacity:.88}
+    .videos-list{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden}
+    .video-row{display:flex;align-items:center;gap:1rem;padding:.85rem 1.4rem;border-bottom:1px solid var(--line)}
+    .video-row:last-child{border-bottom:none}
+    .video-thumb-sm{width:48px;height:36px;border-radius:8px;background:linear-gradient(135deg,#12103a,#4f35b3);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;overflow:hidden}
+    .video-thumb-sm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+    .video-info{flex:1;min-width:0}
+    .video-title-sm{font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .video-meta-sm{font-size:.75rem;color:var(--muted)}
+    .video-cat{font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:50px;background:var(--plight);color:var(--purple);white-space:nowrap}
+    .btn-del{background:rgba(217,64,64,.1);color:var(--red);border:none;border-radius:8px;padding:.3rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer;transition:opacity .15s;flex-shrink:0}
+    .btn-del:hover{opacity:.8}
+
+    /* Toast */
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;padding:.75rem 1.4rem;border-radius:50px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:500;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast.green{background:var(--teal)}
+
+    /* Empty state */
+    .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
+    .empty-state p{font-size:.9rem}
+
+    @media(max-width:768px){
+      .admin-sidebar{display:none}
+      .stats-row{grid-template-columns:1fr 1fr}
+      .form-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+      <span><strong>GlobalVet</strong> México</span>
+    </div>
+    <h1 class="login-title">Panel Administrativo</h1>
+    <p class="login-sub">Acceso exclusivo para administradores</p>
+    <div class="login-error" id="loginError">Correo o contraseña incorrectos.</div>
+    <label class="login-label" for="adminEmail">Correo</label>
+    <input class="login-input" type="email" id="adminEmail" placeholder="admin@globalvet.com" autocomplete="email">
+    <label class="login-label" for="adminPass">Contraseña</label>
+    <input class="login-input" type="password" id="adminPass" placeholder="Tu contraseña" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn" onclick="adminLogin()">Iniciar sesión</button>
+  </div>
+</div>
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="adminScreen">
+  <nav class="admin-top">
+    <div class="admin-top-left">
+      <div class="admin-top-logo">
+        <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+        <span>Club GlobalVet</span>
+      </div>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <div class="admin-top-right">
+      <span class="admin-user" id="adminUserLabel"></span>
+      <button class="admin-logout-btn" onclick="adminLogout()">Salir</button>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="aslbl">Panel</div>
+      <button class="asbtn active" onclick="showPanel('resumen',this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Resumen
+      </button>
+      <button class="asbtn" onclick="showPanel('miembros',this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Miembros
+        <span class="asbadge" id="memberCount">0</span>
+      </button>
+      <button class="asbtn" onclick="showPanel('videos',this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Videos
+      </button>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- RESUMEN -->
+      <div class="apanel active" id="apanel-resumen">
+        <div class="apage-title">📊 Resumen del Club</div>
+        <div class="stats-row">
+          <div class="stat-card purple">
+            <div class="stat-num" id="statTotal">—</div>
+            <div class="stat-lbl">Miembros totales</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-num" id="statActivos">—</div>
+            <div class="stat-lbl">Membresías activas</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-num" id="statPendientes">—</div>
+            <div class="stat-lbl">Pendientes de activar</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><div class="table-title">Últimos registros</div></div>
+          <table>
+            <thead><tr><th>Miembro</th><th>Plan</th><th>Estado</th><th>Fecha</th></tr></thead>
+            <tbody id="recentTable"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MIEMBROS -->
+      <div class="apanel" id="apanel-miembros">
+        <div class="apage-title">👥 Miembros registrados</div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <div class="table-title">Todos los miembros</div>
+            <input class="table-search" type="text" placeholder="Buscar por nombre o email…" oninput="filterMembers(this.value)">
+          </div>
+          <table>
+            <thead><tr><th>Nombre</th><th>Plan</th><th>Estado</th><th>Registro</th><th>Acciones</th></tr></thead>
+            <tbody id="membersTable"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIDEOS -->
+      <div class="apanel" id="apanel-videos">
+        <div class="apage-title">🎬 Gestión de Videos</div>
+        <div class="video-form">
+          <div class="video-form-title">➕ Agregar nuevo video</div>
+          <div class="form-grid">
+            <div>
+              <label class="field-label">Título del video</label>
+              <input class="field-input" type="text" id="vTitle" placeholder="Ej: Cirugía de tejidos blandos">
+            </div>
+            <div>
+              <label class="field-label">Categoría / Curso</label>
+              <select class="field-select" id="vCat">
+                <option value="endo">Endocrinología canina básica</option>
+                <option value="onco">Bases de oncología veterinaria</option>
+                <option value="hema">Hematología clínica</option>
+                <option value="nuevo">Nuevo curso</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">URL de YouTube</label>
+              <input class="field-input" type="url" id="vUrl" placeholder="https://youtu.be/XXXXXXX">
+            </div>
+            <div>
+              <label class="field-label">Instructor</label>
+              <input class="field-input" type="text" id="vInstructor" placeholder="Ej: MVZ. Juan Pérez">
+            </div>
+            <div class="fg-full">
+              <label class="field-label">Etiqueta (opcional)</label>
+              <select class="field-select" id="vTag">
+                <option value="nuevo">Nuevo</option>
+                <option value="visto">Visto</option>
+                <option value="">Sin etiqueta</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-add-video" onclick="addVideo()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar video al Club
+          </button>
+        </div>
+
+        <div class="table-wrap videos-list" id="videosList">
+          <div style="text-align:center;padding:2rem;color:var(--muted);">Cargando videos...</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<!-- ===== FIREBASE ===== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, orderBy, limit, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const cfg = {
+    apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",
+    authDomain:"club-global-vet.firebaseapp.com",
+    projectId:"club-global-vet",
+    storageBucket:"club-global-vet.firebasestorage.app",
+    messagingSenderId:"448888067634",
+    appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"
+  };
+
+  const app  = initializeApp(cfg);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Lista de admins autorizados (emails)
+  const ADMINS = [
+    'globalvetmexico1@gmail.com',
+    'teccapitalweb@gmail.com'
+  ];
+
+  let allMembers = [];
+  let allVideos  = [];
+
+  // ── Auth state ──────────────────────────────────────────
+  onAuthStateChanged(auth, user => {
+    if (user && ADMINS.includes(user.email)) {
+      showAdmin(user);
+    } else if (user) {
+      // Logueado pero no es admin
+      signOut(auth);
+      showLoginError('Esta cuenta no tiene permisos de administrador.');
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminScreen').style.display = 'none';
+    }
+  });
+
+  function showAdmin(user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    document.getElementById('adminUserLabel').textContent = user.email;
+    loadMembers();
+    loadVideos();
+  }
+
+  function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 4000);
+  }
+
+  // ── LOGIN ──────────────────────────────────────────────
+  window.adminLogin = async () => {
+    const email = document.getElementById('adminEmail').value.trim();
+    const pass  = document.getElementById('adminPass').value;
+    if (!email || !pass) return;
+    const btn = document.getElementById('loginBtn');
+    btn.textContent = 'Verificando…'; btn.disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      showLoginError('Correo o contraseña incorrectos.');
+      btn.textContent = 'Iniciar sesión'; btn.disabled = false;
+    }
+  };
+
+  window.adminLogout = async () => {
+    await signOut(auth);
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminScreen').style.display = 'none';
+  };
+
+  // ── CARGAR MIEMBROS ────────────────────────────────────
+  async function loadMembers() {
+    try {
+      const snap = await getDocs(collection(db, 'usuarios'));
+      allMembers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const total     = allMembers.length;
+      const activos   = allMembers.filter(m => m.membresiaActiva || m.estado === 'activo').length;
+      const pendientes = allMembers.filter(m => !m.membresiaActiva && m.estado !== 'activo').length;
+
+      document.getElementById('statTotal').textContent     = total;
+      document.getElementById('statActivos').textContent   = activos;
+      document.getElementById('statPendientes').textContent = pendientes;
+      document.getElementById('memberCount').textContent   = total;
+
+      renderMembers(allMembers);
+      renderRecent(allMembers.slice(0, 5));
+    } catch(e) {
+      console.error(e);
+      st('❌ Error cargando miembros');
+    }
+  }
+
+  function renderMembers(members) {
+    const tbody = document.getElementById('membersTable');
+    if (!members.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">No hay miembros aún</td></tr>';
+      return;
+    }
+    tbody.innerHTML = members.map(m => {
+      const activo = m.membresiaActiva || m.estado === 'activo';
+      const fecha = m.fechaRegistro?.toDate
+        ? m.fechaRegistro.toDate().toLocaleDateString('es-MX', {day:'2-digit',month:'short',year:'numeric'})
+        : '—';
+      return `
+        <tr>
+          <td>
+            <div class="member-name">${m.nombre || '—'}</div>
+            <div class="member-email">${m.email || '—'}</div>
+          </td>
+          <td><span class="plan-chip">${m.planLabel || 'Plan Mensual'}</span></td>
+          <td>
+            <span class="status-badge ${activo ? 'status-active' : 'status-pending'}">
+              ${activo ? '✓ Activo' : '⏳ Pendiente'}
+            </span>
+          </td>
+          <td style="font-size:.82rem;color:var(--muted);">${fecha}</td>
+          <td>
+            ${activo
+              ? `<button class="action-btn btn-deactivate" onclick="toggleMember('${m.id}', false)">Desactivar</button>`
+              : `<button class="action-btn btn-activate"   onclick="toggleMember('${m.id}', true)">Activar</button>`
+            }
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderRecent(members) {
+    const tbody = document.getElementById('recentTable');
+    if (!members.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Sin registros aún</td></tr>';
+      return;
+    }
+    tbody.innerHTML = members.map(m => {
+      const activo = m.membresiaActiva || m.estado === 'activo';
+      const fecha = m.fechaRegistro?.toDate
+        ? m.fechaRegistro.toDate().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})
+        : '—';
+      return `
+        <tr>
+          <td>
+            <div class="member-name">${m.nombre || '—'}</div>
+            <div class="member-email">${m.email || '—'}</div>
+          </td>
+          <td><span class="plan-chip">${m.planLabel || 'Plan Mensual'}</span></td>
+          <td><span class="status-badge ${activo ? 'status-active' : 'status-pending'}">${activo ? '✓ Activo' : '⏳ Pendiente'}</span></td>
+          <td style="font-size:.82rem;color:var(--muted);">${fecha}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // ── FILTRAR MIEMBROS ───────────────────────────────────
+  window.filterMembers = (q) => {
+    const filtered = allMembers.filter(m =>
+      (m.nombre  || '').toLowerCase().includes(q.toLowerCase()) ||
+      (m.email   || '').toLowerCase().includes(q.toLowerCase())
+    );
+    renderMembers(filtered);
+  };
+
+  // ── ACTIVAR / DESACTIVAR MIEMBRO ───────────────────────
+  window.toggleMember = async (uid, activate) => {
+    try {
+      await updateDoc(doc(db, 'usuarios', uid), {
+        membresiaActiva: activate,
+        estado: activate ? 'activo' : 'inactivo'
+      });
+      st(activate ? '✅ Membresía activada' : '⚠️ Membresía desactivada', activate);
+      loadMembers();
+    } catch(e) {
+      st('❌ Error al actualizar');
+    }
+  };
+
+  // ── CARGAR VIDEOS ──────────────────────────────────────
+  async function loadVideos() {
+    try {
+      const snap = await getDocs(collection(db, 'videos_club'));
+      allVideos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderVideos(allVideos);
+    } catch(e) {
+      renderVideos([]);
+    }
+  }
+
+  const catNames = {
+    endo:'Endocrinología canina básica', onco:'Bases de oncología veterinaria',
+    hema:'Hematología clínica', nuevo:'Nuevo curso'
+  };
+  const catImgs = {
+    endo:'../assets/img/cursos/endocrinologia.png',
+    onco:'../assets/img/cursos/oncologia.png',
+    hema:'../assets/img/cursos/hematologia.png',
+    nuevo:''
+  };
+
+  function renderVideos(videos) {
+    const container = document.getElementById('videosList');
+    if (!videos.length) {
+      container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);">No hay videos aún. Agrega el primero arriba.</div>';
+      return;
+    }
+    container.innerHTML = videos.map(v => {
+      const img = catImgs[v.categoria] || '';
+      return `
+        <div class="video-row">
+          <div class="video-thumb-sm">
+            ${img ? `<img src="${img}" alt="">` : '🎥'}
+          </div>
+          <div class="video-info">
+            <div class="video-title-sm">${v.titulo || '—'}</div>
+            <div class="video-meta-sm">${v.instructor || ''} · <a href="${v.youtubeUrl || '#'}" target="_blank" style="color:var(--purple);">Ver video</a></div>
+          </div>
+          <span class="video-cat">${catNames[v.categoria] || v.categoria}</span>
+          <button class="btn-del" onclick="deleteVideo('${v.id}')">Eliminar</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── AGREGAR VIDEO ──────────────────────────────────────
+  window.addVideo = async () => {
+    const titulo     = document.getElementById('vTitle').value.trim();
+    const categoria  = document.getElementById('vCat').value;
+    const youtubeUrl = document.getElementById('vUrl').value.trim();
+    const instructor = document.getElementById('vInstructor').value.trim();
+    const etiqueta   = document.getElementById('vTag').value;
+
+    if (!titulo || !youtubeUrl) {
+      st('⚠️ Completa título y URL del video');
+      return;
+    }
+
+    // Extraer ID de YouTube
+    let ytId = youtubeUrl;
+    const match = youtubeUrl.match(/(?:youtu\.be\/|v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
+    if (match) ytId = match[1];
+
+    try {
+      await addDoc(collection(db, 'videos_club'), {
+        titulo, categoria, youtubeUrl: ytId,
+        instructor, etiqueta,
+        fechaSubida: serverTimestamp()
+      });
+      st('✅ Video agregado al Club', true);
+      document.getElementById('vTitle').value = '';
+      document.getElementById('vUrl').value   = '';
+      document.getElementById('vInstructor').value = '';
+      loadVideos();
+    } catch(e) {
+      st('❌ Error al guardar el video');
+    }
+  };
+
+  // ── ELIMINAR VIDEO ─────────────────────────────────────
+  window.deleteVideo = async (id) => {
+    if (!confirm('¿Eliminar este video del Club?')) return;
+    try {
+      await deleteDoc(doc(db, 'videos_club', id));
+      st('🗑️ Video eliminado');
+      loadVideos();
+    } catch(e) {
+      st('❌ Error al eliminar');
+    }
+  };
+
+  // ── TOAST ──────────────────────────────────────────────
+  function st(msg, green) {
+    const t = document.getElementById('toastEl');
+    t.textContent = msg;
+    t.className = 'toast show' + (green ? ' green' : '');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+  window.st = st;
+</script>
+
+<script>
+  // Panel switcher
+  function showPanel(id, btn) {
+    document.querySelectorAll('.apanel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.asbtn').forEach(b => b.classList.remove('active'));
+    document.getElementById('apanel-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+  window.showPanel = showPanel;
+
+  // Enter en login
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const ls = document.getElementById('loginScreen');
+      if (ls && ls.style.display !== 'none') window.adminLogin?.();
+    }
+  });
+</script>
+
+</body>
+</html>
