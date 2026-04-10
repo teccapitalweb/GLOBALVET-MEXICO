@@ -290,6 +290,13 @@
         <div class="reg-field-error" id="errPass">Mínimo 6 caracteres.</div>
       </div>
 
+      <div class="reg-field" style="margin-bottom:.7rem;">
+        <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;font-size:.82rem;color:var(--reg-muted);line-height:1.5;">
+          <input type="checkbox" id="regTerminos" style="margin-top:.15rem;width:15px;height:15px;accent-color:var(--reg-teal);flex-shrink:0;">
+          <span>Acepto los <a href="#" onclick="openTerminos(event)" style="color:var(--reg-teal);font-weight:700;text-decoration:underline;">Términos y Condiciones</a> y la <a href="#" onclick="openTerminos(event)" style="color:var(--reg-teal);font-weight:700;text-decoration:underline;">Política de Privacidad</a> del Club GlobalVet</span>
+        </label>
+        <div class="reg-field-error" id="errTerminos">Debes aceptar los términos y condiciones.</div>
+      </div>
       <button class="reg-btn-main" id="btnRegister" onclick="handleRegister()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
         Crear cuenta y activar membresía
@@ -467,6 +474,9 @@
     showE('errEmail',  'regEmail',  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
     showE('errWa',     'regWa',     !wa);
     showE('errPass',   'regPass',   pass.length < 6);
+    const terminos = document.getElementById('regTerminos').checked;
+    document.getElementById('errTerminos').classList.toggle('show', !terminos);
+    if (!terminos) ok = false;
     if (!ok) return;
 
     setLoading('btnRegister', true);
@@ -566,5 +576,52 @@
   }
 </script>
 
+
+<!-- MODAL TÉRMINOS Y CONDICIONES -->
+<div id="terminosModal" style="display:none;position:fixed;inset:0;background:rgba(13,31,53,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#fff;border-radius:22px;width:100%;max-width:540px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(13,31,53,.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid #eef1f8;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;color:#0d1f35;">Términos y Condiciones — Club GlobalVet</div>
+      <button onclick="closeTerminos()" style="background:rgba(0,0,0,.06);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="overflow-y:auto;padding:1.4rem 1.5rem;font-size:.85rem;color:#5b7080;line-height:1.7;">
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">1. Membresía y Acceso</p>
+      <p>Al registrarte en el Club GlobalVet, obtienes acceso exclusivo a videos, PDFs, sesiones en vivo y comunidad de WhatsApp. El acceso es personal e intransferible.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">2. Pagos y Suscripción</p>
+      <p>La membresía mensual tiene un costo de $199 MXN/mes con un mínimo de 3 meses. La membresía anual es de $1,788 MXN con renovación anual. Los precios pueden cambiar para nuevos miembros.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">3. Cancelación</p>
+      <p>Puedes cancelar tu membresía mensual después del tercer mes enviando un mensaje a globalvetmexico@gmail.com. No se realizan reembolsos por el mes en curso.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">4. Uso del Contenido</p>
+      <p>Todo el contenido del Club GlobalVet (videos, PDFs, materiales) es exclusivo para miembros activos. Queda prohibida su reproducción, distribución o compartición sin autorización.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">5. Privacidad</p>
+      <p>Tus datos personales (nombre, correo, WhatsApp) se usan únicamente para gestionar tu membresía y enviarte contenido del Club. No compartimos tu información con terceros.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">6. Conducta en Comunidad</p>
+      <p>Los miembros del grupo de WhatsApp deben mantener respeto y profesionalismo. GlobalVet México se reserva el derecho de retirar el acceso a quien incumpla estas normas.</p>
+      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">7. Contacto</p>
+      <p>Para cualquier duda: <strong>globalvetmexico@gmail.com</strong> o WhatsApp <strong>+52 1 238 150 0864</strong></p>
+    </div>
+    <div style="padding:1rem 1.5rem;border-top:1px solid #eef1f8;">
+      <button onclick="acceptTerminos()" style="width:100%;padding:.8rem;background:#0a7c6e;color:#fff;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;">Entendido — Acepto los términos</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openTerminos(e) {
+    e.preventDefault();
+    document.getElementById('terminosModal').style.display = 'flex';
+  }
+  function closeTerminos() {
+    document.getElementById('terminosModal').style.display = 'none';
+  }
+  function acceptTerminos() {
+    document.getElementById('regTerminos').checked = true;
+    document.getElementById('errTerminos').classList.remove('show');
+    closeTerminos();
+  }
+  document.getElementById('terminosModal').addEventListener('click', function(e) {
+    if (e.target === this) closeTerminos();
+  });
+</script>
 </body>
 </html>
