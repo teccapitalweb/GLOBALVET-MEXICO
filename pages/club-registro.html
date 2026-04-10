@@ -489,16 +489,35 @@
       // Actualizar displayName
       await updateProfile(cred.user, { displayName: nombre });
 
+      // Verificar si tiene pago pendiente en Shopify
+      const emailKey = email.replace(/[^a-zA-Z0-9]/g, '_');
+      let planFromShopify = currentPlan;
+      let planLabelFromShopify = currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual';
+      let estadoMembres = 'pendiente'; // por default pendiente hasta confirmar pago
+
+      try {
+        const pendSnap = await getDoc(doc(db, 'pagos_pendientes', emailKey));
+        if (pendSnap.exists()) {
+          const pd = pendSnap.data();
+          if (!pd.activado) {
+            planFromShopify = pd.plan || currentPlan;
+            planLabelFromShopify = pd.planLabel || planLabelFromShopify;
+            estadoMembres = 'activo'; // tiene pago confirmado por Shopify
+          }
+        }
+      } catch(e) { /* sin pago pendiente, continúa normal */ }
+
       // Guardar perfil en Firestore → colección "usuarios"
       await setDoc(doc(db, 'usuarios', uid), {
         nombre,
         email,
-        whatsapp:     wa,
-        especialidad: esp || 'No especificada',
-        plan:         currentPlan,
-        planLabel:    currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual',
-        estado:       'activo',
-        fechaRegistro: serverTimestamp(),
+        whatsapp:        wa,
+        especialidad:    esp || 'No especificada',
+        plan:            planFromShopify,
+        planLabel:       planLabelFromShopify,
+        estado:          estadoMembres,
+        membresiaActiva: estadoMembres === 'activo',
+        fechaRegistro:   serverTimestamp(),
         uid
       });
 
