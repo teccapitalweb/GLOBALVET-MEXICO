@@ -1,0 +1,539 @@
+
+    /* FEED ROWS */
+    .fdr{display:flex;align-items:center;gap:1rem;padding:.88rem 1.5rem;border-bottom:1px solid var(--li)}
+    .fdr:last-child{border-bottom:none}
+    .fdd{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+      color:var(--mu);width:78px;flex-shrink:0}
+    .fdt{font-size:.9rem;font-weight:600;flex:1}
+    .fdm{font-size:.77rem;color:var(--mu)}
+    .ftv{background:rgba(217,64,64,.1);color:var(--re);font-size:.69rem;font-weight:700;padding:.15rem .5rem;border-radius:50px}
+    .ftp{background:rgba(79,53,179,.1);color:var(--pu);font-size:.69rem;font-weight:700;padding:.15rem .5rem;border-radius:50px}
+    .ftl{background:rgba(232,160,32,.15);color:#7a4800;font-size:.69rem;font-weight:700;padding:.15rem .5rem;border-radius:50px}
+    .ftn{background:var(--dk);color:#fff;font-size:.69rem;font-weight:700;padding:.15rem .5rem;border-radius:50px}
+    .fdr.hl{background:rgba(79,53,179,.03)}
+    .feed-head{background:var(--dk);color:rgba(255,255,255,.85);font-family:var(--ff);
+      font-size:.83rem;font-weight:700;padding:.92rem 1.5rem;
+      display:flex;justify-content:space-between;align-items:center}
+    .feed-head span{color:rgba(255,255,255,.38);font-weight:400}
+
+    /* VIDEO MODAL */
+    .vmo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;
+      align-items:center;justify-content:center;padding:1rem}
+    .vmo.show{display:flex}
+    .vmb{background:#12103a;border-radius:20px;width:100%;max-width:860px;overflow:hidden}
+    .vmh{display:flex;align-items:center;justify-content:space-between;
+      padding:.95rem 1.3rem;border-bottom:1px solid rgba(255,255,255,.08)}
+    .vmt{font-family:var(--ff);font-weight:700;color:#fff;font-size:.95rem;margin-bottom:.12rem}
+    .vmm{font-size:.74rem;color:rgba(255,255,255,.4)}
+    .vmx{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;
+      width:32px;height:32px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;border:none}
+    .vm-player{background:#000;position:relative;padding-top:56.25%}
+    .vm-player iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .vm-sessions{padding:.88rem 1.3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+    .sess-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+    .sess-btn{padding:.33rem .82rem;border-radius:50px;font-family:var(--ff);font-size:.77rem;
+      font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+    .sess-btn.on{background:var(--pu2);color:#fff;border:1.5px solid var(--pu2)}
+    .sess-btn.off{background:transparent;color:rgba(255,255,255,.5);border:1.5px solid rgba(255,255,255,.2)}
+
+    /* PERFIL */
+    .pf-sec{background:var(--w);border-radius:16px;border:1px solid var(--li);padding:1.4rem 1.6rem;margin-bottom:1rem}
+    .pf-st{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:1rem}
+    .pf-row{display:flex;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--li);gap:1rem}
+    .pf-row:last-child{border-bottom:none}
+    .pf-lbl{font-size:.84rem;color:var(--mu);width:120px;flex-shrink:0}
+    .pf-inp{flex:1;border:none;outline:none;font-family:var(--fb);font-size:.9rem;color:var(--dk);background:transparent}
+    .pf-val{flex:1;font-size:.9rem;font-weight:600}
+    .pf-plan{display:inline-flex;align-items:center;gap:.4rem;background:#f5fdf8;
+      border:1.5px solid rgba(10,124,110,.25);color:var(--te);font-size:.82rem;font-weight:700;
+      padding:.33rem .8rem;border-radius:50px}
+    .btn-save{background:var(--pu);color:#fff;border:none;border-radius:10px;
+      padding:.62rem 1.4rem;font-family:var(--ff);font-size:.84rem;font-weight:700;
+      cursor:pointer;transition:opacity .15s;margin-top:.8rem}
+    .btn-save:hover{opacity:.88}
+    .act-tbl{width:100%}
+    .act-tbl tr{border-bottom:1px solid var(--li)}
+    .act-tbl tr:last-child{border-bottom:none}
+    .act-tbl td{padding:.62rem 0;font-size:.87rem}
+    .act-tbl td:first-child{color:var(--mu)}
+    .act-tbl td:last-child{text-align:right;font-weight:700}
+
+    /* SUSCRIPCIÓN */
+    .sub-row{display:flex;justify-content:space-between;padding:.58rem 0;border-bottom:1px solid var(--li);font-size:.87rem}
+    .sub-row:last-child{border-bottom:none}
+    .sub-lbl{color:var(--mu)}
+    .sub-val{font-weight:700}
+    .sub-val.gr{color:var(--gr)}.sub-val.pu{color:var(--pu)}
+
+    /* TOAST */
+    .tst{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);
+      background:var(--dk);color:#fff;font-family:var(--ff);font-size:.87rem;font-weight:600;
+      padding:.72rem 1.4rem;border-radius:50px;box-shadow:0 8px 24px rgba(0,0,0,.2);
+      z-index:500;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+    .tst.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .tst.gr{background:var(--te)}
+
+    /* TOGGLE */
+    .tgl{position:relative;width:42px;height:24px;background:#d1d5db;border-radius:50px;
+      cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
+    .tgl.on{background:var(--pu)}
+    .tgl::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;
+      background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+    .tgl.on::after{transform:translateX(18px)}
+    .tgl-row{display:flex;align-items:center;justify-content:space-between;padding:.68rem 0;border-bottom:1px solid var(--li)}
+    .tgl-row:last-child{border-bottom:none}
+
+    @media(max-width:900px){.rp{display:none}.mn{margin-right:0}}
+    @media(max-width:680px){.sb{display:none}.mn{margin-left:0;padding:1rem}}
+  </style>
+</head>
+<body>
+
+<div id="LD"><div class="sp"></div><p>Cargando tu Club GlobalVet…</p></div>
+
+<!-- NAV -->
+<nav class="nav" id="topNav" style="display:none">
+  <div class="nav-l">
+    <div class="nav-logo">
+      <img src="assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+      <span>Club GlobalVet</span>
+    </div>
+    <span class="nav-bd">Miembro</span>
+  </div>
+  <div class="nav-r">
+    <div class="nav-av" id="navAv">?</div>
+    <div>
+      <div class="nav-nm" id="navNm">—</div>
+      <div class="nav-st">Miembro activo</div>
+    </div>
+    <button class="nav-out" onclick="doLogout()">Salir</button>
+  </div>
+</nav>
+
+<div class="lay" id="dashLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-lbl">Principal</div>
+    <button class="sb-btn on" onclick="sp('inicio',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Inicio
+    </button>
+    <button class="sb-btn" onclick="sp('videos',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      Videos
+      <span class="sb-n" id="sbV">0</span>
+    </button>
+    <button class="sb-btn" onclick="sp('sesiones',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Sesiones en vivo
+      <span class="sb-n re">●</span>
+    </button>
+    <button class="sb-btn" onclick="sp('pdfs',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      PDFs
+      <span class="sb-n re">2</span>
+    </button>
+    <div class="sb-lbl">Mi cuenta</div>
+    <button class="sb-btn" onclick="sp('perfil',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Mi perfil
+    </button>
+    <button class="sb-btn" onclick="sp('suscripcion',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Suscripción
+    </button>
+    <button class="sb-btn" onclick="sp('config',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configuración
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="mn">
+
+    <!-- INICIO -->
+    <div class="pn on" id="p-inicio">
+      <div class="hb">
+        <div class="hb-t" id="hbTitle">¡Hola! 👋</div>
+        <div class="hb-s">Tienes contenido nuevo esta semana en Club GlobalVet</div>
+        <div class="hb-stats">
+          <div class="hb-st"><div class="hb-n" id="hbVideos">0</div><div class="hb-l">Videos</div></div>
+          <div class="hb-st"><div class="hb-n">4</div><div class="hb-l">PDFs</div></div>
+          <div class="hb-st"><div class="hb-n">4</div><div class="hb-l">Lives</div></div>
+          <div class="hb-st"><div class="hb-n" id="hbMes">1°</div><div class="hb-l">Mes</div></div>
+        </div>
+      </div>
+
+      <!-- Feed semanal dinámico -->
+      <div class="stit">⭐ Esta semana <span class="scnt" id="feedSemana">Semana actual</span></div>
+      <div class="cl">
+        <div class="feed-head">Contenido de esta semana <span id="feedLabel">Cargando…</span></div>
+        <div id="feedRows"><div style="text-align:center;padding:2rem;color:var(--mu)">Cargando feed…</div></div>
+      </div>
+
+      <!-- Videos recientes de Firebase -->
+      <div class="stit">🎬 Últimos videos añadidos</div>
+      <div class="cl" id="recentVideos">
+        <div style="text-align:center;padding:2rem;color:var(--mu)">Cargando videos…</div>
+      </div>
+    </div>
+
+    <!-- VIDEOS — carga dinámica de Firebase -->
+    <div class="pn" id="p-videos">
+      <div class="stit">🎬 Biblioteca de Videos</div>
+      <div class="cl" id="allVideos">
+        <div style="text-align:center;padding:2rem;color:var(--mu)">Cargando…</div>
+      </div>
+    </div>
+
+    <!-- SESIONES -->
+    <div class="pn" id="p-sesiones">
+      <div class="stit">📡 Sesiones en vivo</div>
+      <div class="cl">
+        <div class="fdr">
+          <div class="fdd">Próxima</div>
+          <div style="flex:1"><div class="fdt" id="sesTitle">Q&A GlobalVet</div><div class="fdm" id="sesMeta">—</div></div>
+          <span class="ftl">● En vivo</span>
+        </div>
+        <div class="fdr">
+          <div class="fdd">Grabación</div>
+          <div style="flex:1"><div class="fdt">Q&A Cirugía — Dra. Sánchez</div><div class="fdm">Sesión grabada · Marzo · 55 min</div></div>
+          <button class="cabt" onclick="openVideo('qaciru')">▶ Ver</button>
+          <span class="tag tag-v">Visto</span>
+        </div>
+        <div class="fdr">
+          <div class="fdd">Grabación</div>
+          <div style="flex:1"><div class="fdt">Bienestar animal — Dr. Torres</div><div class="fdm">Sesión grabada · Febrero · 48 min</div></div>
+          <button class="cabt" onclick="openVideo('qabien')">▶ Ver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDFs -->
+    <div class="pn" id="p-pdfs">
+      <div class="stit">📄 PDFs y material educativo</div>
+      <div class="cl">
+        <div class="cr"><div class="ct-d">📄</div><div class="ci"><div class="ctit">Protocolo de primeros auxilios veterinarios</div><div class="cme">PDF descargable · 6 páginas</div></div><div class="cac"><button class="cabt" style="color:var(--te)" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tag-n">Nuevo</span></div></div>
+        <div class="cr"><div class="ct-d">📄</div><div class="ci"><div class="ctit">Guía manejo clínico en práctica diaria</div><div class="cme">PDF · 4 páginas</div></div><div class="cac"><button class="cabt" style="color:var(--te)" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tag-d">Descargado</span></div></div>
+        <div class="cr"><div class="ct-d">📋</div><div class="ci"><div class="ctit">Checklist preoperatorio — Cirugía de tejidos blandos</div><div class="cme">PDF · 3 páginas</div></div><div class="cac"><button class="cabt" style="color:var(--te)" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tag-d">Descargado</span></div></div>
+        <div class="cr"><div class="ct-d">🏆</div><div class="ci"><div class="ctit">Certificado educación continua — Marzo 2026</div><div class="cme">8 horas · GlobalVet México</div></div><div class="cac"><button class="cabt" style="color:var(--te)" onclick="st('📥 Descargando certificado…')">↓ Abrir</button><span class="tag tag-d">Descargado</span></div></div>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="pn" id="p-perfil">
+      <div class="stit">👤 Mi perfil</div>
+      <div class="pf-sec">
+        <div class="pf-st">Información personal</div>
+        <div class="pf-row"><span class="pf-lbl">Nombre</span><input class="pf-inp" id="pNom" type="text" placeholder="Tu nombre"></div>
+        <div class="pf-row"><span class="pf-lbl">Email</span><div class="pf-val" id="pEml">—</div></div>
+        <div class="pf-row"><span class="pf-lbl">WhatsApp</span><input class="pf-inp" id="pWa" type="tel" placeholder="+52 000 000 0000"></div>
+        <div class="pf-row"><span class="pf-lbl">Especialidad</span><input class="pf-inp" id="pEsp" type="text" placeholder="Tu especialidad"></div>
+        <div class="pf-row"><span class="pf-lbl">Ciudad</span><input class="pf-inp" id="pCiu" type="text" placeholder="Tu ciudad"></div>
+        <div class="pf-row"><span class="pf-lbl">Miembro desde</span><div class="pf-val" id="pFec">—</div></div>
+        <div class="pf-row"><span class="pf-lbl">Membresía</span><span class="pf-plan" id="pPlan">⭐ Plan Mensual</span></div>
+        <button class="btn-save" onclick="savePerfil()">Guardar perfil</button>
+      </div>
+      <div class="pf-sec">
+        <div class="pf-st">Mi actividad total</div>
+        <table class="act-tbl">
+          <tr><td>Videos vistos</td><td id="pVidV">0 de 0</td></tr>
+          <tr><td>PDFs descargados</td><td>3 de 4</td></tr>
+          <tr><td>Lives asistidos</td><td>2 de 4</td></tr>
+          <tr><td>Meses miembro</td><td id="pMes">1</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUSCRIPCIÓN -->
+    <div class="pn" id="p-suscripcion">
+      <div class="stit">💳 Mi suscripción</div>
+      <div class="pf-sec">
+        <div class="pf-st">Detalles del plan</div>
+        <div class="sub-row"><span class="sub-lbl">Plan</span><span class="sub-val" id="subPlan">—</span></div>
+        <div class="sub-row"><span class="sub-lbl">Estado</span><span class="sub-val gr">✓ Activa</span></div>
+        <div class="sub-row"><span class="sub-lbl">Próximo cobro</span><span class="sub-val">1 de mayo, 2026</span></div>
+      </div>
+      <div class="pf-sec">
+        <div class="pf-st">Historial de pagos</div>
+        <div class="sub-row"><span class="sub-lbl">Abril 2026</span><span class="sub-val gr">$199 · Pagado</span></div>
+        <div class="sub-row"><span class="sub-lbl">Marzo 2026</span><span class="sub-val gr">$199 · Pagado</span></div>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="pn" id="p-config">
+      <div class="stit">⚙️ Configuración</div>
+      <div class="pf-sec">
+        <div class="pf-st">🔔 Notificaciones</div>
+        <div class="tgl-row"><span>Notificarme por WhatsApp cuando hay contenido nuevo</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-row"><span>Recordatorio de sesión en vivo (24h antes)</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-row"><span>Email con resumen semanal</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="rp">
+    <!-- Próxima sesión con cronómetro dinámico -->
+    <div class="rpc dk">
+      <div class="rpl">📅 Próxima sesión</div>
+      <div class="rp-st" id="rpSesTitle">Q&A GlobalVet</div>
+      <div class="rp-sm" id="rpSesMeta">Cargando…</div>
+      <div class="cd-row">
+        <div class="cd-box"><div class="cd-n" id="cdD">00</div><div class="cd-l">Días</div></div>
+        <div class="cd-box"><div class="cd-n" id="cdH">00</div><div class="cd-l">Hrs</div></div>
+        <div class="cd-box"><div class="cd-n" id="cdM">00</div><div class="cd-l">Min</div></div>
+      </div>
+      <button class="rp-btn cal" onclick="st('📅 Evento agregado al calendario')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Agregar a calendario
+      </button>
+    </div>
+    <!-- Comunidad -->
+    <div class="rpc">
+      <div class="rpl">💬 Comunidad WhatsApp</div>
+      <div class="rp-d">Conecta con otros veterinarios del Club GlobalVet</div>
+      <a href="https://whatsapp.com/channel/0029VbCa3rQ3WHTSHm47751V" target="_blank" class="rp-btn wa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.138.563 4.14 1.535 5.874L0 24l6.29-1.508A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.814 9.814 0 01-5.058-1.4l-.361-.214-3.735.896.944-3.653-.235-.374A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        Comunidad
+      </a>
+    </div>
+    <!-- Beneficio -->
+    <div class="rpc">
+      <div class="rpl">🎁 Beneficio exclusivo</div>
+      <div class="rp-bt">20% de descuento</div>
+      <div class="rp-bd">En todos los cursos de GlobalVet México</div>
+      <a href="https://wa.me/5212381500864?text=Hola%2C%20me%20interesa%20el%2020%25%20de%20descuento%20en%20los%20cursos%20disponibles" target="_blank" class="rp-btn pu">Ver cursos disponibles</a>
+    </div>
+    <!-- Actividad -->
+    <div class="rpc">
+      <div class="rpl">📊 Mi actividad</div>
+      <div class="act-r"><span class="act-l">Videos</span><div class="act-bw"><div class="act-b" id="actV" style="width:0%;background:var(--pu)"></div></div><span style="font-size:.74rem;font-weight:700;color:var(--dk);width:28px;text-align:right" id="actVL">0/0</span></div>
+      <div class="act-r"><span class="act-l">PDFs</span><div class="act-bw"><div class="act-b" style="width:75%;background:var(--go)"></div></div><span style="font-size:.74rem;font-weight:700;width:28px;text-align:right">3/4</span></div>
+      <div class="act-r"><span class="act-l">Lives</span><div class="act-bw"><div class="act-b" style="width:50%;background:var(--re)"></div></div><span style="font-size:.74rem;font-weight:700;width:28px;text-align:right">2/4</span></div>
+    </div>
+    <!-- Certificado -->
+    <div class="rpc dk">
+      <div class="rp-cl">🏆 Certificado Abril</div>
+      <div class="rp-ct">Educación continua</div>
+      <div class="rp-cd">Completa 3/4 videos + 1 live</div>
+      <button class="rp-btn go" onclick="st('📥 Descargando certificado…')">Ver mi progreso</button>
+    </div>
+    <!-- Contacto -->
+    <div class="rpc">
+      <div class="rpl">📩 Contacto</div>
+      <a href="mailto:globalvetmexico1@gmail.com" style="font-size:.8rem;color:var(--pu);font-weight:700">globalvetmexico1@gmail.com</a>
+    </div>
+  </aside>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="vmo" id="vmo">
+  <div class="vmb">
+    <div class="vmh">
+      <div><div class="vmt" id="vmoTitle">Video</div><div class="vmm" id="vmoMeta">GlobalVet México</div></div>
+      <button class="vmx" onclick="closeVideo()">✕</button>
+    </div>
+    <div class="vm-player"><iframe id="ytFrame" src="" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>
+    <div class="vm-sessions">
+      <div class="sess-btns" id="sessBtns"></div>
+      <div style="font-size:.73rem;color:rgba(255,255,255,.3)">Club GlobalVet México</div>
+    </div>
+  </div>
+</div>
+
+<div class="tst" id="tst"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const cfg={apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",authDomain:"club-global-vet.firebaseapp.com",
+  projectId:"club-global-vet",storageBucket:"club-global-vet.firebasestorage.app",
+  messagingSenderId:"448888067634",appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"};
+const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app);
+let CU=null,PD={},VIDEOS=[];
+
+const CI={endo:'assets/img/cursos/endocrinologia.png',onco:'assets/img/cursos/oncologia.png',hema:'assets/img/cursos/hematologia.png'};
+const CN={endo:'Endocrinología canina básica',onco:'Bases de oncología veterinaria',hema:'Hematología clínica',otro:'Curso GlobalVet'};
+
+onAuthStateChanged(auth,async u=>{
+  if(!u){window.location.href='registro.html?tab=login';return;}
+  CU=u;
+  try{const s=await getDoc(doc(db,'usuarios',u.uid));if(s.exists())PD=s.data();}catch{}
+  const nom=PD.nombre||u.displayName||'Miembro';
+  const eml=PD.email||u.email||'';
+  const wa=PD.whatsapp||'';const esp=PD.especialidad||'';const ciu=PD.ciudad||'';
+  const pl=PD.planLabel||'Plan Mensual';
+  const fec=PD.fechaRegistro?.toDate?PD.fechaRegistro.toDate().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'}):'Reciente';
+  let mes=1;if(PD.fechaRegistro?.toDate){const d=Date.now()-PD.fechaRegistro.toDate().getTime();mes=Math.max(1,Math.floor(d/(1000*60*60*24*30)));}
+  const ini=nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('navAv').textContent=ini;
+  document.getElementById('navNm').textContent=nom;
+  document.getElementById('hbTitle').textContent=`¡Hola, ${nom.split(' ')[0]}! 👋`;
+  document.getElementById('hbMes').textContent=mes+'°';
+  document.getElementById('pNom').value=nom;document.getElementById('pEml').textContent=eml;
+  document.getElementById('pWa').value=wa;document.getElementById('pEsp').value=esp;
+  document.getElementById('pCiu').value=ciu;document.getElementById('pFec').textContent=fec;
+  document.getElementById('pMes').textContent=mes;document.getElementById('pPlan').textContent='⭐ '+pl;
+  document.getElementById('subPlan').textContent='Club GlobalVet — '+pl;
+  await Promise.all([loadVideos(),loadFeed(),loadSesion()]);
+  document.getElementById('LD').style.display='none';
+  document.getElementById('topNav').style.display='flex';
+  document.getElementById('dashLayout').style.display='flex';
+});
+
+// CARGAR VIDEOS DESDE FIREBASE
+async function loadVideos(){
+  try{
+    const s=await getDocs(collection(db,'videos_club'));
+    VIDEOS=s.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('sbV').textContent=VIDEOS.length;
+    document.getElementById('hbVideos').textContent=VIDEOS.length;
+    document.getElementById('actVL').textContent=`${Math.min(VIDEOS.length,VIDEOS.length)}/${VIDEOS.length}`;
+    document.getElementById('actV').style.width=VIDEOS.length?'70%':'0%';
+    document.getElementById('pVidV').textContent=`${VIDEOS.length} de ${VIDEOS.length}`;
+    renderVideos(VIDEOS,'allVideos');
+    renderVideos(VIDEOS.slice(0,3),'recentVideos');
+  }catch{document.getElementById('allVideos').innerHTML='<div style="text-align:center;padding:2rem;color:var(--mu)">Sin videos disponibles aún.</div>';}
+}
+
+function renderVideos(list,containerId){
+  const c=document.getElementById(containerId);
+  if(!list.length){c.innerHTML='<div style="text-align:center;padding:2rem;color:var(--mu)">Sin videos disponibles aún.</div>';return;}
+  c.innerHTML=list.map(v=>{
+    const img=CI[v.categoria];
+    const cat=CN[v.categoria]||v.categoria||'GlobalVet';
+    return`<div class="cr" onclick="openDynVideo('${v.id}')">
+      ${img?`<div class="ct"><img src="${img}" alt=""></div>`:'<div class="ct-d">🎥</div>'}
+      <div class="ci">
+        <div class="ctit">${v.titulo||'—'}</div>
+        <div class="cme">${cat}${v.instructor?' · '+v.instructor:''}${v.duracion?' · '+v.duracion:''}</div>
+      </div>
+      <div class="cac">
+        <button class="cabt">▶ Ver</button>
+        ${v.etiqueta==='nuevo'?'<span class="tag tag-n">Nuevo</span>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Abrir video dinámico desde Firebase (sin sesiones múltiples)
+window.openDynVideo=function(id){
+  const v=VIDEOS.find(x=>x.id===id);
+  if(!v)return;
+  document.getElementById('vmoTitle').textContent=v.titulo||'Video';
+  document.getElementById('vmoMeta').textContent=(v.instructor||'GlobalVet')+(v.duracion?' · '+v.duracion:'');
+  document.getElementById('ytFrame').src='https://www.youtube.com/embed/'+v.youtubeUrl+'?autoplay=1&rel=0&modestbranding=1';
+  document.getElementById('sessBtns').innerHTML='<span style="font-size:.75rem;color:rgba(255,255,255,.3)">GlobalVet México</span>';
+  document.getElementById('vmo').classList.add('show');
+};
+
+// CARGAR FEED SEMANAL DESDE FIREBASE
+async function loadFeed(){
+  try{
+    const s=await getDocs(collection(db,'feed_semanal'));
+    const items=s.docs.map(d=>({id:d.id,...d.data()}));
+    const TM={video:'ftv',pdf:'ftp',live:'ftl',nuevo:'ftn'};
+    const TL={video:'● Video',pdf:'● PDF',live:'● En vivo',nuevo:'Nuevo'};
+    const now=new Date();
+    document.getElementById('feedLabel').textContent=`Semana ${getWeekNum(now)} — ${now.toLocaleDateString('es-MX',{month:'long',year:'numeric'})}`;
+    if(!items.length){
+      document.getElementById('feedRows').innerHTML='<div style="text-align:center;padding:2rem;color:var(--mu)">Contenido de esta semana próximamente.</div>';
+      return;
+    }
+    document.getElementById('feedRows').innerHTML=items.map(f=>`
+      <div class="fdr${f.tipo==='nuevo'?' hl':''}">
+        <div class="fdd">${f.dia||'—'}</div>
+        <div style="flex:1"><div class="fdt">${f.titulo||'—'}</div><div class="fdm">${f.meta||''}</div></div>
+        <span class="${TM[f.tipo]||'ftn'}">${TL[f.tipo]||f.tipo}</span>
+      </div>`).join('');
+  }catch{document.getElementById('feedRows').innerHTML='<div style="text-align:center;padding:2rem;color:var(--mu)">Cargando…</div>';}
+}
+function getWeekNum(d){const s=new Date(d.getFullYear(),0,1);return Math.ceil(((d-s)/86400000+s.getDay()+1)/7);}
+
+// CARGAR SESIÓN DESDE FIREBASE
+async function loadSesion(){
+  try{
+    const s=await getDoc(doc(db,'config','proxima_sesion'));
+    if(s.exists()){
+      const d=s.data();
+      const meta=`${d.instructor||'Instructor'} · ${d.fecha||'Próximamente'} · ${d.hora||''}`;
+      document.getElementById('rpSesTitle').textContent=d.titulo||'Próxima sesión';
+      document.getElementById('rpSesMeta').textContent=meta;
+      document.getElementById('sesTitle').textContent=d.titulo||'Q&A GlobalVet';
+      document.getElementById('sesMeta').textContent=meta;
+      if(d.fechaExacta)startCD(new Date(d.fechaExacta));
+      else startCD(null);
+    }
+  }catch{startCD(null);}
+}
+
+function startCD(targetDate){
+  if(!targetDate){
+    const now=new Date();let d=new Date(now);d.setHours(20,0,0,0);
+    const day=d.getDay();let di=(3-day+7)%7;if(di===0&&now>=d)di=7;
+    d.setDate(d.getDate()+di);targetDate=d;
+  }
+  function u(){
+    const diff=targetDate-Date.now();
+    if(diff<=0){['cdD','cdH','cdM'].forEach(i=>document.getElementById(i).textContent='00');return;}
+    document.getElementById('cdD').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cdH').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cdM').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  }
+  u();setInterval(u,30000);
+}
+
+// GUARDAR PERFIL
+window.savePerfil=async()=>{
+  if(!CU)return;
+  const u={nombre:document.getElementById('pNom').value.trim(),whatsapp:document.getElementById('pWa').value.trim(),especialidad:document.getElementById('pEsp').value.trim(),ciudad:document.getElementById('pCiu').value.trim()};
+  try{await updateDoc(doc(db,'usuarios',CU.uid),u);
+    document.getElementById('navNm').textContent=u.nombre;
+    document.getElementById('navAv').textContent=u.nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    st('✅ Perfil guardado',true);}
+  catch{st('❌ Error al guardar');}
+};
+
+window.doLogout=async()=>{await signOut(auth);window.location.href='registro.html?tab=login';};
+
+// TOAST
+function st(msg,gr){const t=document.getElementById('tst');t.textContent=msg;t.className='tst show'+(gr?' gr':'');setTimeout(()=>t.classList.remove('show'),3500);}
+window.st=st;
+</script>
+
+<script>
+// Video modal - videos estáticos (sesiones grabadas)
+const staticVD={
+  qaciru:{t:'Q&A Cirugía — Dra. Sánchez',m:'Sesión grabada · Marzo · 55 min',sessions:[]},
+  qabien:{t:'Bienestar animal — Dr. Torres',m:'Sesión grabada · Febrero · 48 min',sessions:[]}
+};
+window.openVideo=function(id){
+  const v=staticVD[id];if(!v)return;
+  document.getElementById('vmoTitle').textContent=v.t;
+  document.getElementById('vmoMeta').textContent=v.m;
+  document.getElementById('ytFrame').src='';
+  document.getElementById('sessBtns').innerHTML='<span style="font-size:.75rem;color:rgba(255,255,255,.3)">Video próximamente disponible</span>';
+  document.getElementById('vmo').classList.add('show');
+};
+window.closeVideo=function(){document.getElementById('vmo').classList.remove('show');document.getElementById('ytFrame').src='';};
+document.getElementById('vmo').addEventListener('click',function(e){if(e.target===this)window.closeVideo();});
+
+function sp(id,btn){
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+window.sp=sp;
+</script>
+</body>
+</html>
