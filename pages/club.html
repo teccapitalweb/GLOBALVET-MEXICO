@@ -71,6 +71,7 @@
     .hero-sub {
       font-size: 1.08rem; color: var(--gv-muted);
       max-width: 500px; margin: 0 auto 2.8rem; line-height: 1.7;
+      text-align: center;
     }
     .hero-actions {
       display: flex; align-items: center; justify-content: center;
@@ -180,8 +181,12 @@
     }
     .content-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(59,43,134,.1); }
     .cc-img {
-      height: 130px; display: flex; align-items: center;
-      justify-content: center; font-size: 2.4rem;
+      height: 160px; display: flex; align-items: center;
+      justify-content: center; font-size: 2.4rem; overflow: hidden;
+    }
+    .cc-img img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center center;
+      display: block;
     }
     .cc-img.purple { background: linear-gradient(135deg, #1e1060, #5f45c8); }
     .cc-img.navy   { background: linear-gradient(135deg, #12103a, #3b2b86); }
@@ -539,8 +544,8 @@
       </div>
       <div class="content-cards">
         <div class="content-card">
-          <div class="cc-img purple" style="padding:0;overflow:hidden;">
-            <img src="../assets/img/132.webp" alt="Caso clínico en video" style="width:100%;height:100%;object-fit:cover;">
+          <div class="cc-img purple">
+            <img src="../assets/img/132.webp" alt="Caso clínico en video">
           </div>
           <div class="cc-body">
             <div class="cc-freq">Cada semana</div>
@@ -549,8 +554,8 @@
           </div>
         </div>
         <div class="content-card">
-          <div class="cc-img navy" style="padding:0;overflow:hidden;">
-            <img src="../assets/img/veterinaria-yorkshire.png" alt="Sesión en vivo" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          <div class="cc-img navy">
+            <img src="../assets/img/veterinaria-yorkshire.png" alt="Sesión en vivo" style="object-position:top center;">
           </div>
           <div class="cc-body">
             <div class="cc-freq">Cada mes</div>
@@ -559,8 +564,8 @@
           </div>
         </div>
         <div class="content-card">
-          <div class="cc-img teal" style="padding:0;overflow:hidden;">
-            <img src="../assets/img/redessociales02.jpg" alt="Comunidad" style="width:100%;height:100%;object-fit:cover;">
+          <div class="cc-img teal">
+            <img src="../assets/img/redessociales02.jpg" alt="Comunidad" style="object-position:center 30%;">
           </div>
           <div class="cc-body">
             <div class="cc-freq">Siempre</div>
