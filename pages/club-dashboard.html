@@ -576,7 +576,7 @@
       <div class="actr"><span class="actl">PDFs</span><div class="actbw"><div class="actb" style="width:75%;background:var(--gold)"></div></div><span class="actv">3/4</span></div>
       <div class="actr"><span class="actl">Lives</span><div class="actbw"><div class="actb" style="width:50%;background:var(--red)"></div></div><span class="actv">2/4</span></div>
       <div class="addbtns">
-        <button class="addbtn" style="background:rgba(79,53,179,.12);color:var(--purple)" onclick="sp('videos',null)">+ Video</button>
+        <button class="addbtn" style="background:rgba(79,53,179,.12);color:var(--purple)" onclick="sp('biblioteca',null)">+ Video</button>
         <button class="addbtn" style="background:rgba(232,160,32,.12);color:#9a5f00" onclick="sp('pdfs',null)">+ PDF</button>
         <button class="addbtn" style="background:rgba(217,64,64,.12);color:var(--red)" onclick="sp('sesiones',null)">+ Live</button>
       </div>
@@ -777,6 +777,7 @@
     const p=document.getElementById('panel-'+id);if(p)p.classList.add('active');
     if(btn)btn.classList.add('active');
   }
+  window.sp=sp;
   function st(msg,green){
     const t=document.getElementById('toastEl');t.textContent=msg;
     t.className='toast show'+(green?' green':'');
