@@ -1260,7 +1260,6 @@
           <div class="curso-inst">${c.instructor}</div>
           <div class="curso-meta">
             <span>📚 ${total} sesiones</span>
-            <span>⏱ ~${total * 15} min</span>
           </div>
           <div class="curso-prog-wrap">
             <div class="curso-prog-label"><span>${pct === 0 ? 'Sin comenzar' : pct === 100 ? '✅ Completado' : `${completadas}/${total} sesiones`}</span><span>${pct}%</span></div>
@@ -1296,16 +1295,8 @@
 
     // Descripción enriquecida
     let infoHtml = `<p style="font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:.8rem;">${ses.desc}</p>`;
-    if (ses.duracion) {
-      infoHtml += `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;"><span style="font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.06em;font-weight:700;">⏱ Duración:</span><span style="font-size:.78rem;color:rgba(255,255,255,.65);font-weight:600;">${ses.duracion}</span></div>`;
-    }
-    if (ses.temas && ses.temas.length) {
-      infoHtml += `<div style="margin-bottom:.9rem;"><div style="font-size:.68rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:.45rem;">📋 Temas cubiertos</div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
-      ses.temas.forEach(t => {
-        infoHtml += `<span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:.72rem;padding:.25rem .65rem;border-radius:50px;border:1px solid rgba(255,255,255,.1);">${t}</span>`;
-      });
-      infoHtml += `</div></div>`;
-    }
+
+
     document.getElementById('cmSesDesc').innerHTML = infoHtml;
 
     document.getElementById('cmFrame').src = ses.ytId
