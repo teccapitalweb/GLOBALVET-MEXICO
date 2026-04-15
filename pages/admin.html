@@ -278,7 +278,7 @@
     <input class="lc-inp" type="email" id="adminEmail" placeholder="admin@globalvetmexico.com">
     <label class="lc-lbl">Contraseña</label>
     <input class="lc-inp" type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleAdminLogin()">
-    <button class="lc-btn" onclick="entrarAdmin()">Entrar al panel</button>
+    <button class="lc-btn" onclick="handleAdminLogin()">Entrar al panel</button>
     <button onclick="entrarAdmin()" style="width:100%;margin-top:.6rem;padding:.7rem;background:none;border:1.5px solid var(--line);border-radius:14px;font-family:var(--ff);font-weight:600;font-size:.85rem;color:var(--muted);cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--purple)';this.style.color='var(--purple)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--muted)'">
       Acceso sin cuenta (modo temporal)
     </button>
