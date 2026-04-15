@@ -743,7 +743,7 @@
   async function loadSesionesAdmin(){ try{ const s=await getDocs(collection(db,'sesiones')); const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_sesSnap.length){ _sesSnap=d; renderSesionesTable(d); const e=document.getElementById('dSes');if(e)e.textContent=d.length; } }catch(e){} }
 
   function updSb(){
-    const act=allM.filter(m=>m.membresiaActiva!==false).length;
+    const act=allM.filter(m=>m.membresiaActiva===true||m.membresiaActiva==="true"||m.estado==="activo").length;
     const pend=allP.filter(p=>!p.activado).length;
     document.getElementById('sbM').textContent=act;
     ['dM','eM'].forEach(id=>{ const el=document.getElementById(id); if(el)el.textContent=act; });
@@ -759,7 +759,7 @@
     if(!list.length){ tb.innerHTML='<tr><td colspan="6" class="empty"><div class="ei">👥</div>Sin miembros</td></tr>'; return; }
     tb.innerHTML='';
     list.forEach(m=>{
-      const a=m.membresiaActiva!==false;
+      const a=m.membresiaActiva===true||m.membresiaActiva==="true"||m.estado==="activo";
       const f=m.fechaRegistro?.toDate?m.fechaRegistro.toDate().toLocaleDateString('es-MX'):'—';
       const tr=document.createElement('tr');
       tr.innerHTML='<td><div class="nm">'+(m.nombre||'Sin nombre')+'</div><div class="em">'+(m.email||'—')+'</div></td>'
@@ -778,7 +778,7 @@
     if(!r.length){ tb.innerHTML='<tr><td colspan="5" class="empty">Sin miembros</td></tr>'; return; }
     tb.innerHTML='';
     r.forEach(m=>{
-      const a=m.membresiaActiva!==false;
+      const a=m.membresiaActiva===true||m.membresiaActiva==="true"||m.estado==="activo";
       const tr=document.createElement('tr');
       tr.innerHTML='<td><div class="nm">'+(m.nombre||'Sin nombre')+'</div><div class="em">'+(m.email||'—')+'</div></td>'
         +'<td>'+(m.planLabel||'Mensual')+'</td><td>'+(m.whatsapp||'—')+'</td>'
