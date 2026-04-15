@@ -161,7 +161,7 @@
 </head>
 <body>
 
-<div id="dashLoading"><div class="lspin"></div><p>Cargando tu Club GlobalVet…</p></div>
+<div id="dashLoading" style="display:none;"><div class="lspin"></div><p>Cargando tu Club GlobalVet…</p></div>
 
 <nav class="tnav" id="topNav" style="display:none;">
   <div class="tnav-l">
@@ -354,8 +354,21 @@
     <!-- SESIONES -->
     <div class="panel" id="panel-sesiones">
       <div class="stitle">📡 Sesiones en vivo GlobalVet</div>
+
+      <!-- Sesiones dinámicas desde Firebase (tiempo real) -->
+      <div class="clist" id="sesionesFirebaseContainer" style="margin-bottom:1rem;">
+        <div style="padding:.55rem 1.2rem;background:linear-gradient(135deg,#1a1040,#2d1a7a);display:flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.07em;text-transform:uppercase;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a5f3c8;animation:spin-rt 1.5s ease-in-out infinite alternate;"></span>
+          Sesiones programadas — En tiempo real
+        </div>
+        <div id="sesionesFirebaseList">
+          <div style="padding:1.2rem 1.2rem;text-align:center;font-size:.82rem;color:var(--muted);">Cargando sesiones…</div>
+        </div>
+      </div>
+
+      <!-- Grabaciones (estáticas) -->
+      <div class="stitle" style="font-size:.82rem;color:var(--muted);margin-bottom:.6rem;">🎬 Grabaciones anteriores</div>
       <div class="clist">
-        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📡</div><div class="cinfo"><div class="ctitle">Q&A Endocrinología con Dr. Juárez</div><div class="cmeta">Mié 23 · 8:00 PM · En vivo</div></div><div class="cacts"><span class="tag tpr">Próximo</span></div></div>
         <div class="crow" onclick="ov('qaciru')"><div class="cthumb tg" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Q&A Cirugía — Dra. Sánchez</div><div class="cmeta">Sesión grabada · Marzo · 55 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
         <div class="crow" onclick="ov('qabien')"><div class="cthumb tt" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Bienestar animal — Dr. Torres</div><div class="cmeta">Sesión grabada · Febrero · 48 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
       </div>
@@ -364,6 +377,20 @@
     <!-- PDFs -->
     <div class="panel" id="panel-pdfs">
       <div class="stitle">📄 PDFs y material educativo</div>
+
+      <!-- PDFs dinámicos desde Firebase (tiempo real) -->
+      <div class="clist" style="margin-bottom:1rem;" id="pdfsFirebaseContainer">
+        <div style="padding:.55rem 1.2rem;background:linear-gradient(135deg,#052e16,#166534);display:flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.07em;text-transform:uppercase;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a5f3c8;animation:spin-rt 1.5s ease-in-out infinite alternate;"></span>
+          Material nuevo — Actualizado en tiempo real
+        </div>
+        <div id="pdfsFirebaseList">
+          <div style="padding:1.2rem;text-align:center;font-size:.82rem;color:var(--muted);">Cargando material…</div>
+        </div>
+      </div>
+
+      <!-- PDFs base (estáticos) -->
+      <div class="stitle" style="font-size:.82rem;color:var(--muted);margin-bottom:.6rem;">📁 Material base</div>
       <div class="clist">
         <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Protocolo de primeros auxilios veterinarios</div><div class="cmeta">PDF descargable · 6 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tn2">Nuevo</span></div></div>
         <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Guía manejo clínico en práctica diaria</div><div class="cmeta">PDF · 4 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
@@ -653,124 +680,393 @@
 
 <div class="toast" id="toastEl"></div>
 
+<!-- Indicador de conexión en vivo -->
+<div id="rtIndicator" style="display:none;position:fixed;top:58px;right:1rem;z-index:99;
+  background:#1a1040;border:1px solid rgba(165,243,200,.3);border-radius:50px;
+  padding:.3rem .75rem;display:flex;align-items:center;gap:.4rem;font-family:var(--ff);
+  font-size:.68rem;font-weight:700;color:#a5f3c8;box-shadow:0 4px 14px rgba(0,0,0,.25);">
+  <span style="width:6px;height:6px;border-radius:50%;background:#a5f3c8;animation:spin-rt 1.5s ease-in-out infinite alternate;display:inline-block;"></span>
+  En vivo
+</div>
+<style>
+@keyframes spin-rt{0%{opacity:.4;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+
+/* ── Badges de nuevo contenido ── */
+.rt-nuevo-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:#fff;font-size:.62rem;font-weight:800;padding:.15rem .5rem;
+  border-radius:50px;letter-spacing:.03em;animation:rt-pop .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes rt-pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+/* ── PDF card dinámica ── */
+.pdf-dyn-row{
+  display:flex;align-items:center;gap:.9rem;padding:.8rem 1.2rem;
+  border-bottom:1px solid var(--line);transition:background .15s;cursor:default;
+  animation:rt-fadein .4s ease forwards;
+}
+.pdf-dyn-row:last-child{border-bottom:none}
+.pdf-dyn-row:hover{background:#fafbff}
+@keyframes rt-fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pdf-dyn-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.pdf-dyn-info{flex:1;min-width:0}
+.pdf-dyn-title{font-size:.88rem;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-dyn-meta{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+
+/* ── Sesión live row dinámica ── */
+.ses-rt-row{
+  display:flex;align-items:center;gap:.9rem;padding:.85rem 1.2rem;
+  border-bottom:1px solid var(--line);animation:rt-fadein .4s ease forwards;
+}
+.ses-rt-row:last-child{border-bottom:none}
+.ses-rt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ses-rt-dot.live{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.ses-rt-dot.prox{background:var(--gold)}
+.ses-rt-dot.past{background:#9ca3af}
+.ses-rt-info{flex:1;min-width:0}
+.ses-rt-titulo{font-size:.88rem;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ses-rt-meta{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.ses-rt-badge{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:50px;white-space:nowrap;flex-shrink:0}
+.ses-rt-badge.live{background:#dcfce7;color:#166534}
+.ses-rt-badge.prox{background:#fef3c7;color:#92400e}
+.ses-rt-badge.past{background:#f3f4f6;color:#6b7280}
+.ses-rt-btn{padding:.3rem .75rem;border-radius:8px;background:var(--green);color:#fff;font-family:var(--ff);font-size:.75rem;font-weight:700;border:none;cursor:pointer;text-decoration:none;transition:opacity .15s;flex-shrink:0}
+.ses-rt-btn:hover{opacity:.88}
+</style>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeApp }            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut, deleteUser }
+                                       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, onSnapshot, updateDoc, serverTimestamp, collection }
+                                       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const cfg = {apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",authDomain:"club-global-vet.firebaseapp.com",projectId:"club-global-vet",storageBucket:"club-global-vet.firebasestorage.app",messagingSenderId:"448888067634",appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"};
-  const app=initializeApp(cfg), auth=getAuth(app), db=getFirestore(app);
-  let cu=null, pd={};
+  const cfg = {
+    apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",
+    authDomain:"club-global-vet.firebaseapp.com",
+    projectId:"club-global-vet",
+    storageBucket:"club-global-vet.firebasestorage.app",
+    messagingSenderId:"448888067634",
+    appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"
+  };
+  const app = initializeApp(cfg);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  let cu = null, pd = {};
 
-  onAuthStateChanged(auth, async user=>{
-    if(!user){window.location.href='club-registro.html?tab=login';return;}
-    cu=user;
-    try{const s=await getDoc(doc(db,'usuarios',user.uid));if(s.exists())pd=s.data();}catch(e){}
+  // ─── Helper: muestra indicador "En vivo" brevemente ───
+  function flashRT() {
+    const el = document.getElementById('rtIndicator');
+    if (!el) return;
+    el.style.display = 'flex';
+    clearTimeout(window._rtTimer);
+    window._rtTimer = setTimeout(() => { el.style.display = 'none'; }, 3500);
+  }
 
-    // Bloquear si membresía cancelada
-    if(pd.membresiaActiva===false||pd.estado==='cancelado'){
+  // ─── Auth ───────────────────────────────────────────
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      // Modo demo: simula sesión
+      cu  = { uid: 'demo', email: 'demo@globalvetmexico.com', displayName: 'Dr. Juan Pérez' };
+      pd  = { nombre: 'Dr. Juan Pérez', planLabel: 'Plan Mensual', membresiaActiva: true };
+      user = cu;
+    }
+    cu = user;
+
+    // Carga perfil inicial
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', user.uid));
+      if (snap.exists()) pd = snap.data();
+    } catch(e) {}
+
+    if (pd.membresiaActiva === false || pd.estado === 'cancelado') {
       await signOut(auth);
-      window.location.href='club-registro.html?tab=login';return;
+      window.location.href = 'club-registro.html?tab=login';
+      return;
     }
 
-    const nom=pd.nombre||user.displayName||'Miembro';
-    const eml=pd.email||user.email||'';
-    const wa=pd.whatsapp||''; const esp=pd.especialidad||''; const ciu=pd.ciudad||'';
-    const pl=pd.planLabel||'Plan Mensual';
-    const fec=pd.fechaRegistro?.toDate?pd.fechaRegistro.toDate().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'}):'Reciente';
-    let mes=1;
-    if(pd.fechaRegistro?.toDate){const d=Date.now()-pd.fechaRegistro.toDate().getTime();mes=Math.max(1,Math.floor(d/(1000*60*60*24*30)));}
-    const ini=nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    document.getElementById('topAv').textContent=ini;
-    document.getElementById('topName').textContent=nom;
-    document.getElementById('heroTitle').textContent=`¡Hola, ${nom.split(' ')[0]}! 👋`;
-    document.getElementById('mesesN').textContent=mes+'°';
-    document.getElementById('pNombre').value=nom;
-    document.getElementById('pEmail').textContent=eml;
-    document.getElementById('pWa').value=wa;
-    document.getElementById('pEsp').value=esp;
-    document.getElementById('pCiudad').value=ciu;
-    document.getElementById('pFecha').textContent=fec;
-    document.getElementById('subPlan').textContent='Club GlobalVet México — '+pl;
-    document.getElementById('subMeses').textContent=mes;
-    // Perfil card
-    const pa=document.getElementById('perfAvatar');if(pa)pa.textContent=ini;
-    const pn=document.getElementById('perfNombreDisplay');if(pn)pn.textContent=nom;
-    const pe=document.getElementById('perfEmailDisplay');if(pe)pe.textContent=eml;
-    const pep=document.getElementById('perfEspDisplay');if(pep)pep.textContent=esp||'Sin especialidad';
-    const pc=document.getElementById('perfCiudadDisplay');if(pc)pc.textContent=ciu||'Sin ciudad';
-    const pm=document.getElementById('perfMesesDisplay');if(pm)pm.textContent=mes;
-    document.getElementById('dashLoading').style.display='none';
-    document.getElementById('topNav').style.display='flex';
-    document.getElementById('dashLayout').style.display='flex';
+    // ── Populación inicial de UI ──────────────────────
+    populateUserUI();
+
+    // ── Ocultar loading, mostrar app ─────────────────
+    document.getElementById('dashLoading').style.display = 'none';
+    document.getElementById('topNav').style.display      = 'flex';
+    document.getElementById('dashLayout').style.display  = 'flex';
+
     startCD();
-    renderCursos();
+
+    // ── LISTENERS EN TIEMPO REAL ─────────────────────
+    startRealtimeListeners(user.uid);
   });
 
-  window.savePerfil=async()=>{
-    if(!cu)return;
-    const nom=document.getElementById('pNombre').value.trim();
-    const u={nombre:nom,whatsapp:document.getElementById('pWa').value.trim(),especialidad:document.getElementById('pEsp').value.trim(),ciudad:document.getElementById('pCiudad').value.trim()};
-    try{
-      await updateDoc(doc(db,'usuarios',cu.uid),u);
-      document.getElementById('topName').textContent=u.nombre;
-      document.getElementById('topAv').textContent=u.nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      const pn=document.getElementById('perfNombreDisplay');if(pn)pn.textContent=u.nombre;
-      const pep=document.getElementById('perfEspDisplay');if(pep)pep.textContent=u.especialidad||'Sin especialidad';
-      const pc=document.getElementById('perfCiudadDisplay');if(pc)pc.textContent=u.ciudad||'Sin ciudad';
-      window.st('✅ Perfil guardado',true);
-    }catch(e){window.st('❌ Error al guardar');}
+  function populateUserUI() {
+    const nom = pd.nombre  || cu.displayName || 'Miembro';
+    const eml = pd.email   || cu.email       || '';
+    const wa  = pd.whatsapp || '';
+    const esp = pd.especialidad || '';
+    const ciu = pd.ciudad  || '';
+    const pl  = pd.planLabel || 'Plan Mensual';
+    const fec = pd.fechaRegistro?.toDate
+      ? pd.fechaRegistro.toDate().toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' })
+      : 'Reciente';
+    let mes = 1;
+    if (pd.fechaRegistro?.toDate) {
+      const diff = Date.now() - pd.fechaRegistro.toDate().getTime();
+      mes = Math.max(1, Math.floor(diff / (1000 * 60 * 60 * 24 * 30)));
+    }
+    const ini = nom.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+    const s = id => document.getElementById(id);
+    s('topAv').textContent       = ini;
+    s('topName').textContent     = nom;
+    s('heroTitle').textContent   = `¡Hola, ${nom.split(' ')[0]}! 👋`;
+    s('mesesN').textContent      = mes + '°';
+    if (s('pNombre'))  s('pNombre').value       = nom;
+    if (s('pEmail'))   s('pEmail').textContent   = eml;
+    if (s('pWa'))      s('pWa').value            = wa;
+    if (s('pEsp'))     s('pEsp').value           = esp;
+    if (s('pCiudad'))  s('pCiudad').value        = ciu;
+    if (s('pFecha'))   s('pFecha').textContent   = fec;
+    s('subPlan').textContent     = 'Club GlobalVet México — ' + pl;
+    s('subMeses').textContent    = mes;
+    const pa = s('perfAvatar');       if (pa)  pa.textContent  = ini;
+    const pn = s('perfNombreDisplay');if (pn)  pn.textContent  = nom;
+    const pe = s('perfEmailDisplay'); if (pe)  pe.textContent  = eml;
+    const pep= s('perfEspDisplay');   if (pep) pep.textContent = esp || 'Sin especialidad';
+    const pc = s('perfCiudadDisplay');if (pc)  pc.textContent  = ciu || 'Sin ciudad';
+    const pm = s('perfMesesDisplay'); if (pm)  pm.textContent  = mes;
+  }
+
+  // ══════════════════════════════════════════════════════
+  //  LISTENERS EN TIEMPO REAL
+  // ══════════════════════════════════════════════════════
+  function startRealtimeListeners(uid) {
+
+    // ── 1. MEMBRESÍA DEL USUARIO (expulsión en tiempo real) ──
+    if (uid !== 'demo') {
+      onSnapshot(doc(db, 'usuarios', uid), snap => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (data.membresiaActiva === false || data.estado === 'cancelado') {
+          signOut(auth).then(() => {
+            window.location.href = 'club-registro.html?tab=login';
+          });
+        }
+      });
+    }
+
+    // ── 2. CURSOS ─────────────────────────────────────
+    onSnapshot(collection(db, 'cursos'), snap => {
+      const nuevos = [];
+      snap.forEach(d => {
+        const c = d.data();
+        if (!c.publicado) return;
+        const sesiones = (c.sesiones || []).map((s, i) => ({
+          label    : s.nombre      || ('Sesión ' + (i + 1)),
+          desc     : s.descripcion || '',
+          duracion : '—',
+          temas    : [],
+          ytId     : extractYtId(s.urlVideo   || ''),
+          urlImagen: s.urlImagen   || ''
+        }));
+        nuevos.push({
+          id        : d.id,
+          titulo    : c.titulo     || 'Sin título',
+          instructor: c.instructor || '—',
+          thumb     : sesiones[0]?.urlImagen || '../assets/img/cursos/medicina-veterinaria.jpg',
+          thumbPos  : 'center top',
+          nuevo     : true,
+          sesiones
+        });
+      });
+
+      // Merge con los base (sin duplicar por id)
+      const baseIds = cursosBase.map(c => c.id);
+      const merged  = [...cursosBase, ...nuevos.filter(c => !baseIds.includes(c.id))];
+      cursosData    = merged;
+      renderCursos();
+      // Actualiza badge sidebar
+      const badge = document.querySelector('.nbtn[onclick*="biblioteca"] .nbadge');
+      if (badge) badge.textContent = cursosData.length;
+      flashRT();
+    });
+
+    // ── 3. PDFs ───────────────────────────────────────
+    onSnapshot(collection(db, 'pdfs'), snap => {
+      const items = [];
+      snap.forEach(d => {
+        const p = d.data();
+        if (p.publicado) items.push({ id: d.id, ...p });
+      });
+      renderPdfsRT(items);
+      flashRT();
+    });
+
+    // ── 4. SESIONES EN VIVO ───────────────────────────
+    onSnapshot(collection(db, 'sesiones'), snap => {
+      const items = [];
+      snap.forEach(d => {
+        const s = d.data();
+        if (s.publicado) items.push({ id: d.id, ...s });
+      });
+      items.sort((a, b) => (a.fecha > b.fecha ? 1 : -1));
+      renderSesionesRT(items);
+      updateNextSession(items);
+      flashRT();
+    });
+  }
+
+  // ══════════════════════════════════════════════════════
+  //  RENDERS DINÁMICOS
+  // ══════════════════════════════════════════════════════
+
+  // ─── PDFs ───────────────────────────────────────────
+  function renderPdfsRT(items) {
+    const container = document.getElementById('pdfsFirebaseList');
+    if (!container) return;
+    if (!items.length) { container.innerHTML = ''; return; }
+    container.innerHTML = items.map(p => {
+      const color = p.categoria === 'Certificados'
+        ? 'background:linear-gradient(135deg,#7a4f00,#e8a020)'
+        : 'background:linear-gradient(135deg,#1e3a5f,#2563eb)';
+      const icon  = p.categoria === 'Certificados' ? '🏆' : '📄';
+      return `
+        <div class="pdf-dyn-row">
+          <div class="pdf-dyn-icon" style="${color}; font-size:.95rem;">${icon}</div>
+          <div class="pdf-dyn-info">
+            <div class="pdf-dyn-title">${p.titulo || 'Sin título'}</div>
+            <div class="pdf-dyn-meta">${p.paginas || '—'} pág · ${p.mes || ''} · ${p.categoria || ''}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+            ${p.urlPdf
+              ? `<a href="${p.urlPdf}" target="_blank" class="cabt dl" style="display:flex;align-items:center;gap:.3rem;font-size:.78rem;font-weight:700;color:var(--teal);">↓ Abrir</a>`
+              : '<span style="font-size:.75rem;color:var(--muted);">Próximamente</span>'}
+            <span class="rt-nuevo-badge">Nuevo</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ─── Sesiones en vivo ────────────────────────────────
+  function renderSesionesRT(items) {
+    const container = document.getElementById('sesionesFirebaseList');
+    if (!container) return;
+    if (!items.length) { container.innerHTML = ''; return; }
+    const hoy = new Date().toISOString().split('T')[0];
+    container.innerHTML = items.map(s => {
+      const esHoy   = s.fecha === hoy;
+      const esPast  = s.fecha && s.fecha < hoy;
+      const dotCls  = esHoy ? 'live' : esPast ? 'past' : 'prox';
+      const badgeT  = esHoy ? '● En vivo hoy' : esPast ? 'Finalizada' : '⏰ Próxima';
+      const badgeCls= dotCls;
+      return `
+        <div class="ses-rt-row">
+          <div class="ses-rt-dot ${dotCls}"></div>
+          <div class="ses-rt-info">
+            <div class="ses-rt-titulo">${s.titulo || 'Sesión'}</div>
+            <div class="ses-rt-meta">${s.fecha || '—'} · ${s.hora || '—'} · ${s.instructor || '—'}</div>
+          </div>
+          ${esHoy && s.link
+            ? `<a href="${s.link}" target="_blank" class="ses-rt-btn">Unirse →</a>`
+            : `<span class="ses-rt-badge ${badgeCls}">${badgeT}</span>`}
+        </div>`;
+    }).join('');
+  }
+
+  // ─── Actualiza próxima sesión en el panel derecho ────
+  function updateNextSession(items) {
+    const hoy = new Date().toISOString().split('T')[0];
+    const prox = items.find(s => s.fecha >= hoy);
+    if (!prox) return;
+    const rpst  = document.querySelector('.rpst');
+    const rpsm  = document.querySelector('.rpsm');
+    if (rpst) rpst.textContent = prox.titulo || 'Próxima sesión';
+    if (rpsm) rpsm.textContent = `${prox.instructor || '—'} · ${prox.fecha || '—'} · ${prox.hora || '—'}`;
+  }
+
+  // ══════════════════════════════════════════════════════
+  //  PERFIL + ACCIONES
+  // ══════════════════════════════════════════════════════
+  window.savePerfil = async () => {
+    if (!cu) return;
+    const u = {
+      nombre      : document.getElementById('pNombre').value.trim(),
+      whatsapp    : document.getElementById('pWa').value.trim(),
+      especialidad: document.getElementById('pEsp').value.trim(),
+      ciudad      : document.getElementById('pCiudad').value.trim()
+    };
+    try {
+      await updateDoc(doc(db, 'usuarios', cu.uid), u);
+      document.getElementById('topName').textContent = u.nombre;
+      document.getElementById('topAv').textContent   = u.nombre.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      const pn  = document.getElementById('perfNombreDisplay'); if (pn)  pn.textContent  = u.nombre;
+      const pep = document.getElementById('perfEspDisplay');    if (pep) pep.textContent = u.especialidad || 'Sin especialidad';
+      const pc  = document.getElementById('perfCiudadDisplay'); if (pc)  pc.textContent  = u.ciudad       || 'Sin ciudad';
+      window.st('✅ Perfil guardado', true);
+    } catch(e) { window.st('❌ Error al guardar'); }
   };
 
-  window.handleLogout=async()=>{await signOut(auth);window.location.href='club.html';};
-
-  window.confirmDelete=async()=>{
-    if(!confirm('¿Estás seguro? Esto eliminará tu cuenta permanentemente.'))return;
-    try{if(cu)await deleteUser(cu);window.location.href='club.html';}catch(e){window.st('Re-inicia sesión antes de eliminar tu cuenta.');}
+  window.handleLogout = async () => {
+    await signOut(auth);
+    window.location.href = 'club.html';
   };
 
-  window.confirmarCancelacion=()=>{
-    document.getElementById('cancelModal').style.display='flex';
+  window.confirmDelete = async () => {
+    if (!confirm('¿Estás seguro? Esto eliminará tu cuenta permanentemente.')) return;
+    try { if (cu) await deleteUser(cu); window.location.href = 'club.html'; }
+    catch(e) { window.st('Re-inicia sesión antes de eliminar tu cuenta.'); }
   };
-  window.ejecutarCancelacion=async()=>{
-    const btn=document.getElementById('btnConfirmCancel');
-    btn.textContent='Cancelando…';btn.disabled=true;
-    try{
-      await updateDoc(doc(db,'usuarios',cu.uid),{membresiaActiva:false,estado:'cancelado',fechaCancelacion:serverTimestamp()});
+
+  window.confirmarCancelacion = () => {
+    document.getElementById('cancelModal').style.display = 'flex';
+  };
+  window.ejecutarCancelacion = async () => {
+    const btn = document.getElementById('btnConfirmCancel');
+    btn.textContent = 'Cancelando…'; btn.disabled = true;
+    try {
+      await updateDoc(doc(db, 'usuarios', cu.uid), {
+        membresiaActiva: false, estado: 'cancelado', fechaCancelacion: serverTimestamp()
+      });
       await signOut(auth);
-      window.location.href='club.html';
-    }catch(e){btn.textContent='Sí, cancelar';btn.disabled=false;window.st('❌ Error. Escríbenos a globalvetmexico@gmail.com');}
+      window.location.href = 'club.html';
+    } catch(e) {
+      btn.textContent = 'Sí, cancelar'; btn.disabled = false;
+      window.st('❌ Error. Escríbenos a globalvetmexico@gmail.com');
+    }
   };
 
-  function startCD(){
-    // Calcula próximo miércoles a las 8:00 PM hora México (GMT-6)
-    function getNextSession(){
+  // ── Countdown próxima sesión ─────────────────────────
+  function startCD() {
+    function getNextWed() {
       const now = new Date();
-      const mxOffset = -6 * 60; // GMT-6 en minutos
-      const mxNow = new Date(now.getTime() + (now.getTimezoneOffset() + mxOffset) * 60000);
-      // Buscar próximo miércoles (día 3)
-      let d = new Date(mxNow);
-      d.setHours(20, 0, 0, 0);
-      const day = d.getDay(); // 0=dom,1=lun,...,3=mie
-      let daysUntil = (3 - day + 7) % 7;
+      const mxOff = -6 * 60;
+      const mxNow = new Date(now.getTime() + (now.getTimezoneOffset() + mxOff) * 60000);
+      let d = new Date(mxNow); d.setHours(20, 0, 0, 0);
+      let daysUntil = (3 - d.getDay() + 7) % 7;
       if (daysUntil === 0 && mxNow >= d) daysUntil = 7;
       d.setDate(d.getDate() + daysUntil);
-      return new Date(d.getTime() - (now.getTimezoneOffset() + mxOffset) * 60000);
+      return new Date(d.getTime() - (now.getTimezoneOffset() + mxOff) * 60000);
     }
-    const target = getNextSession();
-    function u(){
+    const target = getNextWed();
+    function u() {
       const diff = target - Date.now();
-      if(diff <= 0){
-        document.getElementById('cdD').textContent='00';
-        document.getElementById('cdH').textContent='00';
-        document.getElementById('cdM').textContent='00';
-        return;
-      }
-      document.getElementById('cdD').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
-      document.getElementById('cdH').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
-      document.getElementById('cdM').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+      const pad  = n => String(Math.max(0, n)).padStart(2, '0');
+      if (diff <= 0) { ['cdD','cdH','cdM'].forEach(id => { const el=document.getElementById(id); if(el)el.textContent='00'; }); return; }
+      const dEl=document.getElementById('cdD'), hEl=document.getElementById('cdH'), mEl=document.getElementById('cdM');
+      if (dEl) dEl.textContent = pad(Math.floor(diff / 86400000));
+      if (hEl) hEl.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      if (mEl) mEl.textContent = pad(Math.floor((diff % 3600000) / 60000));
     }
-    u(); setInterval(u,30000);
+    u(); setInterval(u, 30000);
+  }
+  window.startCD = startCD;
+
+  // ── Util ─────────────────────────────────────────────
+  function extractYtId(url) {
+    if (!url) return '';
+    const m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : url.replace(/\s/g, '').substring(0, 11);
   }
 </script>
 
@@ -886,7 +1182,8 @@
   });
 
   // ===== BIBLIOTECA DE CURSOS — GRID + MODAL CON SESIONES =====
-  const cursosData = [
+  // Cursos base (hardcodeados como fallback)
+  const cursosBase = [
     {
       id: 'endo',
       titulo: 'Endocrinología canina básica',
@@ -895,20 +1192,8 @@
       thumbPos: 'center 75%',
       nuevo: true,
       sesiones: [
-        {
-          label: 'Sesión 1 — Fundamentos',
-          desc: 'Introducción a la endocrinología canina. Anatomía y fisiología de las principales glándulas: hipófisis, tiroides, adrenales y páncreas.',
-          duracion: '18 min',
-          temas: ['Eje hipotálamo-hipófisis', 'Glándulas endocrinas principales', 'Mecanismos de retroalimentación', 'Toma de muestra correcta'],
-          ytId: 'FZD2xrncqb0'
-        },
-        {
-          label: 'Sesión 2 — Diagnóstico',
-          desc: 'Diagnóstico diferencial: hipotiroidismo vs hipertiroidismo en perros. Interpretación de T4 total, T4 libre y TSH canina con casos clínicos reales.',
-          duracion: '22 min',
-          temas: ['Interpretación de T4 y TSH', 'Signos clínicos clave', 'Tratamiento con levotiroxina', 'Seguimiento y monitoreo'],
-          ytId: 'nDwizCDDgTY'
-        }
+        { label: 'Sesión 1 — Fundamentos', desc: 'Introducción a la endocrinología canina. Anatomía y fisiología de las principales glándulas: hipófisis, tiroides, adrenales y páncreas.', duracion: '18 min', temas: ['Eje hipotálamo-hipófisis', 'Glándulas endocrinas principales', 'Mecanismos de retroalimentación', 'Toma de muestra correcta'], ytId: 'FZD2xrncqb0' },
+        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico diferencial: hipotiroidismo vs hipertiroidismo en perros. Interpretación de T4 total, T4 libre y TSH canina con casos clínicos reales.', duracion: '22 min', temas: ['Interpretación de T4 y TSH', 'Signos clínicos clave', 'Tratamiento con levotiroxina', 'Seguimiento y monitoreo'], ytId: 'nDwizCDDgTY' }
       ]
     },
     {
@@ -919,20 +1204,8 @@
       thumbPos: 'center 70%',
       nuevo: true,
       sesiones: [
-        {
-          label: 'Sesión 1 — Hemograma completo',
-          desc: 'Interpretación sistemática del hemograma en perros y gatos. Valores de referencia, errores frecuentes y alteraciones más comunes en práctica general.',
-          duracion: '20 min',
-          temas: ['Eritrograma: anemia vs policitemia', 'Leucograma: inflamación vs infección', 'Plaquetas y coagulación básica', 'Casos de práctica diaria'],
-          ytId: 'de8WtzUByQA'
-        },
-        {
-          label: 'Sesión 2 — Anemias y policitemias',
-          desc: 'Clasificación morfológica y fisiopatológica de las anemias. Diagnóstico diferencial y protocolo de manejo clínico paso a paso con frotis sanguíneo.',
-          duracion: '25 min',
-          temas: ['Anemia regenerativa vs no regenerativa', 'Lectura del frotis sanguíneo', 'Eritroblastos y cuerpos de Heinz', 'Protocolo de transfusión básica'],
-          ytId: 'NhTHkGDCUmA'
-        }
+        { label: 'Sesión 1 — Hemograma completo', desc: 'Interpretación sistemática del hemograma en perros y gatos. Valores de referencia, errores frecuentes y alteraciones más comunes en práctica general.', duracion: '20 min', temas: ['Eritrograma: anemia vs policitemia', 'Leucograma: inflamación vs infección', 'Plaquetas y coagulación básica', 'Casos de práctica diaria'], ytId: 'de8WtzUByQA' },
+        { label: 'Sesión 2 — Anemias y policitemias', desc: 'Clasificación morfológica y fisiopatológica de las anemias. Diagnóstico diferencial y protocolo de manejo clínico paso a paso con frotis sanguíneo.', duracion: '25 min', temas: ['Anemia regenerativa vs no regenerativa', 'Lectura del frotis sanguíneo', 'Eritroblastos y cuerpos de Heinz', 'Protocolo de transfusión básica'], ytId: 'NhTHkGDCUmA' }
       ]
     },
     {
@@ -943,30 +1216,15 @@
       thumbPos: 'center 65%',
       nuevo: true,
       sesiones: [
-        {
-          label: 'Sesión 1 — Fundamentos oncológicos',
-          desc: 'Introducción a la oncología veterinaria: biología tumoral, clasificación de neoplasias y estadificación clínica en perros y gatos.',
-          duracion: '15 min',
-          temas: ['Neoplasias benignas vs malignas', 'Sistema TNM en veterinaria', 'Tumores más frecuentes en consulta', '¿Cuándo referir al oncólogo?'],
-          ytId: 'byGO0J4mgok'
-        },
-        {
-          label: 'Sesión 2 — Diagnóstico',
-          desc: 'Diagnóstico citológico e histopatológico: cuándo y cómo tomar muestras, técnicas de biopsia y cómo interpretar los reportes de patología.',
-          duracion: '20 min',
-          temas: ['PAAF vs biopsia incisional/excisional', 'Envío correcto de muestras', 'Interpretación del reporte histopatológico', 'Márgenes quirúrgicos limpios'],
-          ytId: 'RXegH8Qk5Pw'
-        },
-        {
-          label: 'Sesión 3 — Quimioterapia básica',
-          desc: 'Protocolos de quimioterapia básica para el médico veterinario general. Caso clínico completo de linfoma multicéntrico canino con protocolo CHOP.',
-          duracion: '28 min',
-          temas: ['Protocolo CHOP simplificado', 'Manejo de efectos secundarios', 'Comunicación con el propietario', 'Calidad de vida del paciente oncológico'],
-          ytId: 'Ao0gXgSdb54'
-        }
+        { label: 'Sesión 1 — Fundamentos oncológicos', desc: 'Introducción a la oncología veterinaria: biología tumoral, clasificación de neoplasias y estadificación clínica en perros y gatos.', duracion: '15 min', temas: ['Neoplasias benignas vs malignas', 'Sistema TNM en veterinaria', 'Tumores más frecuentes en consulta', '¿Cuándo referir al oncólogo?'], ytId: 'byGO0J4mgok' },
+        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico citológico e histopatológico: cuándo y cómo tomar muestras, técnicas de biopsia y cómo interpretar los reportes de patología.', duracion: '20 min', temas: ['PAAF vs biopsia incisional/excisional', 'Envío correcto de muestras', 'Interpretación del reporte histopatológico', 'Márgenes quirúrgicos limpios'], ytId: 'RXegH8Qk5Pw' },
+        { label: 'Sesión 3 — Quimioterapia básica', desc: 'Protocolos de quimioterapia básica para el médico veterinario general. Caso clínico completo de linfoma multicéntrico canino con protocolo CHOP.', duracion: '28 min', temas: ['Protocolo CHOP simplificado', 'Manejo de efectos secundarios', 'Comunicación con el propietario', 'Calidad de vida del paciente oncológico'], ytId: 'Ao0gXgSdb54' }
       ]
     }
   ];
+
+  // cursosData — global, actualizado por onSnapshot del módulo Firebase
+  let cursosData = [...cursosBase];
 
   let cursoActivo = null;
   let sesionActiva = 0;
@@ -1130,6 +1388,20 @@
     else if (mes === 'abril') { la.style.display = ''; lm.style.display = 'none'; }
     else { la.style.display = 'none'; lm.style.display = ''; }
   };
+</script>
+
+<script type="module">
+  // Preview: disparar con usuario demo
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var loading = document.getElementById('dashLoading');
+      if (loading) loading.style.display = 'none';
+      var nav = document.getElementById('topNav');
+      if (nav) nav.style.display = 'flex';
+      var layout = document.getElementById('dashLayout');
+      if (layout) layout.style.display = 'flex';
+    }, 500);
+  });
 </script>
 </body>
 </html>

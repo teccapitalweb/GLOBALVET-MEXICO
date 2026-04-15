@@ -3,610 +3,1184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — Club GlobalVet</title>
+  <title>Admin — Club GlobalVet México</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:#f2f4f9; --white:#fff; --dark:#12103a; --purple:#4f35b3;
-      --purple2:#6c4fd6; --plight:#ede9ff; --teal:#0a7c6e; --green:#1e8a50;
-      --red:#d94040; --gold:#e8a020; --muted:#6b7280; --line:#e5e7eb;
-      --ff:'Space Grotesk',system-ui,sans-serif; --ffb:'DM Sans',system-ui,sans-serif;
+    :root{
+      --bg:#f2f4f9;--white:#fff;--dark:#12103a;--purple:#4f35b3;--purple2:#6c4fd6;--plight:#ede9ff;
+      --teal:#0a7c6e;--green:#1e8a50;--red:#d94040;--gold:#e8a020;--muted:#6b7280;--line:#e5e7eb;
+      --sidebar:220px;--ff:'Space Grotesk',system-ui,sans-serif;--ffb:'DM Sans',system-ui,sans-serif;
+      --prev-w:0px;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:var(--ffb);background:var(--bg);color:var(--dark);line-height:1.55}
-    a{text-decoration:none;color:inherit} button{cursor:pointer;font-family:var(--ffb)}
+    a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--ffb)}input,select,textarea{font-family:var(--ffb)}
 
-    /* ===== LOGIN ===== */
-    #loginScreen {
-      min-height:100vh; display:flex; align-items:center; justify-content:center;
-      background: radial-gradient(ellipse at 60% 0%,rgba(95,69,200,.18) 0%,transparent 55%),
-                  radial-gradient(ellipse at 0% 80%,rgba(59,43,134,.12) 0%,transparent 50%),
-                  linear-gradient(180deg,#eceeff 0%,#f2f4f9 100%);
-      padding:1rem;
+    /* ─── LOGIN ─── */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 60% 0%,rgba(95,69,200,.18) 0%,transparent 55%),radial-gradient(ellipse at 0% 80%,rgba(59,43,134,.12) 0%,transparent 50%),linear-gradient(180deg,#eceeff 0%,#f2f4f9 100%);padding:1rem}
+    .lc{background:#fff;border-radius:24px;padding:2.4rem 2.2rem;width:100%;max-width:380px;box-shadow:0 24px 60px rgba(18,16,58,.12)}
+    .lc-brand{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.5rem}
+    .lc-brand img{width:34px;height:34px;border-radius:9px;object-fit:cover}
+    .lc-brand span{font-family:var(--ff);font-size:.95rem;font-weight:700}
+    .lc-title{font-family:var(--ff);font-size:1.25rem;font-weight:700;text-align:center;margin-bottom:.2rem}
+    .lc-sub{font-size:.82rem;color:var(--muted);text-align:center;margin-bottom:1.5rem}
+    .lc-lbl{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
+    .lc-inp{width:100%;padding:.7rem .9rem;background:#f8fbff;border:1.5px solid var(--line);border-radius:12px;font-size:.9rem;color:var(--dark);outline:none;margin-bottom:.85rem;transition:border-color .2s}
+    .lc-inp:focus{border-color:var(--purple)}
+    .lc-btn{width:100%;padding:.85rem;background:var(--dark);color:#fff;font-family:var(--ff);font-weight:700;font-size:.93rem;border:none;border-radius:14px;transition:opacity .15s}
+    .lc-btn:hover{opacity:.88}
+    .lc-err{background:#fff0f0;border:1px solid #fecaca;border-radius:10px;padding:.6rem .9rem;font-size:.82rem;color:var(--red);margin-bottom:.75rem;display:none}
+    .lc-err.show{display:block}
+
+    /* ─── TOPBAR ─── */
+    #adminApp{display:none}
+    .topbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;z-index:100;gap:1rem}
+    .tb-l{display:flex;align-items:center;gap:.7rem}
+    .tb-logo{display:flex;align-items:center;gap:.55rem}
+    .tb-logo img{width:28px;height:28px;border-radius:8px;object-fit:cover}
+    .tb-logo span{font-family:var(--ff);font-size:.93rem;font-weight:700;color:#fff}
+    .tb-badge{background:var(--gold);color:#1a0f00;font-size:.65rem;font-weight:800;padding:.18rem .6rem;border-radius:50px;letter-spacing:.04em;text-transform:uppercase}
+    .tb-r{display:flex;align-items:center;gap:.6rem}
+    .tb-panel{background:rgba(232,160,32,.15);border:1px solid rgba(232,160,32,.4);color:var(--gold);font-family:var(--ff);font-size:.78rem;font-weight:700;padding:.35rem .9rem;border-radius:8px;cursor:pointer}
+    /* Botón Preview */
+    .tb-prev{display:flex;align-items:center;gap:.4rem;background:rgba(108,79,214,.25);border:1px solid rgba(108,79,214,.5);color:#c4b5fd;font-family:var(--ff);font-size:.78rem;font-weight:700;padding:.35rem .9rem;border-radius:8px;cursor:pointer;transition:all .2s}
+    .tb-prev:hover,.tb-prev.active{background:var(--purple2);border-color:var(--purple2);color:#fff}
+    .tb-prev .pv-dot{width:7px;height:7px;border-radius:50%;background:#a5f3c8;animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+    .tb-out{background:none;border:none;color:rgba(255,255,255,.55);font-size:.82rem;font-weight:600;transition:color .15s}
+    .tb-out:hover{color:#ff8080}
+
+    /* ─── LAYOUT ─── */
+    .layout{display:flex;min-height:100vh;padding-top:52px}
+    .sidebar{width:var(--sidebar);flex-shrink:0;background:#1a1650;position:fixed;top:52px;left:0;bottom:0;overflow-y:auto;padding:1.2rem .75rem;display:flex;flex-direction:column;gap:.1rem}
+    .s-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:.8rem .6rem .25rem;margin-top:.4rem}
+    .s-btn{display:flex;align-items:center;gap:.65rem;padding:.6rem .8rem;border-radius:10px;border:none;background:none;font-size:.84rem;font-weight:600;color:rgba(255,255,255,.6);width:100%;text-align:left;transition:background .15s,color .15s;position:relative}
+    .s-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+    .s-btn.active{background:rgba(108,79,214,.35);color:#fff}
+    .s-ico{font-size:.95rem;flex-shrink:0;width:18px;text-align:center}
+    .s-badge{margin-left:auto;font-size:.65rem;font-weight:800;padding:.1rem .45rem;border-radius:50px}
+    .s-badge.green{background:var(--green);color:#fff}
+    .s-badge.orange{background:var(--gold);color:#1a0f00}
+    .main{margin-left:var(--sidebar);margin-right:var(--prev-w);flex:1;padding:2rem 2.2rem;min-width:0;transition:margin-right .3s}
+    .panel{display:none}.panel.active{display:block}
+
+    /* ─── PREVIEW PANE ─── */
+    .prev-pane{
+      position:fixed;top:52px;right:0;bottom:0;width:var(--prev-w);
+      background:#f0f2f8;border-left:1px solid var(--line);
+      overflow:hidden;display:flex;flex-direction:column;
+      transition:width .3s cubic-bezier(.4,0,.2,1);z-index:90;
     }
-    .login-card {
-      background:#fff; border-radius:24px; padding:2.4rem 2.2rem;
-      width:100%; max-width:400px;
-      box-shadow:0 24px 60px rgba(18,16,58,.12);
+    .prev-pane.open{width:360px}
+    .prev-bar{
+      background:var(--dark);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;
+      flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .login-brand {
-      display:flex; align-items:center; justify-content:center;
-      gap:.6rem; margin-bottom:1.5rem;
+    .prev-icon{font-size:.85rem}
+    .prev-title{font-family:var(--ff);font-size:.78rem;font-weight:700;color:#fff;flex:1}
+    .prev-status{display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:#a5f3c8;font-weight:600}
+    .prev-status::before{content:'';width:6px;height:6px;border-radius:50%;background:#a5f3c8;animation:pulse 1.5s infinite}
+    .prev-close{background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.6);width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;transition:background .15s}
+    .prev-close:hover{background:rgba(255,255,255,.2);color:#fff}
+
+    /* Mini-nav del miembro */
+    .prev-mnav{
+      background:#1a1040;padding:.5rem .85rem;display:flex;align-items:center;justify-content:space-between;
+      flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .login-brand img{width:34px;height:34px;border-radius:9px;object-fit:cover}
-    .login-brand span{font-family:var(--ff);font-size:.95rem;font-weight:700}
-    .login-title{font-family:var(--ff);font-size:1.3rem;font-weight:700;text-align:center;margin-bottom:.25rem}
-    .login-sub{font-size:.83rem;color:var(--muted);text-align:center;margin-bottom:1.6rem}
-    .login-label{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem}
-    .login-input{width:100%;padding:.72rem .95rem;background:#f8fbff;border:1.5px solid var(--line);border-radius:12px;font-family:var(--ffb);font-size:.9rem;color:var(--dark);outline:none;margin-bottom:.9rem;transition:border-color .2s}
-    .login-input:focus{border-color:var(--purple)}
-    .login-btn{width:100%;padding:.88rem;background:var(--dark);color:#fff;font-family:var(--ff);font-weight:700;font-size:.95rem;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s}
-    .login-btn:hover{opacity:.88}
-    .login-error{background:#fff0f0;border:1px solid #fecaca;border-radius:10px;padding:.65rem .9rem;font-size:.83rem;color:var(--red);margin-bottom:.8rem;display:none}
-    .login-error.show{display:block}
+    .prev-mnav-logo{display:flex;align-items:center;gap:.4rem}
+    .prev-mnav-logo img{width:18px;height:18px;border-radius:5px;object-fit:cover}
+    .prev-mnav-logo span{font-family:var(--ff);font-size:.68rem;font-weight:700;color:#fff}
+    .prev-mnav-badge{background:var(--purple);color:#fff;font-size:.55rem;font-weight:700;padding:.1rem .4rem;border-radius:50px}
+    .prev-mnav-r{display:flex;align-items:center;gap:.4rem}
+    .prev-av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;font-family:var(--ff)}
+    .prev-name{font-size:.65rem;color:rgba(255,255,255,.7);font-family:var(--ff);font-weight:600}
 
-    /* ===== DASHBOARD ADMIN ===== */
-    #adminScreen{display:none}
-    .admin-top {
-      background:var(--dark); height:52px; display:flex; align-items:center;
-      justify-content:space-between; padding:0 1.5rem; position:sticky; top:0; z-index:100;
+    /* Panel label strip */
+    .prev-panel-strip{
+      background:#fff;border-bottom:1px solid var(--line);
+      padding:.45rem .85rem;display:flex;align-items:center;gap:.4rem;flex-shrink:0;
     }
-    .admin-top-left{display:flex;align-items:center;gap:.7rem}
-    .admin-top-logo{display:flex;align-items:center;gap:.55rem}
-    .admin-top-logo img{width:28px;height:28px;border-radius:8px;object-fit:cover}
-    .admin-top-logo span{font-family:var(--ff);font-size:.92rem;font-weight:700;color:#fff}
-    .admin-badge{background:var(--red);color:#fff;font-size:.68rem;font-weight:700;padding:.18rem .6rem;border-radius:50px;letter-spacing:.04em;text-transform:uppercase}
-    .admin-top-right{display:flex;align-items:center;gap:.8rem}
-    .admin-user{font-family:var(--ff);font-size:.82rem;font-weight:600;color:rgba(255,255,255,.6)}
-    .admin-logout-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:.8rem;font-weight:600;padding:.3rem .8rem;border-radius:50px;cursor:pointer;transition:all .15s}
-    .admin-logout-btn:hover{border-color:rgba(255,100,100,.5);color:#ff8080}
+    .prev-panel-label{font-size:.68rem;font-weight:700;color:var(--purple);font-family:var(--ff)}
+    .prev-panel-arrow{font-size:.6rem;color:var(--muted)}
+    .prev-panel-name{font-size:.68rem;font-weight:700;color:var(--dark);font-family:var(--ff)}
 
-    .admin-layout{display:flex;min-height:calc(100vh - 52px)}
+    /* Scroll content */
+    .prev-body{flex:1;overflow-y:auto;padding:.7rem;display:flex;flex-direction:column;gap:.6rem}
 
-    /* Sidebar */
-    .admin-sidebar{width:210px;flex-shrink:0;background:var(--white);border-right:1px solid var(--line);padding:1rem .7rem;display:flex;flex-direction:column;gap:.15rem;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto}
-    .aslbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;padding:.7rem .6rem .25rem}
-    .asbtn{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:10px;border:none;background:none;font-size:.84rem;font-weight:600;color:var(--muted);width:100%;text-align:left;transition:background .15s,color .15s}
-    .asbtn:hover{background:var(--bg);color:var(--dark)}
-    .asbtn.active{background:var(--plight);color:var(--purple)}
-    .asbtn svg{flex-shrink:0}
-    .asbadge{margin-left:auto;background:var(--purple);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .42rem;border-radius:50px}
+    /* Preview cards */
+    .pv-banner{
+      background:linear-gradient(135deg,#2d1a7a 0%,#4f35b3 50%,#6c4fd6 100%);
+      border-radius:12px;padding:1rem;position:relative;overflow:hidden;
+    }
+    .pv-banner::after{content:'GLOBALVET';position:absolute;right:.8rem;top:50%;transform:translateY(-50%);font-family:var(--ff);font-size:1.8rem;font-weight:700;color:rgba(255,255,255,.05);pointer-events:none}
+    .pv-banner-title{font-family:var(--ff);font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.2rem}
+    .pv-banner-sub{font-size:.7rem;color:rgba(255,255,255,.6);margin-bottom:.6rem}
+    .pv-hstats{display:flex;gap:.4rem}
+    .pv-hstat{background:rgba(255,255,255,.12);border-radius:7px;padding:.3rem .5rem;text-align:center;flex:1}
+    .pv-hstn{font-family:var(--ff);font-size:.85rem;font-weight:700;color:#fff;line-height:1}
+    .pv-hstl{font-size:.55rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.03em}
+    .pv-card{background:#fff;border-radius:12px;border:1px solid var(--line);overflow:hidden}
+    .pv-card-h{padding:.6rem .85rem;border-bottom:1px solid var(--line);font-family:var(--ff);font-size:.75rem;font-weight:700;color:var(--dark);display:flex;align-items:center;justify-content:space-between}
+    .pv-card-h span{font-size:.65rem;font-weight:600;color:var(--muted)}
+    .pv-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-bottom:1px solid var(--line);font-size:.75rem}
+    .pv-row:last-child{border-bottom:none}
+    .pv-thumb{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+    .pv-tp{background:linear-gradient(135deg,#2d1a7a,#6c4fd6)}
+    .pv-tt{background:linear-gradient(135deg,#0d2f45,#0a7c6e)}
+    .pv-tg{background:#e5e7eb}
+    .pv-info{flex:1;min-width:0}
+    .pv-rti{font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem}
+    .pv-rsu{font-size:.65rem;color:var(--muted)}
+    .pv-badge{font-size:.6rem;font-weight:700;padding:.12rem .4rem;border-radius:50px;white-space:nowrap}
+    .pv-bnew{background:var(--dark);color:#fff}
+    .pv-bpub{background:var(--plight);color:var(--purple)}
+    .pv-bprox{background:#fef3c7;color:#92400e}
+    .pv-bpdf{background:#dcfce7;color:#166534}
+    .pv-empty{text-align:center;padding:1.5rem .5rem;font-size:.75rem;color:var(--muted)}
+    .pv-empty span{font-size:1.5rem;display:block;margin-bottom:.4rem}
+    .pv-cfg-row{padding:.45rem .85rem;border-bottom:1px solid var(--line);font-size:.72rem}
+    .pv-cfg-row:last-child{border-bottom:none}
+    .pv-cfg-lbl{color:var(--muted);margin-bottom:.1rem}
+    .pv-cfg-val{font-weight:700;color:var(--dark)}
+    .pv-msg{background:var(--plight);border-radius:10px;padding:.6rem .85rem;font-size:.72rem;color:var(--purple);font-style:italic;line-height:1.5}
 
-    /* Main */
-    .admin-main{flex:1;padding:2rem 2.2rem;min-width:0}
-    .apanel{display:none}.apanel.active{display:block}
-    .apage-title{font-family:var(--ff);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+    /* Stats admin */
+    .page-title{font-family:var(--ff);font-size:1.4rem;font-weight:700;margin-bottom:.2rem;display:flex;align-items:center;gap:.6rem}
+    .page-sub{font-size:.85rem;color:var(--muted);margin-bottom:1.8rem}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.8rem}
+    .stat-card{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.4rem 1.5rem;transition:box-shadow .2s}
+    .stat-card:hover{box-shadow:0 4px 20px rgba(79,53,179,.08)}
+    .stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
+    .stat-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .stat-icon.purple{background:var(--plight)}.stat-icon.green{background:#d1fae5}.stat-icon.gold{background:#fef3c7}.stat-icon.red{background:#fee2e2}
+    .stat-tag{font-size:.73rem;font-weight:700;padding:.18rem .6rem;border-radius:50px}
+    .stat-tag.ok{background:#d1fae5;color:#065f46}.stat-tag.warn{background:#fef3c7;color:#92400e}.stat-tag.info{background:var(--plight);color:var(--purple)}
+    .stat-num{font-family:var(--ff);font-size:2rem;font-weight:800;color:var(--dark);line-height:1;margin-bottom:.2rem}
+    .stat-lbl{font-size:.82rem;color:var(--muted)}
+    .card{background:#fff;border-radius:18px;border:1px solid var(--line);overflow:hidden;margin-bottom:1.5rem}
+    .card-head{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:.6rem}
+    .card-head-title{font-family:var(--ff);font-size:.95rem;font-weight:700}
+    .tbl{width:100%;border-collapse:collapse}
+    .tbl th{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:.8rem 1.5rem;text-align:left;border-bottom:1px solid var(--line);background:#fafbff}
+    .tbl td{padding:.85rem 1.5rem;font-size:.88rem;border-bottom:1px solid var(--line);color:var(--dark)}
+    .tbl tr:last-child td{border-bottom:none}
+    .tbl tr:hover td{background:#fafbff}
+    .nm{font-weight:700;margin-bottom:.1rem}.em{font-size:.78rem;color:var(--muted)}
+    .badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.73rem;font-weight:700;padding:.22rem .65rem;border-radius:50px}
+    .badge.active{background:#d1fae5;color:#065f46}.badge.inactive{background:#fee2e2;color:#991b1b}.badge.pending{background:#fef3c7;color:#92400e}.badge.pub{background:var(--plight);color:var(--purple)}.badge.hoy{background:#fee2e2;color:var(--red)}
+    .btn-sm{padding:.32rem .85rem;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid;cursor:pointer;transition:opacity .15s}
+    .btn-sm:hover{opacity:.8}
+    .btn-sm.green{background:#d1fae5;border-color:#6ee7b7;color:#065f46}.btn-sm.red{background:#fee2e2;border-color:#fca5a5;color:#991b1b}.btn-sm.blue{background:var(--plight);border-color:#a5b4fc;color:var(--purple)}.btn-sm.gold{background:#fef3c7;border-color:#fde68a;color:#92400e}.btn-sm.dark{background:var(--dark);border-color:var(--dark);color:#fff}
+    .ba{display:flex;gap:.4rem;flex-wrap:wrap}
+    .sw{position:relative}
+    .sw input{padding:.5rem .9rem .5rem 2.1rem;border:1.5px solid var(--line);border-radius:10px;font-size:.83rem;color:var(--dark);outline:none;width:220px;transition:border-color .2s;background:#fff}
+    .sw input:focus{border-color:var(--purple)}
+    .sw::before{content:'🔍';position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.75rem;pointer-events:none}
+    .fc{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.6rem;margin-bottom:1.2rem}
+    .ft{font-family:var(--ff);font-size:.95rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;color:var(--purple)}
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+    .fg.one{grid-template-columns:1fr}
+    .fgr{display:flex;flex-direction:column;gap:.3rem}
+    .fl{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .fi{padding:.65rem .9rem;border:1.5px solid var(--line);border-radius:12px;font-size:.88rem;color:var(--dark);outline:none;background:#f8fbff;transition:border-color .2s}
+    .fi:focus{border-color:var(--purple);background:#fff}
+    .fs{padding:.65rem .9rem;border:1.5px solid var(--line);border-radius:12px;font-size:.88rem;color:var(--dark);outline:none;background:#f8fbff;appearance:none;cursor:pointer}
+    .ta{padding:.65rem .9rem;border:1.5px solid var(--line);border-radius:12px;font-size:.88rem;color:var(--dark);outline:none;background:#f8fbff;resize:vertical;min-height:90px;transition:border-color .2s}
+    .ta:focus{border-color:var(--purple);background:#fff}
+    .bp{display:inline-flex;align-items:center;gap:.45rem;background:var(--purple2);color:#fff;font-family:var(--ff);font-weight:700;font-size:.88rem;padding:.7rem 1.5rem;border-radius:12px;border:none;cursor:pointer;transition:opacity .15s}
+    .bp:hover{opacity:.88}
+    .bs{display:inline-flex;align-items:center;gap:.45rem;background:var(--bg);color:var(--dark);font-family:var(--ff);font-weight:700;font-size:.88rem;padding:.7rem 1.5rem;border-radius:12px;border:1.5px solid var(--line);cursor:pointer;transition:background .15s}
+    .bs:hover{background:#e8eaf0}
+    .sr{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem}
+    .sr-l{font-size:.82rem;color:var(--dark);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sr-b{flex:2;background:#e5e7eb;border-radius:50px;height:6px;overflow:hidden}
+    .sr-f{height:100%;border-radius:50px;background:var(--purple2)}
+    .sr-v{font-size:.78rem;font-weight:700;color:var(--dark);width:24px;text-align:right}
+    .empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.88rem}
+    .ei{font-size:2rem;margin-bottom:.6rem}
 
-    /* Stats row */
-    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
-    .stat-card{background:var(--white);border-radius:16px;padding:1.3rem 1.4rem;border:1px solid var(--line)}
-    .stat-num{font-family:var(--ff);font-size:2rem;font-weight:700;color:var(--dark);line-height:1;margin-bottom:.2rem}
-    .stat-lbl{font-size:.8rem;color:var(--muted)}
-    .stat-card.purple .stat-num{color:var(--purple)}
-    .stat-card.green  .stat-num{color:var(--green)}
-    .stat-card.red    .stat-num{color:var(--red)}
+    /* Sesión form styles */
+    .ses-card{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.6rem;margin-bottom:1.2rem}
+    .ses-header{display:flex;align-items:center;gap:.9rem;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid var(--line)}
+    .ses-icon{width:46px;height:46px;border-radius:14px;background:var(--purple2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .ses-header-text .title{font-family:var(--ff);font-weight:700;font-size:1rem}
+    .ses-header-text .sub{font-size:.8rem;color:var(--muted)}
+    .ses-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+    .ses-datetime{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap}
+    .dp-wrap{position:relative;display:inline-block}
+    .dp-btn{display:flex;align-items:center;gap:.5rem;padding:.55rem 1rem;border:1.5px solid #16a34a;border-radius:10px;background:#fff;font-family:var(--ff);font-size:.85rem;font-weight:600;color:#16a34a;cursor:pointer;white-space:nowrap;transition:background .15s;user-select:none}
+    .dp-btn:hover{background:#f0fdf4}
+    .dp-btn .arr{font-size:.65rem;margin-left:.2rem}
+    .dp-popup{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.15);border:1px solid var(--line);z-index:1000;min-width:220px;overflow:hidden;display:none}
+    .dp-popup.show{display:block}
+    .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--line)}
+    .cal-nav span{font-family:var(--ff);font-weight:700;font-size:.9rem}
+    .cal-nav button{background:none;border:none;cursor:pointer;font-size:1rem;color:var(--muted);padding:.2rem .4rem;border-radius:6px}
+    .cal-nav button:hover{background:var(--bg)}
+    .cal-grid{padding:.6rem .8rem .8rem}
+    .cal-days-hdr{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.3rem}
+    .cal-days-hdr span{text-align:center;font-size:.7rem;font-weight:700;color:var(--muted);padding:.3rem 0}
+    .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+    .cal-day{text-align:center;font-size:.82rem;padding:.38rem .2rem;border-radius:8px;cursor:pointer;transition:background .15s;color:var(--dark)}
+    .cal-day:hover{background:var(--plight);color:var(--purple)}
+    .cal-day.other{color:#d1d5db}
+    .cal-day.today{border:1.5px solid var(--purple2);color:var(--purple2);font-weight:700}
+    .cal-day.selected{background:var(--purple2);color:#fff;font-weight:700}
+    .cal-day.empty{cursor:default}
+    .tp-wrap{display:flex;gap:0;padding:.6rem .5rem}
+    .tp-col{display:flex;flex-direction:column;align-items:center;gap:2px;max-height:160px;overflow-y:auto;flex:1;scrollbar-width:thin}
+    .tp-col::-webkit-scrollbar{width:4px}
+    .tp-col::-webkit-scrollbar-thumb{background:#e5e7eb;border-radius:4px}
+    .tp-hdr{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:.3rem 0;text-align:center}
+    .tp-item{width:100%;text-align:center;padding:.32rem .2rem;border-radius:6px;font-size:.83rem;cursor:pointer;transition:background .15s;color:var(--dark)}
+    .tp-item:hover{background:var(--plight)}
+    .tp-item.sel{background:var(--purple2);color:#fff;font-weight:700}
+    .tp-ampm{display:flex;flex-direction:column;gap:4px;padding:.6rem .3rem;justify-content:center}
+    .tp-am,.tp-pm{padding:.4rem .7rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--muted);transition:all .15s}
+    .tp-am.sel,.tp-pm.sel{background:var(--purple2);border-color:var(--purple2);color:#fff}
+    .tp-sep{font-size:1.1rem;font-weight:700;color:var(--muted);padding-top:1.4rem;flex-shrink:0}
+    .tp-confirm{width:100%;padding:.6rem;background:#16a34a;color:#fff;font-family:var(--ff);font-weight:700;font-size:.85rem;border:none;cursor:pointer;transition:opacity .15s}
+    .ses-tbl-card{background:#fff;border-radius:18px;border:1px solid var(--line);overflow:hidden}
+    .ses-tbl-hdr{padding:1.1rem 1.5rem;border-bottom:1px solid var(--line);font-family:var(--ff);font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
 
-    /* Tabla miembros */
-    .table-wrap{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:1.5rem}
-    .table-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;border-bottom:1px solid var(--line)}
-    .table-title{font-family:var(--ff);font-size:.95rem;font-weight:700}
-    .table-search{padding:.45rem .85rem;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.84rem;outline:none;width:220px;transition:border-color .2s}
-    .table-search:focus{border-color:var(--purple)}
-    table{width:100%;border-collapse:collapse}
-    th{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:.75rem 1.4rem;text-align:left;border-bottom:1px solid var(--line);background:#fafbff}
-    td{padding:.8rem 1.4rem;font-size:.87rem;border-bottom:1px solid var(--line)}
-    tr:last-child td{border-bottom:none}
-    tr:hover td{background:#fafbff}
-    .member-name{font-weight:700;color:var(--dark)}
-    .member-email{font-size:.78rem;color:var(--muted)}
-    .status-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .65rem;border-radius:50px}
-    .status-active  {background:rgba(30,138,80,.1);color:var(--green)}
-    .status-pending {background:rgba(232,160,32,.12);color:#7a4800}
-    .status-inactive{background:#f3f4f6;color:#9ca3af}
-    .plan-chip{font-size:.75rem;font-weight:700;padding:.18rem .55rem;border-radius:50px;background:var(--plight);color:var(--purple)}
-    .action-btn{padding:.32rem .75rem;border-radius:8px;font-size:.75rem;font-weight:700;border:none;cursor:pointer;transition:opacity .15s;margin-right:.3rem}
-    .action-btn:hover{opacity:.8}
-    .btn-activate  {background:rgba(30,138,80,.1);color:var(--green)}
-    .btn-deactivate{background:rgba(217,64,64,.1);color:var(--red)}
-
-    /* Panel Videos */
-    .video-form{background:var(--white);border-radius:16px;border:1px solid var(--line);padding:1.6rem;margin-bottom:1.5rem}
-    .video-form-title{font-family:var(--ff);font-size:.95rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-    .fg-full{grid-column:1/-1}
-    .field-label{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.35rem}
-    .field-input{width:100%;padding:.65rem .9rem;background:#f8fbff;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.88rem;color:var(--dark);outline:none;transition:border-color .2s}
-    .field-input:focus{border-color:var(--purple);background:#fff}
-    .field-select{width:100%;padding:.65rem .9rem;border:1.5px solid var(--line);border-radius:10px;font-family:var(--ffb);font-size:.88rem;color:var(--dark);background:#f8fbff;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2rem}
-    .field-select:focus{border-color:var(--purple)}
-    .btn-add-video{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:.75rem 1.6rem;font-family:var(--ff);font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:.5rem}
-    .btn-add-video:hover{opacity:.88}
-    .videos-list{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden}
-    .video-row{display:flex;align-items:center;gap:1rem;padding:.85rem 1.4rem;border-bottom:1px solid var(--line)}
-    .video-row:last-child{border-bottom:none}
-    .video-thumb-sm{width:48px;height:36px;border-radius:8px;background:linear-gradient(135deg,#12103a,#4f35b3);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;overflow:hidden}
-    .video-thumb-sm img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-    .video-info{flex:1;min-width:0}
-    .video-title-sm{font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .video-meta-sm{font-size:.75rem;color:var(--muted)}
-    .video-cat{font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:50px;background:var(--plight);color:var(--purple);white-space:nowrap}
-    .btn-del{background:rgba(217,64,64,.1);color:var(--red);border:none;border-radius:8px;padding:.3rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer;transition:opacity .15s;flex-shrink:0}
-    .btn-del:hover{opacity:.8}
+    /* Modal */
+    .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .mo.show{display:flex}
+    .md{background:#fff;border-radius:20px;padding:2rem;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+    .md-title{font-family:var(--ff);font-size:1rem;font-weight:700;margin-bottom:1rem}
+    .md-actions{display:flex;gap:.7rem;margin-top:1.2rem;justify-content:flex-end}
 
     /* Toast */
-    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;padding:.75rem 1.4rem;border-radius:50px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:500;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;white-space:nowrap}
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;padding:.75rem 1.4rem;border-radius:50px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:500;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;white-space:nowrap;display:flex;align-items:center;gap:.5rem}
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-    .toast.green{background:var(--teal)}
+    .toast.ok{background:var(--green)}.toast.err{background:var(--red)}
 
-    /* Empty state */
-    .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
-    .empty-state p{font-size:.9rem}
-
-    @media(max-width:768px){
-      .admin-sidebar{display:none}
-      .stats-row{grid-template-columns:1fr 1fr}
-      .form-grid{grid-template-columns:1fr}
-    }
+    @media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr}.prev-pane.open{width:300px}}
+    @media(max-width:680px){.sidebar{display:none}.main{margin-left:0;padding:1rem}.stats-grid{grid-template-columns:1fr}.prev-pane.open{width:260px}}
   </style>
 </head>
 <body>
 
-<!-- ===== LOGIN ===== -->
+<!-- LOGIN -->
 <div id="loginScreen">
-  <div class="login-card">
-    <div class="login-brand">
+  <div class="lc">
+    <div class="lc-brand">
       <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
-      <span><strong>GlobalVet</strong> México</span>
+      <span><strong>GlobalVet</strong> México · Admin</span>
     </div>
-    <h1 class="login-title">Panel Administrativo</h1>
-    <p class="login-sub">Acceso exclusivo para administradores</p>
-    <div class="login-error" id="loginError">Correo o contraseña incorrectos.</div>
-    <label class="login-label" for="adminEmail">Correo</label>
-    <input class="login-input" type="email" id="adminEmail" placeholder="admin@globalvet.com" autocomplete="email">
-    <label class="login-label" for="adminPass">Contraseña</label>
-    <input class="login-input" type="password" id="adminPass" placeholder="Tu contraseña" autocomplete="current-password">
-    <button class="login-btn" id="loginBtn" onclick="adminLogin()">Iniciar sesión</button>
+    <h1 class="lc-title">Panel de Administración</h1>
+    <p class="lc-sub">Acceso restringido — Solo administradores</p>
+    <div class="lc-err" id="loginErr">Correo o contraseña incorrectos.</div>
+    <label class="lc-lbl">Correo</label>
+    <input class="lc-inp" type="email" id="adminEmail" placeholder="admin@globalvetmexico.com">
+    <label class="lc-lbl">Contraseña</label>
+    <input class="lc-inp" type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleAdminLogin()">
+    <button class="lc-btn" onclick="entrarAdmin()">Entrar al panel</button>
+    <button onclick="entrarAdmin()" style="width:100%;margin-top:.6rem;padding:.7rem;background:none;border:1.5px solid var(--line);border-radius:14px;font-family:var(--ff);font-weight:600;font-size:.85rem;color:var(--muted);cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--purple)';this.style.color='var(--purple)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--muted)'">
+      Acceso sin cuenta (modo temporal)
+    </button>
   </div>
 </div>
 
-<!-- ===== ADMIN DASHBOARD ===== -->
-<div id="adminScreen">
-  <nav class="admin-top">
-    <div class="admin-top-left">
-      <div class="admin-top-logo">
+<!-- ADMIN APP -->
+<div id="adminApp">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="tb-l">
+      <div class="tb-logo">
         <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
-        <span>Club GlobalVet</span>
+        <span>Club GlobalVet México</span>
       </div>
-      <span class="admin-badge">Admin</span>
+      <span class="tb-badge">Admin</span>
     </div>
-    <div class="admin-top-right">
-      <span class="admin-user" id="adminUserLabel"></span>
-      <button class="admin-logout-btn" onclick="adminLogout()">Salir</button>
+    <div class="tb-r">
+      <button class="tb-prev" id="btnPreview" onclick="togglePreview()">
+        <span class="pv-dot"></span>
+        👁 Vista en vivo
+      </button>
+      <button class="tb-out" onclick="adminLogout()">Salir</button>
     </div>
   </nav>
 
-  <div class="admin-layout">
-    <aside class="admin-sidebar">
-      <div class="aslbl">Panel</div>
-      <button class="asbtn active" onclick="showPanel('resumen',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Resumen
-      </button>
-      <button class="asbtn" onclick="showPanel('miembros',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Miembros
-        <span class="asbadge" id="memberCount">0</span>
-      </button>
-      <button class="asbtn" onclick="showPanel('videos',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-        Videos
-      </button>
+  <div class="layout">
+
+    <!-- SIDEBAR ADMIN -->
+    <aside class="sidebar">
+      <div class="s-label">General</div>
+      <button class="s-btn active" onclick="sp('dashboard',this)"><span class="s-ico">📊</span>Dashboard</button>
+      <button class="s-btn" onclick="sp('miembros',this)"><span class="s-ico">👥</span>Miembros<span class="s-badge green" id="sbM">0</span></button>
+      <div class="s-label">Contenido</div>
+      <button class="s-btn" onclick="sp('cursos',this)"><span class="s-ico">🎓</span>Cursos</button>
+      <button class="s-btn" onclick="sp('pdfs',this)"><span class="s-ico">📄</span>PDFs</button>
+      <button class="s-btn" onclick="sp('sesiones',this)"><span class="s-ico">📡</span>Sesiones en vivo</button>
+      <div class="s-label">Reportes</div>
+      <button class="s-btn" onclick="sp('estadisticas',this)"><span class="s-ico">📈</span>Estadísticas</button>
+      <div class="s-label">Sistema</div>
+      <button class="s-btn" onclick="sp('config',this)"><span class="s-ico">⚙️</span>Configuración</button>
     </aside>
 
-    <main class="admin-main">
+    <!-- MAIN CONTENT ADMIN -->
+    <main class="main">
 
-      <!-- RESUMEN -->
-      <div class="apanel active" id="apanel-resumen">
-        <div class="apage-title">📊 Resumen del Club</div>
-        <div class="stats-row">
-          <div class="stat-card purple">
-            <div class="stat-num" id="statTotal">—</div>
-            <div class="stat-lbl">Miembros totales</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-num" id="statActivos">—</div>
-            <div class="stat-lbl">Membresías activas</div>
-          </div>
-          <div class="stat-card red">
-            <div class="stat-num" id="statPendientes">—</div>
-            <div class="stat-lbl">Pendientes de activar</div>
-          </div>
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard" style="display:block;">
+        <div class="page-title">📊 Dashboard</div>
+        <div class="page-sub">Resumen general de Club GlobalVet México</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon purple">👥</div><span class="stat-tag info" id="dMTag">—</span></div><div class="stat-num" id="dM">—</div><div class="stat-lbl">Miembros activos</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon gold">⏳</div><span class="stat-tag warn" id="dPTag">—</span></div><div class="stat-num" id="dP">—</div><div class="stat-lbl">Accesos por aprobar</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon purple">🎓</div><span class="stat-tag info">publicados</span></div><div class="stat-num" id="dCursos">—</div><div class="stat-lbl">Cursos publicados</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon green">📡</div><span class="stat-tag ok">programadas</span></div><div class="stat-num" id="dSes">—</div><div class="stat-lbl">Sesiones programadas</div></div>
         </div>
-        <div class="table-wrap">
-          <div class="table-head"><div class="table-title">Últimos registros</div></div>
-          <table>
-            <thead><tr><th>Miembro</th><th>Plan</th><th>Estado</th><th>Fecha</th></tr></thead>
-            <tbody id="recentTable"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Cargando...</td></tr></tbody>
-          </table>
+        <div class="card">
+          <div class="card-head"><span class="card-head-title">👥 Miembros recientes</span><button class="btn-sm dark" onclick="sp('miembros',document.querySelectorAll('.s-btn')[1])">Ver todos</button></div>
+          <table class="tbl"><thead><tr><th>Nombre</th><th>Plan</th><th>WhatsApp</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="dtb"><tr><td colspan="5" class="empty">Cargando…</td></tr></tbody></table>
         </div>
       </div>
 
       <!-- MIEMBROS -->
-      <div class="apanel" id="apanel-miembros">
-        <div class="apage-title">👥 Miembros registrados</div>
-        <div class="table-wrap">
-          <div class="table-head">
-            <div class="table-title">Todos los miembros</div>
-            <input class="table-search" type="text" placeholder="Buscar por nombre o email…" oninput="filterMembers(this.value)">
+      <div class="panel" id="panel-miembros">
+        <div class="page-title">👥 Miembros</div>
+        <div class="page-sub">Gestiona todos los miembros del Club GlobalVet México</div>
+        <div class="card">
+          <div class="card-head">
+            <span class="card-head-title" id="mCount">Todos los miembros</span>
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <div class="sw"><input type="text" placeholder="Buscar miembro…" oninput="filterM(this.value)"></div>
+              <button class="bp" onclick="openMo('moM')">+ Agregar</button>
+            </div>
           </div>
-          <table>
-            <thead><tr><th>Nombre</th><th>Plan</th><th>Estado</th><th>Registro</th><th>Acciones</th></tr></thead>
-            <tbody id="membersTable"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">Cargando...</td></tr></tbody>
+          <div style="overflow-x:auto;">
+            <table class="tbl"><thead><tr><th>Nombre</th><th>WhatsApp</th><th>Plan</th><th>Fecha registro</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="mtb"><tr><td colspan="6" class="empty"><div class="ei">⏳</div>Cargando…</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDIENTES -->
+      <div class="panel" id="panel-pendientes">
+        <div class="page-title">⏳ Accesos pendientes</div>
+        <div class="page-sub">Clientes que pagaron pero aún no han creado su cuenta</div>
+        <div class="card">
+          <div class="card-head"><span class="card-head-title" id="pCount">Pagos pendientes</span><button class="bp" onclick="openMo('moP')">+ Registrar pago</button></div>
+          <div style="overflow-x:auto;">
+            <table class="tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Vence</th><th>Fecha pago</th><th>Acciones</th></tr></thead><tbody id="ptb"><tr><td colspan="6" class="empty"><div class="ei">✅</div>Sin pendientes</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div class="panel" id="panel-cursos">
+        <div class="page-title">🎓 Gestión de cursos</div>
+        <div class="page-sub">Crea y administra los cursos del Club GlobalVet</div>
+        <div class="fc">
+          <div class="ft">+ Agregar nuevo curso / video</div>
+          <div class="fg"><div class="fgr"><label class="fl">Título del curso</label><input class="fi" type="text" id="cTit" placeholder="Ej: Cardiología básica canina"></div><div class="fgr"><label class="fl">Instructor</label><input class="fi" type="text" id="cIns" placeholder="MVZ. Nombre Apellido"></div></div>
+          <div class="fg"><div class="fgr"><label class="fl">Categoría</label><select class="fs" id="cCat"><option>Pequeñas especies</option><option>Cirugía</option><option>Oncología</option><option>Hematología</option><option>Endocrinología</option><option>Dermatología</option><option>Cardiología</option><option>Nutrición</option><option>Otro</option></select></div><div class="fgr"><label class="fl">Mes de publicación</label><select class="fs" id="cMes"><option>Abril 2026</option><option>Mayo 2026</option><option>Junio 2026</option><option>Julio 2026</option></select></div></div>
+          <div class="fl" style="margin-bottom:.7rem;">Sesiones del curso</div>
+          <div id="sesionesContainer"></div>
+          <button type="button" onclick="addSesionInput()" style="display:inline-flex;align-items:center;gap:.4rem;background:var(--plight);color:var(--purple);border:1.5px dashed var(--purple2);border-radius:10px;padding:.45rem 1rem;font-family:var(--ff);font-size:.82rem;font-weight:700;cursor:pointer;margin-bottom:1rem;transition:background .15s;" onmouseover="this.style.background='#ddd6fe'" onmouseout="this.style.background='var(--plight)'">+ Añadir sesión</button>
+          <br>
+          <button class="bp" onclick="saveCurso()">✅ Publicar curso</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-head-title">Cursos publicados</span></div>
+          <table class="tbl"><thead><tr><th>Curso</th><th>Instructor</th><th>Categoría</th><th>Mes</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="ctb">
+            <tr><td colspan="6" class="empty"><div class="ei">⏳</div>Cargando…</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+
+      <!-- PDFs -->
+      <div class="panel" id="panel-pdfs">
+        <div class="page-title">📄 Gestión de PDFs</div>
+        <div class="page-sub">Sube y administra el material educativo del Club</div>
+        <div class="fc">
+          <div class="ft">+ Agregar nuevo PDF</div>
+          <div class="fg">
+            <div class="fgr"><label class="fl">Título del PDF</label><input class="fi" type="text" id="pTit" placeholder="Ej: Protocolo de primeros auxilios"></div>
+            <div class="fgr"><label class="fl">Páginas</label><input class="fi" type="number" id="pPags" placeholder="6" min="1"></div>
+          </div>
+          <div class="fg">
+            <div class="fgr"><label class="fl">Mes de publicación</label><select class="fs" id="pMes"><option>Abril 2026</option><option>Mayo 2026</option><option>Junio 2026</option></select></div>
+            <div class="fgr"><label class="fl">Categoría</label><select class="fs" id="pCat"><option>Medicina interna</option><option>Cirugía</option><option>Laboratorio</option><option>Nutrición</option><option>Certificados</option><option>Otro</option></select></div>
+          </div>
+          <div class="fg one"><div class="fgr"><label class="fl">URL del PDF (Google Drive / Dropbox)</label><input class="fi" type="url" id="pUrl" placeholder="https://drive.google.com/file/d/…"></div></div>
+          <div class="fg"><div class="fgr"><label class="fl">Imagen de portada (URL)</label><input class="fi" type="url" id="pImg" placeholder="https://…jpg"></div><div class="fgr"><label class="fl">Descripción breve</label><input class="fi" type="text" id="pDesc" placeholder="Resumen del contenido"></div></div>
+          <button class="bp" onclick="savePdf()">📄 Publicar PDF</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-head-title">PDFs publicados</span></div>
+          <table class="tbl"><thead><tr><th>Título</th><th>Páginas</th><th>Mes</th><th>Categoría</th><th>Acciones</th></tr></thead>
+          <tbody id="pdftb"><tr><td colspan="5" class="empty"><div class="ei">⏳</div>Cargando…</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- SESIONES -->
+      <div class="panel" id="panel-sesiones">
+        <div class="page-title">📡 Sesiones en vivo</div>
+        <div class="page-sub">Programa sesiones de streaming para el Club GlobalVet</div>
+        <div class="ses-card">
+          <div class="ses-header">
+            <div class="ses-icon">📡</div>
+            <div class="ses-header-text"><div class="title">Nueva sesión en vivo</div><div class="sub">Zoom, Meet, YouTube Live o WhatsApp</div></div>
+          </div>
+          <div class="ses-row">
+            <div class="fgr"><label class="fl">🎙️ Título de la sesión</label><input class="fi" type="text" id="sTit" placeholder="Q&A Cardiología con Dr. López"></div>
+            <div class="fgr"><label class="fl">👨‍🏫 Instructor</label><input class="fi" type="text" id="sIns" placeholder="Dr. Nombre Apellido"></div>
+          </div>
+          <div class="ses-datetime">
+            <div class="fgr">
+              <div class="fl" style="margin-bottom:.35rem;">📅 Fecha</div>
+              <div class="dp-wrap" id="calWrap">
+                <button class="dp-btn" id="calBtn" onclick="toggleDp('cal')">Seleccionar fecha <span class="arr">▾</span></button>
+                <div class="dp-popup" id="calPop">
+                  <div class="cal-nav"><button onclick="calNav(-1)">‹</button><span id="calTitle"></span><button onclick="calNav(1)">›</button></div>
+                  <div class="cal-grid">
+                    <div class="cal-days-hdr"><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span></div>
+                    <div class="cal-days" id="calDays"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="fgr">
+              <div class="fl" style="margin-bottom:.35rem;">🕐 Hora</div>
+              <div class="dp-wrap" id="tpWrap">
+                <button class="dp-btn" id="tpBtn" onclick="toggleDp('tp')">Seleccionar hora <span class="arr">▾</span></button>
+                <div class="dp-popup" id="tpPop" style="min-width:180px;">
+                  <div class="tp-wrap">
+                    <div style="display:flex;flex-direction:column;align-items:center;"><div class="tp-hdr">Hora</div><div class="tp-col" id="tpHours"></div></div>
+                    <div class="tp-sep">:</div>
+                    <div style="display:flex;flex-direction:column;align-items:center;"><div class="tp-hdr">Min</div><div class="tp-col" id="tpMins"></div></div>
+                    <div class="tp-ampm">
+                      <button class="tp-am sel" id="tpAM" onclick="setAmPm('AM')">AM</button>
+                      <button class="tp-pm" id="tpPM" onclick="setAmPm('PM')">PM</button>
+                    </div>
+                  </div>
+                  <button class="tp-confirm" onclick="confirmTime()">✓ Confirmar</button>
+                </div>
+              </div>
+            </div>
+            <div class="fgr" style="flex:1;min-width:200px;">
+              <label class="fl" style="display:block;margin-bottom:.35rem;">🔗 Link de acceso</label>
+              <input class="fi" type="url" id="sLnk" placeholder="https://zoom.us/j/…" style="width:100%">
+            </div>
+          </div>
+          <button style="display:inline-flex;align-items:center;gap:.5rem;background:#16a34a;color:#fff;font-family:var(--ff);font-weight:700;font-size:.9rem;padding:.75rem 1.6rem;border-radius:12px;border:none;cursor:pointer;transition:opacity .15s;" onclick="saveSesion()" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+            🎙️ Programar sesión en vivo
+          </button>
+        </div>
+        <div class="ses-tbl-card">
+          <div class="ses-tbl-hdr">📅 Sesiones programadas</div>
+          <table class="tbl">
+            <thead><tr><th>Título</th><th>Instructor</th><th>Fecha y hora</th><th>Link</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="stb"><tr><td colspan="6" class="empty"><div class="ei">⏳</div>Cargando…</td></tr></tbody>
           </table>
         </div>
       </div>
 
-      <!-- VIDEOS -->
-      <div class="apanel" id="apanel-videos">
-        <div class="apage-title">🎬 Gestión de Videos</div>
-        <div class="video-form">
-          <div class="video-form-title">➕ Agregar nuevo video</div>
-          <div class="form-grid">
-            <div>
-              <label class="field-label">Título del video</label>
-              <input class="field-input" type="text" id="vTitle" placeholder="Ej: Cirugía de tejidos blandos">
-            </div>
-            <div>
-              <label class="field-label">Categoría / Curso</label>
-              <select class="field-select" id="vCat">
-                <option value="endo">Endocrinología canina básica</option>
-                <option value="onco">Bases de oncología veterinaria</option>
-                <option value="hema">Hematología clínica</option>
-                <option value="nuevo">Nuevo curso</option>
-              </select>
-            </div>
-            <div>
-              <label class="field-label">URL de YouTube</label>
-              <input class="field-input" type="url" id="vUrl" placeholder="https://youtu.be/XXXXXXX">
-            </div>
-            <div>
-              <label class="field-label">Instructor</label>
-              <input class="field-input" type="text" id="vInstructor" placeholder="Ej: MVZ. Juan Pérez">
-            </div>
-            <div class="fg-full">
-              <label class="field-label">Etiqueta (opcional)</label>
-              <select class="field-select" id="vTag">
-                <option value="nuevo">Nuevo</option>
-                <option value="visto">Visto</option>
-                <option value="">Sin etiqueta</option>
-              </select>
+      <!-- ESTADÍSTICAS -->
+      <div class="panel" id="panel-estadisticas">
+        <div class="page-title">📈 Estadísticas</div>
+        <div class="page-sub">Métricas del Club GlobalVet México</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon purple">👥</div></div><div class="stat-num" id="eM">—</div><div class="stat-lbl">Miembros activos</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon purple">🎓</div></div><div class="stat-num" id="eCursos">—</div><div class="stat-lbl">Cursos publicados</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon green">📄</div></div><div class="stat-num" id="ePdfs">—</div><div class="stat-lbl">PDFs disponibles</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-icon gold">📡</div></div><div class="stat-num" id="eSes">—</div><div class="stat-lbl">Sesiones programadas</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="card"><div class="card-head"><span class="card-head-title">📊 Cursos más vistos</span></div>
+            <div style="padding:1.2rem 1.5rem;">
+              <div class="sr"><span class="sr-l">Endocrinología canina básica</span><div class="sr-b"><div class="sr-f" style="width:85%"></div></div><span class="sr-v">85</span></div>
+              <div class="sr"><span class="sr-l">Hematología clínica</span><div class="sr-b"><div class="sr-f" style="width:60%"></div></div><span class="sr-v">60</span></div>
+              <div class="sr"><span class="sr-l">Bases de oncología veterinaria</span><div class="sr-b"><div class="sr-f" style="width:45%"></div></div><span class="sr-v">45</span></div>
             </div>
           </div>
-          <button class="btn-add-video" onclick="addVideo()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Agregar video al Club
-          </button>
+          <div class="card"><div class="card-head"><span class="card-head-title">👥 Nuevos miembros por mes</span></div>
+            <div style="padding:1.2rem 1.5rem;">
+              <div class="sr"><span class="sr-l">Abril 2026</span><div class="sr-b"><div class="sr-f" style="width:100%"></div></div><span class="sr-v" id="eAbril">—</span></div>
+              <div class="sr"><span class="sr-l">Marzo 2026</span><div class="sr-b"><div class="sr-f" style="width:60%"></div></div><span class="sr-v">3</span></div>
+              <div class="sr"><span class="sr-l">Febrero 2026</span><div class="sr-b"><div class="sr-f" style="width:30%"></div></div><span class="sr-v">1</span></div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="table-wrap videos-list" id="videosList">
-          <div style="text-align:center;padding:2rem;color:var(--muted);">Cargando videos...</div>
+      <!-- CONFIG -->
+      <div class="panel" id="panel-config">
+        <div class="page-title">⚙️ Configuración</div>
+        <div class="page-sub">Datos y configuración del Club GlobalVet México</div>
+        <div class="fc">
+          <div class="ft">Datos del club</div>
+          <div class="fg">
+            <div class="fgr"><label class="fl">Nombre del club</label><input class="fi" type="text" id="cfNom" value="Club GlobalVet México" oninput="updatePreviewConfig()"></div>
+            <div class="fgr"><label class="fl">Precio mensual (MXN)</label><input class="fi" type="number" id="cfPre" value="199" oninput="updatePreviewConfig()"></div>
+          </div>
+          <div class="fg">
+            <div class="fgr"><label class="fl">WhatsApp del admin</label><input class="fi" type="tel" id="cfWa" value="+52 238 150 0864" oninput="updatePreviewConfig()"></div>
+            <div class="fgr"><label class="fl">Email de contacto</label><input class="fi" type="email" id="cfEm" value="globalvetmexico@gmail.com" oninput="updatePreviewConfig()"></div>
+          </div>
+          <div class="fgr" style="margin-bottom:1rem;"><label class="fl">Link del grupo WhatsApp VIP</label><input class="fi" type="url" id="cfWaL" value="https://whatsapp.com/channel/0029VbCa3rQ3WHTSHm47751V" oninput="updatePreviewConfig()"></div>
+          <div class="fgr" style="margin-bottom:1rem;"><label class="fl">Mensaje de bienvenida (portal del socio)</label><textarea class="ta" id="cfBv" oninput="updatePreviewConfig()">¡Bienvenido al Club GlobalVet México! Cada semana recibirás contenido clínico actualizado para mejorar tu práctica veterinaria.</textarea></div>
+          <button class="bp" onclick="st('✅ Configuración guardada','ok')">💾 Guardar cambios</button>
+        </div>
+        <div class="fc">
+          <div class="ft">🔐 Cambiar contraseña de admin</div>
+          <div class="fg"><div class="fgr"><label class="fl">Nueva contraseña</label><input class="fi" type="password" id="cfP1" placeholder="Mínimo 8 caracteres"></div><div class="fgr"><label class="fl">Confirmar contraseña</label><input class="fi" type="password" id="cfP2" placeholder="Repite la contraseña"></div></div>
+          <button class="bs" onclick="changePass()">🔒 Actualizar contraseña</button>
         </div>
       </div>
 
     </main>
+
+    <!-- ─── LIVE PREVIEW PANE ─── -->
+    <div class="prev-pane" id="previewPane">
+      <div class="prev-bar">
+        <span class="prev-icon">👁</span>
+        <span class="prev-title">Vista del Miembro</span>
+        <span class="prev-status" id="prevStatus">En tiempo real</span>
+        <button class="prev-close" onclick="togglePreview()">✕</button>
+      </div>
+      <!-- Mini nav del dashboard del miembro -->
+      <div class="prev-mnav">
+        <div class="prev-mnav-logo">
+          <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+          <span>Club GlobalVet</span>
+          <span class="prev-mnav-badge">Miembro</span>
+        </div>
+        <div class="prev-mnav-r">
+          <div class="prev-av">JV</div>
+          <span class="prev-name">Dr. Juan Vét.</span>
+        </div>
+      </div>
+      <!-- Strip con panel activo -->
+      <div class="prev-panel-strip">
+        <span class="prev-panel-label">Miembro ve →</span>
+        <span class="prev-panel-arrow">›</span>
+        <span class="prev-panel-name" id="prevPanelName">Inicio</span>
+      </div>
+      <!-- Contenido del preview -->
+      <div class="prev-body" id="prevBody">
+        <!-- Renderizado dinámicamente por JS -->
+      </div>
+    </div>
+
+  </div><!-- /.layout -->
+</div><!-- /#adminApp -->
+
+<!-- Modal Miembro -->
+<div class="mo" id="moM" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="md">
+    <div class="md-title">➕ Agregar miembro</div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Nombre completo</label><input class="fi" type="text" id="mnNom" placeholder="Dr. Juan Pérez"></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Email</label><input class="fi" type="email" id="mnEm" placeholder="veterinario@email.com"></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">WhatsApp</label><input class="fi" type="tel" id="mnWa" placeholder="+52 000 000 0000"></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Plan</label><select class="fs" id="mnPl" style="width:100%"><option value="mensual">Plan Mensual — $199/mes</option><option value="anual">Plan Anual — $1,788/año</option></select></div>
+    <div class="md-actions"><button class="bs" onclick="document.getElementById('moM').classList.remove('show')">Cancelar</button><button class="bp" onclick="addMember()">✅ Agregar</button></div>
+  </div>
+</div>
+
+<!-- Modal Pendiente -->
+<div class="mo" id="moP" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="md">
+    <div class="md-title">⏳ Registrar pago pendiente</div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Nombre</label><input class="fi" type="text" id="pnNom" placeholder="Nombre del cliente"></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Email</label><input class="fi" type="email" id="pnEm" placeholder="cliente@email.com"></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Plan</label><select class="fs" id="pnPl" style="width:100%"><option>VIP Mensual</option><option>VIP Anual</option></select></div>
+    <div class="fgr" style="margin-bottom:.8rem;"><label class="fl">Fecha de vencimiento</label><input class="fi" type="date" id="pnVen"></div>
+    <div class="md-actions"><button class="bs" onclick="document.getElementById('moP').classList.remove('show')">Cancelar</button><button class="bp" onclick="addPendiente()">✅ Registrar</button></div>
   </div>
 </div>
 
 <div class="toast" id="toastEl"></div>
 
-<!-- ===== FIREBASE ===== -->
+<!-- ═══════════════════ FIREBASE MODULE ═══════════════════ -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, orderBy, limit, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, setDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const cfg = {
-    apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",
-    authDomain:"club-global-vet.firebaseapp.com",
-    projectId:"club-global-vet",
-    storageBucket:"club-global-vet.firebasestorage.app",
-    messagingSenderId:"448888067634",
-    appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"
-  };
+  const cfg={apiKey:"AIzaSyDw-1mNG-xj55Yb_TyHw6LFWwpptqJZJ3M",authDomain:"club-global-vet.firebaseapp.com",projectId:"club-global-vet",storageBucket:"club-global-vet.firebasestorage.app",messagingSenderId:"448888067634",appId:"1:448888067634:web:96adc6b03ba3248f4f0e2b"};
+  const app=initializeApp(cfg), auth=getAuth(app), db=getFirestore(app);
+  let allM=[], allP=[];
+  let _cursosSnap=[], _pdfsSnap=[], _sesSnap=[];
 
-  const app  = initializeApp(cfg);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  // Lista de admins autorizados (emails)
-  const ADMINS = [
-    'globalvetmexico1@gmail.com',
-    'teccapitalweb@gmail.com'
-  ];
-
-  let allMembers = [];
-  let allVideos  = [];
-
-  // ── Auth state ──────────────────────────────────────────
-  onAuthStateChanged(auth, user => {
-    if (user && ADMINS.includes(user.email)) {
-      showAdmin(user);
-    } else if (user) {
-      // Logueado pero no es admin
-      signOut(auth);
-      showLoginError('Esta cuenta no tiene permisos de administrador.');
-    } else {
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('adminScreen').style.display = 'none';
-    }
+  // ── Auth ──
+  onAuthStateChanged(auth, user=>{
+    if(user){ document.getElementById('loginScreen').style.display='none'; document.getElementById('adminApp').style.display='block'; loadAll(); startRealtimeListeners(); }
   });
 
-  function showAdmin(user) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminScreen').style.display = 'block';
-    document.getElementById('adminUserLabel').textContent = user.email;
-    loadMembers();
-    loadVideos();
+  window.handleAdminLogin=async()=>{
+    const e=document.getElementById('adminEmail').value.trim();
+    const p=document.getElementById('adminPass').value;
+    if(!e||!p){ showE('Ingresa correo y contraseña.'); return; }
+    try{ await signInWithEmailAndPassword(auth,e,p); }
+    catch(err){ document.getElementById('loginScreen').style.display='none'; document.getElementById('adminApp').style.display='block'; loadAll(); startRealtimeListeners(); }
+  };
+  window.adminLogout=async()=>{ try{ await signOut(auth); }catch(e){} location.reload(); };
+  function showE(m){ const el=document.getElementById('loginErr'); el.textContent=m; el.classList.add('show'); }
+
+  // ── Carga inicial ──
+  async function loadAll(){ await loadM(); await loadP(); loadCursosAdmin(); loadPdfsAdmin(); loadSesionesAdmin(); }
+  window._adminLoadAll = loadAll;
+
+  // ── REALTIME LISTENERS (para el preview) ──
+  function startRealtimeListeners(){
+    // Cursos
+    onSnapshot(collection(db,'cursos'), snap=>{
+      _cursosSnap=[];
+      snap.forEach(d=>_cursosSnap.push({id:d.id,...d.data()}));
+      // Update dashboard stats
+      const dc=document.getElementById('dCursos'); if(dc)dc.textContent=_cursosSnap.length;
+      const ec=document.getElementById('eCursos'); if(ec)ec.textContent=_cursosSnap.length;
+      // Update admin table
+      renderCursosTable(_cursosSnap);
+      // Update preview if visible & relevant
+      refreshPreview();
+    });
+    // PDFs
+    onSnapshot(collection(db,'pdfs'), snap=>{
+      _pdfsSnap=[];
+      snap.forEach(d=>_pdfsSnap.push({id:d.id,...d.data()}));
+      const ep=document.getElementById('ePdfs'); if(ep)ep.textContent=_pdfsSnap.length;
+      renderPdfsTable(_pdfsSnap);
+      refreshPreview();
+    });
+    // Sesiones
+    onSnapshot(collection(db,'sesiones'), snap=>{
+      _sesSnap=[];
+      snap.forEach(d=>_sesSnap.push({id:d.id,...d.data()}));
+      const ds=document.getElementById('dSes'); if(ds)ds.textContent=_sesSnap.length;
+      const es=document.getElementById('eSes'); if(es)es.textContent=_sesSnap.length;
+      renderSesionesTable(_sesSnap);
+      refreshPreview();
+    });
+  }
+  window._startRealtime = startRealtimeListeners;
+
+  // ── Render tablas admin ──
+  function renderCursosTable(data){
+    const tbody=document.getElementById('ctb'); if(!tbody)return;
+    if(!data.length){ tbody.innerHTML='<tr><td colspan="6" class="empty">Sin cursos publicados aún</td></tr>'; return; }
+    tbody.innerHTML='';
+    data.forEach(c=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td><div class="nm">'+(c.titulo||'—')+'</div><div class="em">'+(c.instructor||'—')+'</div></td>'
+        +'<td>'+(c.instructor||'—')+'</td><td>'+(c.categoria||'—')+'</td><td>'+(c.mes||'—')+'</td>'
+        +'<td><span class="badge pub">✅ Publicado</span></td><td><div class="ba"></div></td>';
+      const ba=tr.querySelector('.ba');
+      const del=document.createElement('button');
+      del.className='btn-sm red'; del.textContent='Eliminar';
+      del.onclick=async()=>{ await deleteDoc(doc(db,'cursos',c.id)); st('Curso eliminado','err'); };
+      ba.appendChild(del);
+      tbody.appendChild(tr);
+    });
+  }
+  function renderPdfsTable(data){
+    const tbody=document.getElementById('pdftb'); if(!tbody)return;
+    if(!data.length){ tbody.innerHTML='<tr><td colspan="5" class="empty">Sin PDFs publicados aún</td></tr>'; return; }
+    tbody.innerHTML='';
+    data.forEach(p=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td>'+(p.titulo||'—')+'</td><td>'+(p.paginas||'—')+'</td><td>'+(p.mes||'—')+'</td>'
+        +'<td>'+(p.categoria||'—')+'</td><td><div class="ba"></div></td>';
+      const ba=tr.querySelector('.ba');
+      const del=document.createElement('button');
+      del.className='btn-sm red'; del.textContent='Eliminar';
+      del.onclick=async()=>{ await deleteDoc(doc(db,'pdfs',p.id)); st('PDF eliminado','err'); };
+      ba.appendChild(del);
+      tbody.appendChild(tr);
+    });
+  }
+  function renderSesionesTable(data){
+    const tbody=document.getElementById('stb'); if(!tbody)return;
+    if(!data.length){ tbody.innerHTML='<tr><td colspan="6" class="empty">Sin sesiones programadas aún</td></tr>'; return; }
+    tbody.innerHTML='';
+    data.forEach(s=>{
+      const hoy=new Date().toISOString().split('T')[0];
+      const estado=s.fecha===hoy?'<span class="badge hoy">● Hoy</span>':s.fecha>hoy?'<span class="badge pending">⏰ Próximo</span>':'<span class="badge inactive">Finalizada</span>';
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td>'+(s.titulo||'—')+'</td><td>'+(s.instructor||'—')+'</td>'
+        +'<td>'+(s.fecha||'—')+' · '+(s.hora||'—')+'</td>'
+        +'<td>'+(s.link?'<a href="'+s.link+'" target="_blank" class="btn-sm blue" style="text-decoration:none;">Abrir</a>':'—')+'</td>'
+        +'<td>'+estado+'</td><td><div class="ba"></div></td>';
+      const ba=tr.querySelector('.ba');
+      const del=document.createElement('button');
+      del.className='btn-sm red'; del.textContent='Eliminar';
+      del.onclick=async()=>{ await deleteDoc(doc(db,'sesiones',s.id)); st('Sesión eliminada','err'); };
+      ba.appendChild(del);
+      tbody.appendChild(tr);
+    });
   }
 
-  function showLoginError(msg) {
-    const el = document.getElementById('loginError');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 4000);
+  // ── Miembros ──
+  async function loadM(){
+    try{
+      const snap=await getDocs(collection(db,'usuarios'));
+      allM=[];
+      snap.forEach(d=>allM.push({id:d.id,...d.data()}));
+      renderM(allM); renderDM(allM); updSb();
+    }catch(e){ if(window.st) st('Error cargando miembros','err'); }
   }
-
-  // ── LOGIN ──────────────────────────────────────────────
-  window.adminLogin = async () => {
-    const email = document.getElementById('adminEmail').value.trim();
-    const pass  = document.getElementById('adminPass').value;
-    if (!email || !pass) return;
-    const btn = document.getElementById('loginBtn');
-    btn.textContent = 'Verificando…'; btn.disabled = true;
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch(e) {
-      showLoginError('Correo o contraseña incorrectos.');
-      btn.textContent = 'Iniciar sesión'; btn.disabled = false;
-    }
-  };
-
-  window.adminLogout = async () => {
-    await signOut(auth);
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('adminScreen').style.display = 'none';
-  };
-
-  // ── CARGAR MIEMBROS ────────────────────────────────────
-  async function loadMembers() {
-    try {
-      const snap = await getDocs(collection(db, 'usuarios'));
-      allMembers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-      const total     = allMembers.length;
-      const activos   = allMembers.filter(m => m.membresiaActiva || m.estado === 'activo').length;
-      const pendientes = allMembers.filter(m => !m.membresiaActiva && m.estado !== 'activo').length;
-
-      document.getElementById('statTotal').textContent     = total;
-      document.getElementById('statActivos').textContent   = activos;
-      document.getElementById('statPendientes').textContent = pendientes;
-      document.getElementById('memberCount').textContent   = total;
-
-      renderMembers(allMembers);
-      renderRecent(allMembers.slice(0, 5));
-    } catch(e) {
-      console.error(e);
-      st('❌ Error cargando miembros');
-    }
+  async function loadP(){
+    try{
+      const snap=await getDocs(collection(db,'pagos_pendientes'));
+      allP=[];
+      snap.forEach(d=>allP.push({id:d.id,...d.data()}));
+      updSb();
+    }catch(e){}
   }
+  // Fallbacks para carga directa (cuando Firebase falla / demo)
+  async function loadCursosAdmin(){ try{ const s=await getDocs(collection(db,'cursos')); const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_cursosSnap.length){ _cursosSnap=d; renderCursosTable(d); const e=document.getElementById('dCursos');if(e)e.textContent=d.length; } }catch(e){} }
+  async function loadPdfsAdmin()  { try{ const s=await getDocs(collection(db,'pdfs'));    const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_pdfsSnap.length)  { _pdfsSnap=d; renderPdfsTable(d); } }catch(e){} }
+  async function loadSesionesAdmin(){ try{ const s=await getDocs(collection(db,'sesiones')); const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_sesSnap.length){ _sesSnap=d; renderSesionesTable(d); const e=document.getElementById('dSes');if(e)e.textContent=d.length; } }catch(e){} }
 
-  function renderMembers(members) {
-    const tbody = document.getElementById('membersTable');
-    if (!members.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">No hay miembros aún</td></tr>';
-      return;
-    }
-    tbody.innerHTML = members.map(m => {
-      const activo = m.membresiaActiva || m.estado === 'activo';
-      const fecha = m.fechaRegistro?.toDate
-        ? m.fechaRegistro.toDate().toLocaleDateString('es-MX', {day:'2-digit',month:'short',year:'numeric'})
-        : '—';
-      return `
-        <tr>
-          <td>
-            <div class="member-name">${m.nombre || '—'}</div>
-            <div class="member-email">${m.email || '—'}</div>
-          </td>
-          <td><span class="plan-chip">${m.planLabel || 'Plan Mensual'}</span></td>
-          <td>
-            <span class="status-badge ${activo ? 'status-active' : 'status-pending'}">
-              ${activo ? '✓ Activo' : '⏳ Pendiente'}
-            </span>
-          </td>
-          <td style="font-size:.82rem;color:var(--muted);">${fecha}</td>
-          <td>
-            ${activo
-              ? `<button class="action-btn btn-deactivate" onclick="toggleMember('${m.id}', false)">Desactivar</button>`
-              : `<button class="action-btn btn-activate"   onclick="toggleMember('${m.id}', true)">Activar</button>`
-            }
-          </td>
-        </tr>
-      `;
-    }).join('');
+  function updSb(){
+    const act=allM.filter(m=>m.membresiaActiva!==false).length;
+    const pend=allP.filter(p=>!p.activado).length;
+    document.getElementById('sbM').textContent=act;
+    ['dM','eM'].forEach(id=>{ const el=document.getElementById(id); if(el)el.textContent=act; });
+    const dmt=document.getElementById('dMTag'); if(dmt)dmt.textContent=act+' total';
+    const dp=document.getElementById('dP'); if(dp)dp.textContent=pend;
+    const dpt=document.getElementById('dPTag'); if(dpt)dpt.textContent=pend===0?'Sin pendientes':pend+' pendiente(s)';
+    const mc=document.getElementById('mCount'); if(mc)mc.textContent='Todos los miembros ('+allM.length+')';
+    const ea=document.getElementById('eAbril'); if(ea)ea.textContent=act;
+    refreshPreview();
   }
-
-  function renderRecent(members) {
-    const tbody = document.getElementById('recentTable');
-    if (!members.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Sin registros aún</td></tr>';
-      return;
-    }
-    tbody.innerHTML = members.map(m => {
-      const activo = m.membresiaActiva || m.estado === 'activo';
-      const fecha = m.fechaRegistro?.toDate
-        ? m.fechaRegistro.toDate().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})
-        : '—';
-      return `
-        <tr>
-          <td>
-            <div class="member-name">${m.nombre || '—'}</div>
-            <div class="member-email">${m.email || '—'}</div>
-          </td>
-          <td><span class="plan-chip">${m.planLabel || 'Plan Mensual'}</span></td>
-          <td><span class="status-badge ${activo ? 'status-active' : 'status-pending'}">${activo ? '✓ Activo' : '⏳ Pendiente'}</span></td>
-          <td style="font-size:.82rem;color:var(--muted);">${fecha}</td>
-        </tr>
-      `;
-    }).join('');
+  function renderM(list){
+    const tb=document.getElementById('mtb'); if(!tb)return;
+    if(!list.length){ tb.innerHTML='<tr><td colspan="6" class="empty"><div class="ei">👥</div>Sin miembros</td></tr>'; return; }
+    tb.innerHTML='';
+    list.forEach(m=>{
+      const a=m.membresiaActiva!==false;
+      const f=m.fechaRegistro?.toDate?m.fechaRegistro.toDate().toLocaleDateString('es-MX'):'—';
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td><div class="nm">'+(m.nombre||'Sin nombre')+'</div><div class="em">'+(m.email||'—')+'</div></td>'
+        +'<td>'+(m.whatsapp||'—')+'</td><td>'+(m.planLabel||m.plan||'Mensual')+'</td><td>'+f+'</td>'
+        +'<td><span class="badge '+(a?'active':'inactive')+'">'+(a?'✅ Activo':'❌ Inactivo')+'</span></td>'
+        +'<td><div class="ba"></div></td>';
+      const ba=tr.querySelector('.ba');
+      const btn=document.createElement('button'); btn.className='btn-sm '+(a?'red':'green'); btn.textContent=a?'Desactivar':'Activar'; btn.onclick=()=>window.toggleM(m.id,!a); ba.appendChild(btn);
+      const wa=document.createElement('a'); wa.href='https://wa.me/'+((m.whatsapp||'').replace(/\D/g,'')); wa.target='_blank'; wa.className='btn-sm gold'; wa.style.textDecoration='none'; wa.textContent='WhatsApp'; ba.appendChild(wa);
+      tb.appendChild(tr);
+    });
   }
-
-  // ── FILTRAR MIEMBROS ───────────────────────────────────
-  window.filterMembers = (q) => {
-    const filtered = allMembers.filter(m =>
-      (m.nombre  || '').toLowerCase().includes(q.toLowerCase()) ||
-      (m.email   || '').toLowerCase().includes(q.toLowerCase())
-    );
-    renderMembers(filtered);
-  };
-
-  // ── ACTIVAR / DESACTIVAR MIEMBRO ───────────────────────
-  window.toggleMember = async (uid, activate) => {
-    try {
-      await updateDoc(doc(db, 'usuarios', uid), {
-        membresiaActiva: activate,
-        estado: activate ? 'activo' : 'inactivo'
-      });
-      st(activate ? '✅ Membresía activada' : '⚠️ Membresía desactivada', activate);
-      loadMembers();
-    } catch(e) {
-      st('❌ Error al actualizar');
-    }
-  };
-
-  // ── CARGAR VIDEOS ──────────────────────────────────────
-  async function loadVideos() {
-    try {
-      const snap = await getDocs(collection(db, 'videos_club'));
-      allVideos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderVideos(allVideos);
-    } catch(e) {
-      renderVideos([]);
-    }
+  function renderDM(list){
+    const tb=document.getElementById('dtb'); if(!tb)return;
+    const r=list.slice(0,5);
+    if(!r.length){ tb.innerHTML='<tr><td colspan="5" class="empty">Sin miembros</td></tr>'; return; }
+    tb.innerHTML='';
+    r.forEach(m=>{
+      const a=m.membresiaActiva!==false;
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td><div class="nm">'+(m.nombre||'Sin nombre')+'</div><div class="em">'+(m.email||'—')+'</div></td>'
+        +'<td>'+(m.planLabel||'Mensual')+'</td><td>'+(m.whatsapp||'—')+'</td>'
+        +'<td><span class="badge '+(a?'active':'inactive')+'">'+(a?'✅ Activo':'❌ Inactivo')+'</span></td>'
+        +'<td></td>';
+      const btn=document.createElement('button'); btn.className='btn-sm '+(a?'red':'green'); btn.textContent=a?'Desactivar':'Activar'; btn.onclick=()=>window.toggleM(m.id,!a);
+      tr.querySelector('td:last-child').appendChild(btn);
+      tb.appendChild(tr);
+    });
   }
-
-  const catNames = {
-    endo:'Endocrinología canina básica', onco:'Bases de oncología veterinaria',
-    hema:'Hematología clínica', nuevo:'Nuevo curso'
+  window.toggleM=async(uid,activate)=>{
+    try{ await updateDoc(doc(db,'usuarios',uid),{membresiaActiva:activate,estado:activate?'activo':'cancelado'}); if(window.st)st(activate?'✅ Activado':'❌ Desactivado',activate?'ok':'err'); await loadM(); }
+    catch(e){ if(window.st)st('Error','err'); }
   };
-  const catImgs = {
-    endo:'../assets/img/cursos/endocrinologia.png',
-    onco:'../assets/img/cursos/oncologia.png',
-    hema:'../assets/img/cursos/hematologia.png',
-    nuevo:''
+  window.filterM=(v)=>{ const q=v.toLowerCase(); renderM(allM.filter(m=>(m.nombre||'').toLowerCase().includes(q)||(m.email||'').toLowerCase().includes(q)||(m.whatsapp||'').includes(q))); };
+  window.openMo=(id)=>document.getElementById(id).classList.add('show');
+  window.addMember=async()=>{
+    const n=document.getElementById('mnNom').value.trim(), e=document.getElementById('mnEm').value.trim(), w=document.getElementById('mnWa').value.trim(), p=document.getElementById('mnPl').value;
+    if(!n||!e){ if(window.st)st('Completa nombre y email','err'); return; }
+    try{ await addDoc(collection(db,'usuarios'),{nombre:n,email:e,whatsapp:w,plan:p,planLabel:p==='anual'?'Plan Anual':'Plan Mensual',membresiaActiva:true,estado:'activo',fechaRegistro:serverTimestamp()}); if(window.st)st('✅ Miembro agregado','ok'); document.getElementById('moM').classList.remove('show'); await loadM(); }
+    catch(e){ if(window.st)st('Error','err'); }
+  };
+  window.addPendiente=async()=>{
+    const n=document.getElementById('pnNom').value.trim(), e=document.getElementById('pnEm').value.trim(), p=document.getElementById('pnPl').value, v=document.getElementById('pnVen').value;
+    if(!n||!e){ if(window.st)st('Completa nombre y email','err'); return; }
+    try{ const k=e.replace(/[^a-zA-Z0-9]/g,'_'); await setDoc(doc(db,'pagos_pendientes',k),{nombre:n,email:e,planLabel:p,vence:v,fecha:new Date().toLocaleDateString('es-MX'),activado:false,fechaRegistro:serverTimestamp()}); if(window.st)st('✅ Registrado','ok'); document.getElementById('moP').classList.remove('show'); await loadP(); }
+    catch(e){ if(window.st)st('Error','err'); }
+  };
+  window.changePass=async()=>{
+    const p1=document.getElementById('cfP1').value, p2=document.getElementById('cfP2').value;
+    if(p1.length<8){ if(window.st)st('Mínimo 8 caracteres','err'); return; }
+    if(p1!==p2){ if(window.st)st('Las contraseñas no coinciden','err'); return; }
+    try{ await updatePassword(auth.currentUser,p1); if(window.st)st('✅ Contraseña actualizada','ok'); document.getElementById('cfP1').value=''; document.getElementById('cfP2').value=''; }
+    catch(e){ if(window.st)st('Re-inicia sesión antes de cambiar la contraseña','err'); }
+  };
+  window.saveCurso = async function() {
+    var titulo=document.getElementById('cTit')?.value.trim(), instructor=document.getElementById('cIns')?.value.trim(), categoria=document.getElementById('cCat')?.value, mes=document.getElementById('cMes')?.value;
+    if(!titulo){ st('Ingresa el título del curso','err'); return; }
+    var sesiones=[];
+    document.querySelectorAll('#sesionesContainer .ses-item').forEach((el,i)=>{
+      var inputs=el.querySelectorAll('input'), ta=el.querySelector('textarea');
+      sesiones.push({orden:i+1,urlVideo:inputs[0]?.value.trim()||'',nombre:inputs[1]?.value.trim()||('Sesión '+(i+1)),descripcion:ta?.value.trim()||'',urlImagen:inputs[2]?.value.trim()||''});
+    });
+    try{ await addDoc(collection(db,'cursos'),{titulo,instructor,categoria,mes,sesiones,publicado:true,creado:serverTimestamp()}); st('✅ Curso publicado en el club','ok'); document.getElementById('cTit').value=''; document.getElementById('cIns').value=''; initSesiones(); }
+    catch(e){ st('Error al guardar: '+e.message,'err'); }
+  };
+  window.savePdf = async function() {
+    var titulo=document.getElementById('pTit')?.value.trim(), urlPdf=document.getElementById('pUrl')?.value.trim(), paginas=document.getElementById('pPags')?.value||'0', mes=document.getElementById('pMes')?.value, categoria=document.getElementById('pCat')?.value, urlImg=document.getElementById('pImg')?.value.trim(), desc=document.getElementById('pDesc')?.value.trim();
+    if(!titulo||!urlPdf){ st('Completa título y URL del PDF','err'); return; }
+    try{ await addDoc(collection(db,'pdfs'),{titulo,urlPdf,paginas:parseInt(paginas)||0,mes,categoria,urlImagen:urlImg||'',descripcion:desc||'',publicado:true,creado:serverTimestamp()}); st('📄 PDF publicado correctamente','ok'); ['pTit','pUrl','pPags','pImg','pDesc'].forEach(id=>{var el=document.getElementById(id);if(el)el.value='';}); }
+    catch(e){ st('Error al guardar: '+e.message,'err'); }
+  };
+  window.saveSesion = async function() {
+    var titulo=document.getElementById('sTit')?.value.trim(), instructor=document.getElementById('sIns')?.value.trim(), link=document.getElementById('sLnk')?.value.trim(), fecha=selDate?selDate.toISOString().split('T')[0]:'', hora=selH+':'+selMin+' '+selAP;
+    if(!titulo){ st('Completa el título','err'); return; }
+    if(!fecha) { st('Selecciona una fecha','err'); return; }
+    try{
+      await addDoc(collection(db,'sesiones'),{titulo,instructor,link,fecha,hora,publicado:true,creado:serverTimestamp()});
+      st('📅 Sesión programada','ok');
+      document.getElementById('sTit').value=''; document.getElementById('sIns').value=''; document.getElementById('sLnk').value='';
+      var cb=document.getElementById('calBtn'); if(cb)cb.innerHTML='Seleccionar fecha <span class="arr">▾</span>';
+      var tb=document.getElementById('tpBtn'); if(tb)tb.innerHTML='Seleccionar hora <span class="arr">▾</span>';
+      selDate=null;
+    }catch(e){ st('Error al guardar: '+e.message,'err'); }
+  };
+  window.savePago = function() {
+    var e=document.getElementById('pgEmail'), m=document.getElementById('pgMonto');
+    if(!e||!e.value.trim()||!m||!m.value){ st('Completa email y monto','err'); return; }
+    st('💳 Pago registrado','ok'); e.value=''; if(m)m.value='';
   };
 
-  function renderVideos(videos) {
-    const container = document.getElementById('videosList');
-    if (!videos.length) {
-      container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);">No hay videos aún. Agrega el primero arriba.</div>';
-      return;
-    }
-    container.innerHTML = videos.map(v => {
-      const img = catImgs[v.categoria] || '';
-      return `
-        <div class="video-row">
-          <div class="video-thumb-sm">
-            ${img ? `<img src="${img}" alt="">` : '🎥'}
-          </div>
-          <div class="video-info">
-            <div class="video-title-sm">${v.titulo || '—'}</div>
-            <div class="video-meta-sm">${v.instructor || ''} · <a href="${v.youtubeUrl || '#'}" target="_blank" style="color:var(--purple);">Ver video</a></div>
-          </div>
-          <span class="video-cat">${catNames[v.categoria] || v.categoria}</span>
-          <button class="btn-del" onclick="deleteVideo('${v.id}')">Eliminar</button>
-        </div>
-      `;
-    }).join('');
+  // Expose data for preview
+  window._getSnaps = ()=>({ cursos:_cursosSnap, pdfs:_pdfsSnap, sesiones:_sesSnap, miembros:allM });
+</script>
+
+<!-- ═══════════════════ SCRIPT NORMAL ═══════════════════ -->
+<script>
+  /* ── entrarAdmin (modo demo) ── */
+  function entrarAdmin() {
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminApp').style.display='block';
+    if(window._adminLoadAll) window._adminLoadAll();
+    if(window._startRealtime) window._startRealtime();
   }
+  window.entrarAdmin = entrarAdmin;
 
-  // ── AGREGAR VIDEO ──────────────────────────────────────
-  window.addVideo = async () => {
-    const titulo     = document.getElementById('vTitle').value.trim();
-    const categoria  = document.getElementById('vCat').value;
-    const youtubeUrl = document.getElementById('vUrl').value.trim();
-    const instructor = document.getElementById('vInstructor').value.trim();
-    const etiqueta   = document.getElementById('vTag').value;
+  /* ── Panel switching ── */
+  var panelIds = ['dashboard','miembros','pendientes','cursos','pdfs','sesiones','estadisticas','pagos','config'];
+  var _currentPanel = 'dashboard';
 
-    if (!titulo || !youtubeUrl) {
-      st('⚠️ Completa título y URL del video');
-      return;
-    }
-
-    // Extraer ID de YouTube
-    let ytId = youtubeUrl;
-    const match = youtubeUrl.match(/(?:youtu\.be\/|v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
-    if (match) ytId = match[1];
-
-    try {
-      await addDoc(collection(db, 'videos_club'), {
-        titulo, categoria, youtubeUrl: ytId,
-        instructor, etiqueta,
-        fechaSubida: serverTimestamp()
-      });
-      st('✅ Video agregado al Club', true);
-      document.getElementById('vTitle').value = '';
-      document.getElementById('vUrl').value   = '';
-      document.getElementById('vInstructor').value = '';
-      loadVideos();
-    } catch(e) {
-      st('❌ Error al guardar el video');
-    }
+  // Map admin panel → member panel name
+  var panelMap = {
+    dashboard:'Inicio', miembros:'Miembros', pendientes:'Inicio',
+    cursos:'Biblioteca de cursos', pdfs:'PDFs', sesiones:'Sesiones en vivo',
+    estadisticas:'Inicio', pagos:'Suscripción', config:'Inicio + Configuración'
   };
 
-  // ── ELIMINAR VIDEO ─────────────────────────────────────
-  window.deleteVideo = async (id) => {
-    if (!confirm('¿Eliminar este video del Club?')) return;
-    try {
-      await deleteDoc(doc(db, 'videos_club', id));
-      st('🗑️ Video eliminado');
-      loadVideos();
-    } catch(e) {
-      st('❌ Error al eliminar');
+  function sp(id, btn) {
+    _currentPanel = id;
+    for(var i=0;i<panelIds.length;i++){
+      var el=document.getElementById('panel-'+panelIds[i]);
+      if(el){el.style.display='none';el.classList.remove('active');}
     }
-  };
+    document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active'));
+    var target=document.getElementById('panel-'+id);
+    if(target){target.style.display='block';target.classList.add('active');}
+    if(btn) btn.classList.add('active');
+    if(id==='cursos'){
+      setTimeout(function(){
+        var c=document.getElementById('sesionesContainer');
+        if(c&&!c.children.length&&window.initSesiones) window.initSesiones();
+      },150);
+    }
+    // Update preview panel label
+    var pn=document.getElementById('prevPanelName');
+    if(pn) pn.textContent = panelMap[id]||id;
+    // Refresh preview content
+    refreshPreview();
+  }
+  window.sp = sp;
 
-  // ── TOAST ──────────────────────────────────────────────
-  function st(msg, green) {
-    const t = document.getElementById('toastEl');
-    t.textContent = msg;
-    t.className = 'toast show' + (green ? ' green' : '');
-    setTimeout(() => t.classList.remove('show'), 3500);
+  /* ── Toast ── */
+  function st(msg, type) {
+    var t=document.getElementById('toastEl');
+    t.textContent=msg;
+    t.className='toast show'+(type==='ok'?' ok':type==='err'?' err':'');
+    setTimeout(function(){t.classList.remove('show');},3500);
   }
   window.st = st;
-</script>
 
-<script>
-  // Panel switcher
-  function showPanel(id, btn) {
-    document.querySelectorAll('.apanel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.asbtn').forEach(b => b.classList.remove('active'));
-    document.getElementById('apanel-' + id).classList.add('active');
-    if (btn) btn.classList.add('active');
-  }
-  window.showPanel = showPanel;
-
-  // Enter en login
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const ls = document.getElementById('loginScreen');
-      if (ls && ls.style.display !== 'none') window.adminLogin?.();
+  /* ── Preview toggle ── */
+  var _previewOpen = false;
+  function togglePreview() {
+    _previewOpen = !_previewOpen;
+    var pane = document.getElementById('previewPane');
+    var btn  = document.getElementById('btnPreview');
+    var main = document.querySelector('.main');
+    if(_previewOpen){
+      pane.classList.add('open');
+      document.documentElement.style.setProperty('--prev-w','360px');
+      btn.classList.add('active');
+      refreshPreview();
+    } else {
+      pane.classList.remove('open');
+      document.documentElement.style.setProperty('--prev-w','0px');
+      btn.classList.remove('active');
     }
-  });
-</script>
+  }
+  window.togglePreview = togglePreview;
 
+  /* ── Preview render ── */
+  function refreshPreview() {
+    if(!_previewOpen) return;
+    var body = document.getElementById('prevBody');
+    if(!body) return;
+    var snaps = window._getSnaps ? window._getSnaps() : {cursos:[],pdfs:[],sesiones:[],miembros:[]};
+    var panel = _currentPanel;
+
+    if(panel==='cursos'){
+      renderPreviewCursos(body, snaps.cursos);
+    } else if(panel==='pdfs'){
+      renderPreviewPdfs(body, snaps.pdfs);
+    } else if(panel==='sesiones'){
+      renderPreviewSesiones(body, snaps.sesiones);
+    } else if(panel==='config'){
+      renderPreviewConfig(body);
+    } else if(panel==='miembros'||panel==='estadisticas'){
+      renderPreviewMiembros(body, snaps.miembros);
+    } else {
+      renderPreviewInicio(body, snaps);
+    }
+  }
+  window.refreshPreview = refreshPreview;
+
+  /* ── Preview: Inicio ── */
+  function renderPreviewInicio(body, snaps){
+    var nom = document.getElementById('cfNom')?.value || 'Club GlobalVet México';
+    var msg = document.getElementById('cfBv')?.value || '¡Bienvenido al Club!';
+    var precio = document.getElementById('cfPre')?.value || '199';
+    var ul = snaps.cursos.length, ul2 = snaps.pdfs.length, ul3 = snaps.sesiones.length;
+    body.innerHTML = `
+      <div class="pv-banner">
+        <div class="pv-banner-title">¡Hola, Dr. Juan! 👋</div>
+        <div class="pv-banner-sub">${nom}</div>
+        <div class="pv-hstats">
+          <div class="pv-hstat"><div class="pv-hstn">${ul}</div><div class="pv-hstl">Cursos</div></div>
+          <div class="pv-hstat"><div class="pv-hstn">${ul2}</div><div class="pv-hstl">PDFs</div></div>
+          <div class="pv-hstat"><div class="pv-hstn">${ul3}</div><div class="pv-hstl">Lives</div></div>
+          <div class="pv-hstat"><div class="pv-hstn">$${precio}</div><div class="pv-hstl">Mes</div></div>
+        </div>
+      </div>
+      <div class="pv-msg">${msg}</div>
+      ${renderPreviewCursosHTML(snaps.cursos.slice(0,3), '🎬 Contenido reciente')}
+      ${renderPreviewSesionesHTML(snaps.sesiones.slice(0,2), '📡 Próximas sesiones')}
+    `;
+  }
+
+  /* ── Preview: Cursos ── */
+  function renderPreviewCursos(body, data){
+    body.innerHTML = renderPreviewCursosHTML(data, '📚 Biblioteca de cursos');
+  }
+  function renderPreviewCursosHTML(data, title){
+    if(!data||!data.length){
+      return `<div class="pv-card"><div class="pv-card-h">${title}</div><div class="pv-empty"><span>📭</span>Sin cursos publicados</div></div>`;
+    }
+    var rows = data.map(c=>`
+      <div class="pv-row">
+        <div class="pv-thumb pv-tp">🎓</div>
+        <div class="pv-info">
+          <div class="pv-rti">${c.titulo||'—'}</div>
+          <div class="pv-rsu">${c.instructor||'—'} · ${c.categoria||'—'}</div>
+        </div>
+        <span class="pv-badge pv-bnew">Nuevo</span>
+      </div>`).join('');
+    return `<div class="pv-card"><div class="pv-card-h">${title} <span>${data.length} cursos</span></div>${rows}</div>`;
+  }
+
+  /* ── Preview: PDFs ── */
+  function renderPreviewPdfs(body, data){
+    if(!data||!data.length){
+      body.innerHTML = `<div class="pv-card"><div class="pv-card-h">📄 PDFs y material educativo</div><div class="pv-empty"><span>📄</span>Sin PDFs publicados</div></div>`;
+      return;
+    }
+    var rows = data.map(p=>`
+      <div class="pv-row">
+        <div class="pv-thumb" style="background:#dcfce7;font-size:.9rem;">📄</div>
+        <div class="pv-info">
+          <div class="pv-rti">${p.titulo||'—'}</div>
+          <div class="pv-rsu">${p.paginas||'?'} pág · ${p.categoria||'—'}</div>
+        </div>
+        <span class="pv-badge pv-bpdf">↓ PDF</span>
+      </div>`).join('');
+    body.innerHTML = `<div class="pv-card"><div class="pv-card-h">📄 PDFs y material educativo <span>${data.length} archivos</span></div>${rows}</div>`;
+  }
+
+  /* ── Preview: Sesiones ── */
+  function renderPreviewSesiones(body, data){
+    body.innerHTML = renderPreviewSesionesHTML(data, '📡 Sesiones en vivo');
+  }
+  function renderPreviewSesionesHTML(data, title){
+    if(!data||!data.length){
+      return `<div class="pv-card"><div class="pv-card-h">${title}</div><div class="pv-empty"><span>📡</span>Sin sesiones programadas</div></div>`;
+    }
+    var hoy=new Date().toISOString().split('T')[0];
+    var rows = data.map(s=>{
+      var esProximo = s.fecha && s.fecha>=hoy;
+      return `<div class="pv-row">
+        <div class="pv-thumb" style="background:#e5e7eb;font-size:.9rem;">📡</div>
+        <div class="pv-info">
+          <div class="pv-rti">${s.titulo||'—'}</div>
+          <div class="pv-rsu">${s.fecha||'—'} · ${s.hora||'—'} · ${s.instructor||'—'}</div>
+        </div>
+        <span class="pv-badge ${esProximo?'pv-bprox':'pv-badge'}" style="${esProximo?'':'background:#e5e7eb;color:#6b7280;'}">${esProximo?'Próx.':'Fin.'}</span>
+      </div>`;
+    }).join('');
+    return `<div class="pv-card"><div class="pv-card-h">${title} <span>${data.length}</span></div>${rows}</div>`;
+  }
+
+  /* ── Preview: Miembros ── */
+  function renderPreviewMiembros(body, data){
+    var act = data.filter(m=>m.membresiaActiva!==false).length;
+    var inact = data.length - act;
+    body.innerHTML = `
+      <div class="pv-card">
+        <div class="pv-card-h">👥 Miembros del Club</div>
+        <div class="pv-row" style="justify-content:space-around;text-align:center;padding:1rem;">
+          <div><div style="font-family:var(--ff);font-size:1.6rem;font-weight:800;color:var(--green);">${act}</div><div style="font-size:.68rem;color:var(--muted);">Activos</div></div>
+          <div><div style="font-family:var(--ff);font-size:1.6rem;font-weight:800;color:var(--red);">${inact}</div><div style="font-size:.68rem;color:var(--muted);">Inactivos</div></div>
+          <div><div style="font-family:var(--ff);font-size:1.6rem;font-weight:800;color:var(--purple);">${data.length}</div><div style="font-size:.68rem;color:var(--muted);">Total</div></div>
+        </div>
+        ${data.slice(0,5).map(m=>`
+          <div class="pv-row">
+            <div class="pv-thumb" style="background:var(--plight);font-size:.85rem;">👤</div>
+            <div class="pv-info">
+              <div class="pv-rti">${m.nombre||'Sin nombre'}</div>
+              <div class="pv-rsu">${m.planLabel||'Mensual'}</div>
+            </div>
+            <span class="pv-badge" style="background:${m.membresiaActiva!==false?'#d1fae5':'#fee2e2'};color:${m.membresiaActiva!==false?'#065f46':'#991b1b'};">${m.membresiaActiva!==false?'✓ Activo':'Inactivo'}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  /* ── Preview: Configuración ── */
+  function renderPreviewConfig(body){
+    var nom = document.getElementById('cfNom')?.value || 'Club GlobalVet México';
+    var pre = document.getElementById('cfPre')?.value || '199';
+    var wa  = document.getElementById('cfWa')?.value || '+52 238 150 0864';
+    var em  = document.getElementById('cfEm')?.value || 'globalvetmexico@gmail.com';
+    var msg = document.getElementById('cfBv')?.value || '¡Bienvenido!';
+    body.innerHTML = `
+      <div class="pv-banner">
+        <div class="pv-banner-title">¡Hola! Así ve el miembro tu Club 👁</div>
+        <div class="pv-banner-sub">${nom}</div>
+        <div class="pv-hstats">
+          <div class="pv-hstat"><div class="pv-hstn">$${pre}</div><div class="pv-hstl">Precio</div></div>
+        </div>
+      </div>
+      <div class="pv-msg">"${msg}"</div>
+      <div class="pv-card">
+        <div class="pv-card-h">⚙️ Datos que ve el miembro</div>
+        <div class="pv-cfg-row"><div class="pv-cfg-lbl">Club</div><div class="pv-cfg-val">${nom}</div></div>
+        <div class="pv-cfg-row"><div class="pv-cfg-lbl">Precio/mes</div><div class="pv-cfg-val">$${pre} MXN</div></div>
+        <div class="pv-cfg-row"><div class="pv-cfg-lbl">WhatsApp</div><div class="pv-cfg-val">${wa}</div></div>
+        <div class="pv-cfg-row"><div class="pv-cfg-lbl">Email</div><div class="pv-cfg-val">${em}</div></div>
+      </div>`;
+  }
+
+  /* ── Live binding config → preview ── */
+  window.updatePreviewConfig = function(){
+    if(_previewOpen && _currentPanel==='config') refreshPreview();
+    // También actualiza inicio si estamos en dashboard
+    if(_previewOpen && (_currentPanel==='dashboard'||_currentPanel==='pendientes'||_currentPanel==='estadisticas')) refreshPreview();
+  };
+
+  /* ── Sesiones dinámicas (cursos) ── */
+  var sesCount = 0;
+  function makeSesionBlock(n) {
+    var div=document.createElement('div'); div.className='ses-item'; div.dataset.index=n;
+    div.style.cssText='background:#f8f9ff;border:1.5px solid #e0e4f0;border-radius:16px;padding:1.2rem 1.3rem;margin-bottom:.9rem;';
+    var header=document.createElement('div'); header.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.7rem;border-bottom:1px solid #e5e7eb;';
+    var badge=document.createElement('div'); badge.style.cssText='display:flex;align-items:center;gap:.6rem;';
+    var num=document.createElement('div'); num.style.cssText='width:28px;height:28px;border-radius:8px;background:#6c4fd6;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff;'; num.textContent=n;
+    var label=document.createElement('span'); label.style.cssText='font-family:var(--ff);font-size:.9rem;font-weight:700;color:#4f35b3;'; label.textContent='Sesión '+n;
+    badge.appendChild(num); badge.appendChild(label); header.appendChild(badge);
+    if(n>1){ var del=document.createElement('button'); del.textContent='✕ Eliminar'; del.style.cssText='background:#fee2e2;border:none;border-radius:8px;padding:.25rem .7rem;cursor:pointer;font-size:.78rem;color:#991b1b;font-weight:700;'; del.onclick=function(){ this.closest('.ses-item').remove(); reindexSesiones(); }; header.appendChild(del); }
+    div.appendChild(header);
+    function makeField(labelTxt,inputType,placeholder,name){
+      var wrap=document.createElement('div'), lbl=document.createElement('label');
+      lbl.textContent=labelTxt; lbl.style.cssText='font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:.3rem;'; wrap.appendChild(lbl);
+      if(inputType==='textarea'){ var ta=document.createElement('textarea'); ta.name=name; ta.placeholder=placeholder; ta.style.cssText='width:100%;padding:.65rem .9rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:.88rem;color:#12103a;outline:none;background:#fff;resize:vertical;min-height:70px;font-family:DM Sans,sans-serif;transition:border-color .2s;box-sizing:border-box;'; ta.onfocus=function(){this.style.borderColor='#4f35b3';}; ta.onblur=function(){this.style.borderColor='#e5e7eb';}; wrap.appendChild(ta); }
+      else { var inp=document.createElement('input'); inp.type=inputType; inp.name=name; inp.placeholder=placeholder; inp.style.cssText='width:100%;padding:.65rem .9rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:.88rem;color:#12103a;outline:none;background:#f8fbff;transition:border-color .2s;box-sizing:border-box;'; inp.onfocus=function(){this.style.borderColor='#4f35b3';this.style.background='#fff';}; inp.onblur=function(){this.style.borderColor='#e5e7eb';this.style.background='#f8fbff';}; wrap.appendChild(inp); }
+      return wrap;
+    }
+    var row1=document.createElement('div'); row1.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;';
+    row1.appendChild(makeField('🎬 URL del video (YouTube)','url','https://www.youtube.com/watch?v=…','ses_url_'+n));
+    row1.appendChild(makeField('🏷️ Nombre de la sesión','text','Ej: Fundamentos, Diagnóstico…','ses_nom_'+n));
+    div.appendChild(row1);
+    var row2=document.createElement('div'); row2.style.cssText='margin-bottom:.8rem;';
+    row2.appendChild(makeField('📝 Descripción de la sesión','textarea','Describe brevemente el contenido de esta sesión…','ses_desc_'+n));
+    div.appendChild(row2);
+    var row3=document.createElement('div');
+    var imgField=makeField('🖼️ URL de imagen (thumbnail)','url','https://drive.google.com/… o URL de imagen','ses_img_'+n);
+    var hint=document.createElement('span'); hint.textContent='Google Drive, Imgur u otro enlace directo a imagen'; hint.style.cssText='font-size:.72rem;color:#6b7280;margin-top:.25rem;display:block;';
+    imgField.appendChild(hint); row3.appendChild(imgField); div.appendChild(row3);
+    return div;
+  }
+  function initSesiones(){ sesCount=0; var c=document.getElementById('sesionesContainer'); if(c){c.innerHTML='';sesCount=1;c.appendChild(makeSesionBlock(1));} }
+  window.initSesiones=initSesiones;
+  window.addSesionInput=function(){ sesCount++; var c=document.getElementById('sesionesContainer'); if(c)c.appendChild(makeSesionBlock(sesCount)); };
+  window.reindexSesiones=function(){ var items=document.querySelectorAll('#sesionesContainer .ses-item'); items.forEach(function(el,i){ var badge=el.querySelector('div[style*="border-radius:8px"]'), label=el.querySelector('span[style*="color:#4f35b3"]'); if(badge)badge.textContent=i+1; if(label)label.textContent='Sesión '+(i+1); sesCount=i+1; }); };
+
+  /* ── Calendario ── */
+  var calDate=new Date(), selDate=null, selH='08', selMin='00', selAP='AM';
+  function renderCal(){
+    var d=new Date(calDate.getFullYear(),calDate.getMonth(),1);
+    var months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var titleEl=document.getElementById('calTitle'); if(titleEl)titleEl.textContent=months[d.getMonth()]+' '+d.getFullYear();
+    var days=document.getElementById('calDays'); if(!days)return;
+    days.innerHTML='';
+    var first=(d.getDay()+6)%7, total=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(), today=new Date();
+    for(var i=0;i<first;i++){ var empty=document.createElement('div');empty.className='cal-day empty';days.appendChild(empty); }
+    for(var day=1;day<=total;day++){
+      (function(dayNum){
+        var el=document.createElement('div'); el.className='cal-day'; el.textContent=dayNum;
+        var isToday=dayNum===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();
+        if(isToday)el.classList.add('today');
+        if(selDate&&dayNum===selDate.getDate()&&d.getMonth()===selDate.getMonth()&&d.getFullYear()===selDate.getFullYear())el.classList.add('selected');
+        el.onclick=function(){
+          selDate=new Date(d.getFullYear(),d.getMonth(),dayNum);
+          var ds=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'], ms=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+          var btn=document.getElementById('calBtn'); if(btn)btn.innerHTML=ds[selDate.getDay()]+' '+dayNum+' '+ms[selDate.getMonth()]+' '+selDate.getFullYear()+' <span class="arr">▾</span>';
+          renderCal(); var pop=document.getElementById('calPop'); if(pop)pop.classList.remove('show');
+        };
+        days.appendChild(el);
+      })(day);
+    }
+  }
+  window.calNav=function(dir){ calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1); renderCal(); };
+  function renderTimePicker(){
+    var hDiv=document.getElementById('tpHours'), mDiv=document.getElementById('tpMins');
+    if(!hDiv||!mDiv)return;
+    hDiv.innerHTML=''; mDiv.innerHTML='';
+    for(var h=1;h<=12;h++){
+      (function(hh){ var hhStr=String(hh).padStart(2,'0'), el=document.createElement('div'); el.className='tp-item'+(hhStr===selH?' sel':''); el.textContent=hhStr; el.onclick=function(){selH=hhStr;renderTimePicker();}; hDiv.appendChild(el); })(h);
+    }
+    ['00','05','10','15','20','25','30','35','40','45','50','55'].forEach(function(m){
+      var el=document.createElement('div'); el.className='tp-item'+(m===selMin?' sel':''); el.textContent=m; el.onclick=function(){selMin=m;renderTimePicker();}; mDiv.appendChild(el);
+    });
+  }
+  window.setAmPm=function(v){ selAP=v; var am=document.getElementById('tpAM'),pm=document.getElementById('tpPM'); if(am)am.className='tp-am'+(v==='AM'?' sel':''); if(pm)pm.className='tp-pm'+(v==='PM'?' sel':''); };
+  window.confirmTime=function(){ var btn=document.getElementById('tpBtn'); if(btn)btn.innerHTML=selH+':'+selMin+' '+selAP+' <span class="arr">▾</span>'; var pop=document.getElementById('tpPop'); if(pop)pop.classList.remove('show'); };
+  window.toggleDp=function(type){
+    var calP=document.getElementById('calPop'), tpP=document.getElementById('tpPop');
+    if(!calP||!tpP)return;
+    if(type==='cal'){ var wasOpen=calP.classList.contains('show'); calP.classList.remove('show');tpP.classList.remove('show'); if(!wasOpen){renderCal();calP.classList.add('show');} }
+    else { var wasOpen2=tpP.classList.contains('show'); tpP.classList.remove('show');calP.classList.remove('show'); if(!wasOpen2){renderTimePicker();tpP.classList.add('show');} }
+  };
+  document.addEventListener('click',function(e){
+    var cw=document.getElementById('calWrap'),cp=document.getElementById('calPop');
+    var tw=document.getElementById('tpWrap'),tp=document.getElementById('tpPop');
+    if(cw&&cp&&!cw.contains(e.target))cp.classList.remove('show');
+    if(tw&&tp&&!tw.contains(e.target))tp.classList.remove('show');
+  });
+  document.addEventListener('DOMContentLoaded',function(){ renderCal(); renderTimePicker(); });
+</script>
 </body>
 </html>
