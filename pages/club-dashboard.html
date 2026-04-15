@@ -764,13 +764,72 @@
     window._rtTimer = setTimeout(() => { el.style.display = 'none'; }, 3500);
   }
 
+  // ─── Verificar pago (polling post-MP redirect) ──────
+  async function mostrarEsperandoPago(uid) {
+    // Ocultar todo y mostrar pantalla de espera
+    const loading = document.getElementById('dashLoading');
+    if (loading) {
+      loading.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1.5rem;font-family:'DM Sans',sans-serif;background:#f0f4f8;">
+          <div style="width:60px;height:60px;border:4px solid #dce6ef;border-top-color:#0a7c6e;border-radius:50%;animation:spin .8s linear infinite;"></div>
+          <div style="font-size:1.2rem;font-weight:700;color:#0d1f35;">Verificando tu pago...</div>
+          <div style="font-size:.9rem;color:#5b7080;text-align:center;max-width:300px;">Estamos confirmando tu pago con MercadoPago.<br>Esto puede tomar unos segundos.</div>
+          <div id="verifCounter" style="font-size:.8rem;color:#aab5c4;"></div>
+        </div>`;
+      loading.style.display = 'flex';
+    }
+
+    // Polling cada 3 segundos por hasta 60 segundos
+    const maxIntentos = 20;
+    for (let i = 0; i < maxIntentos; i++) {
+      await new Promise(r => setTimeout(r, 3000));
+      const c = document.getElementById('verifCounter');
+      if (c) c.textContent = `Verificando... (${i+1}/${maxIntentos})`;
+      try {
+        const snap = await getDoc(doc(db, 'usuarios', uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.membresiaActiva === true && data.estado === 'activo') {
+            pd = data;
+            // Limpiar URL y mostrar dashboard
+            window.history.replaceState({}, '', 'club-dashboard.html');
+            if (loading) loading.style.display = 'none';
+            document.getElementById('topNav').style.display = 'flex';
+            document.getElementById('dashLayout').style.display = 'flex';
+            populateUserUI();
+            startCD();
+            startRealtimeListeners(uid);
+            return;
+          }
+        }
+      } catch(e) {}
+    }
+
+    // Timeout — pago no confirmado aún
+    if (loading) {
+      loading.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1.5rem;font-family:'DM Sans',sans-serif;background:#f0f4f8;padding:2rem;">
+          <div style="font-size:2rem;">⏳</div>
+          <div style="font-size:1.2rem;font-weight:700;color:#0d1f35;text-align:center;">Tu pago está siendo procesado</div>
+          <div style="font-size:.9rem;color:#5b7080;text-align:center;max-width:320px;">MercadoPago confirmó tu pago pero aún estamos activando tu acceso. Espera unos minutos y vuelve a iniciar sesión.</div>
+          <a href="club-registro.html?tab=login" style="background:#0a7c6e;color:#fff;padding:.9rem 2rem;border-radius:14px;font-weight:700;text-decoration:none;font-family:'Space Grotesk',sans-serif;">Volver a iniciar sesión</a>
+          <div style="font-size:.8rem;color:#aab5c4;">¿Problemas? Escríbenos: globalvetmexico@gmail.com</div>
+        </div>`;
+    }
+  }
+
   // ─── Auth ───────────────────────────────────────────
+  // Detectar si viene de pago aprobado por MercadoPago
+  const urlParams = new URLSearchParams(window.location.search);
+  const mpStatus  = urlParams.get('collection_status') || urlParams.get('status');
+  const mpPayId   = urlParams.get('collection_id') || urlParams.get('payment_id');
+  const vieneDeMP = (mpStatus === 'approved' && mpPayId);
+
   onAuthStateChanged(auth, async user => {
     if (!user) {
-      // Modo demo: simula sesión
-      cu  = { uid: 'demo', email: 'demo@globalvetmexico.com', displayName: 'Dr. Juan Pérez' };
-      pd  = { nombre: 'Dr. Juan Pérez', planLabel: 'Plan Mensual', membresiaActiva: true };
-      user = cu;
+      // Sin sesión → login
+      window.location.href = 'club-registro.html';
+      return;
     }
     cu = user;
 
@@ -780,7 +839,13 @@
       if (snap.exists()) pd = snap.data();
     } catch(e) {}
 
-    if (pd.membresiaActiva === false || pd.estado === 'cancelado') {
+    // Si viene de pago MP y membresía aún no activa → esperar webhook
+    if (vieneDeMP && (pd.membresiaActiva === false || pd.estado === 'pendiente')) {
+      mostrarEsperandoPago(user.uid);
+      return;
+    }
+
+    if (pd.membresiaActiva === false || pd.estado === 'cancelado' || pd.estado === 'pendiente') {
       await signOut(auth);
       window.location.href = 'club-registro.html?tab=login';
       return;

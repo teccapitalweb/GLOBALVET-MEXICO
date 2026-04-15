@@ -388,6 +388,24 @@
 <!-- Toast -->
 <div class="reg-toast" id="regToast"><span id="toastMsg">✓ ¡Listo!</span></div>
 
+<!-- ===================== PAGO BRICK ===================== -->
+<div id="pagoSection" style="display:none;position:fixed;inset:0;background:rgba(13,31,53,.55);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#fff;border-radius:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:2rem 1.8rem;box-shadow:0 24px 72px rgba(13,31,53,.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#0d1f35;">Completa tu pago</div>
+        <div id="pagoResumen" style="font-size:.82rem;color:#5b7080;margin-top:.2rem;"></div>
+      </div>
+      <img src="../assets/logo/globalvet-logo.jpg" style="width:36px;height:36px;border-radius:10px;object-fit:cover;">
+    </div>
+    <div id="paymentBrick_container"></div>
+    <div style="text-align:center;margin-top:1rem;font-size:.75rem;color:#aab5c4;">🔒 Pago seguro con MercadoPago · SSL encriptado</div>
+  </div>
+</div>
+
+<!-- MP SDK -->
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+
 <!-- ===================== FIREBASE ===================== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -410,12 +428,13 @@
   const auth = getAuth(app);
   const db   = getFirestore(app);
 
-  // Flag para evitar redirección mientras se está registrando
+  // Flags para controlar flujo
   let isRegistering = false;
+  let brickShowing   = false;
 
-  // Si ya hay sesión activa → redirigir al dashboard (solo si NO está registrando)
+  // Si ya hay sesión activa → redirigir al dashboard (solo si NO está en proceso de pago)
   onAuthStateChanged(auth, (user) => {
-    if (user && !isRegistering) {
+    if (user && !isRegistering && !brickShowing) {
       window.location.href = 'club-dashboard.html';
     }
   });
@@ -447,6 +466,7 @@
       const user = result.user;
       const snap = await getDoc(doc(db, 'usuarios', user.uid));
       if (!snap.exists()) {
+        // Nuevo usuario: guardar como pendiente y enviar a pagar
         await setDoc(doc(db, 'usuarios', user.uid), {
           nombre: user.displayName || 'Miembro',
           email: user.email,
@@ -459,16 +479,44 @@
           fechaRegistro: serverTimestamp(),
           uid: user.uid
         });
+        // Redirigir a pago
+        showToast('⏳ Preparando tu pago…');
+        const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan })
+        });
+        const data = await resp.json();
+        if (data.id) {
+          brickShowing = true;
+          showToast('✅ ¡Cuenta creada! Completa tu pago 👇', true);
+          mostrarBrickPago(data.id, currentPlan);
+        } else {
+          showFirebaseError('No se pudo iniciar el pago. Intenta de nuevo.');
+        }
       } else {
         // Ya tiene cuenta: verificar si está activa
         const pd = snap.data();
-        if (pd.membresiaActiva === false || pd.estado === 'cancelado') {
-          showFirebaseError('Tu membresía está inactiva. Contacta a globalvetmexico@gmail.com para reactivarla.');
-          return;
+        if (pd.membresiaActiva === true && pd.estado === 'activo') {
+          showToast('✅ Bienvenido de nuevo 🐾', true);
+          setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
+        } else {
+          // Cuenta inactiva: enviar a pagar de nuevo
+          showToast('⏳ Renovando membresía…');
+          const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan })
+          });
+          const data = await resp.json();
+          if (data.id) {
+            brickShowing = true;
+            mostrarBrickPago(data.id, currentPlan);
+          } else {
+            showFirebaseError('Tu membresía está inactiva. Contacta a globalvetmexico@gmail.com.');
+          }
         }
       }
-      showToast('✅ Bienvenido 🐾', true);
-      setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
     } catch(e) {
       showFirebaseError(translateError(e.code));
     }
@@ -518,6 +566,8 @@
     const inp = document.getElementById(id.replace('err','reg')) || document.getElementById(id.replace('err',''));
   }
 
+  const RAILWAY_URL = 'https://web-production-09f0d.up.railway.app';
+
   // ---- REGISTRO ----
   window.handleRegister = async function() {
     document.getElementById('firebaseError').classList.remove('show');
@@ -540,59 +590,51 @@
     if (!ok) return;
 
     setLoading('btnRegister', true);
+    isRegistering = true;
 
-    isRegistering = true; // Evitar redirección automática durante el registro
     try {
-      // Crear usuario en Firebase Auth
+      // 1. Crear usuario en Firebase Auth
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       const uid  = cred.user.uid;
-
-      // Actualizar displayName
       await updateProfile(cred.user, { displayName: nombre });
 
-      // Verificar si tiene pago pendiente en Shopify
-      const emailKey = email.replace(/[^a-zA-Z0-9]/g, '_');
-      let planFromShopify = currentPlan;
-      let planLabelFromShopify = currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual';
-      let estadoMembres = 'pendiente'; // por default pendiente hasta confirmar pago
-
-      try {
-        const pendSnap = await getDoc(doc(db, 'pagos_pendientes', emailKey));
-        if (pendSnap.exists()) {
-          const pd = pendSnap.data();
-          if (!pd.activado) {
-            planFromShopify = pd.plan || currentPlan;
-            planLabelFromShopify = pd.planLabel || planLabelFromShopify;
-            estadoMembres = 'activo'; // tiene pago confirmado por Shopify
-          }
-        }
-      } catch(e) { /* sin pago pendiente, continúa normal */ }
-
-      // Guardar perfil en Firestore → colección "usuarios"
+      // 2. Guardar perfil en Firestore con estado "pendiente"
       await setDoc(doc(db, 'usuarios', uid), {
         nombre,
         email,
         whatsapp:        wa,
         especialidad:    esp || 'No especificada',
-        plan:            planFromShopify,
-        planLabel:       planLabelFromShopify,
-        estado:          estadoMembres,
-        membresiaActiva: estadoMembres === 'activo',
+        plan:            currentPlan,
+        planLabel:       currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual',
+        estado:          'pendiente',
+        membresiaActiva: false,
         fechaRegistro:   serverTimestamp(),
         uid
       });
 
-      showToast('✅ ¡Cuenta creada! Bienvenido al Club GlobalVet 🐾', true);
+      // 3. Llamar a Railway para crear preferencia de pago
+      showToast('⏳ Preparando tu pago…');
+      const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, nombre, plan: currentPlan })
+      });
+      const data = await resp.json();
 
-      // Redirigir al dashboard (después de guardar en Firestore)
-      isRegistering = false;
-      setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1200);
+      if (data.id) {
+        isRegistering = false;
+        brickShowing  = true;
+        showToast('✅ ¡Cuenta creada! Completa tu pago 👇', true);
+        mostrarBrickPago(data.id, currentPlan);
+      } else {
+        throw new Error(data.error || 'No se pudo crear el pago');
+      }
 
     } catch (e) {
       isRegistering = false;
       setLoading('btnRegister', false,
-        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y activar membresía');
-      showFirebaseError(translateError(e.code));
+        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y pagar');
+      showFirebaseError(e.code ? translateError(e.code) : (e.message || 'Error al procesar. Intenta de nuevo.'));
     }
   };
 
@@ -633,6 +675,63 @@
       showToast('📧 Revisa tu correo para restablecer tu contraseña.', true);
     } catch(e) {
       showFirebaseError(translateError(e.code));
+    }
+  };
+
+  // ---- BRICK DE PAGO ----
+  const MP_PUBLIC_KEY_TEST = 'TEST-dca45e8d-4bc5-43fc-bbd4-e08e6f0a6715';
+  const MP_PUBLIC_KEY_PROD = 'APP_USR-0b92ac39-a60a-48dd-aa14-1f689a3e3847';
+  const MP_PUBLIC_KEY = MP_PUBLIC_KEY_PROD; // Cambiar a TEST para pruebas
+
+  window.mostrarBrickPago = async function(preferenceId, plan) {
+    const monto = plan === 'anual' ? 1788 : 199;
+    const label = plan === 'anual' ? 'Plan Anual — $1,788 MXN/año' : 'Plan Mensual — $199 MXN/mes';
+    document.getElementById('pagoResumen').textContent = label;
+    document.getElementById('pagoSection').style.display = 'flex';
+
+    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
+    const bricksBuilder = mp.bricks();
+
+    const settings = {
+      initialization: {
+        amount: monto,
+        preferenceId: preferenceId,
+      },
+      customization: {
+        paymentMethods: {
+          creditCard: 'all',
+          debitCard: 'all',
+          ticket: 'all',
+          bankTransfer: 'all',
+          mercadoPago: ['wallet_purchase'],
+        },
+        visual: {
+          style: {
+            theme: 'default',
+          }
+        }
+      },
+      callbacks: {
+        onReady: () => {
+          setLoading('btnRegister', false,
+            '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y pagar');
+        },
+        onSubmit: ({ selectedPaymentMethod, formData }) => {
+          // El Brick maneja el pago y redirige automáticamente vía preferenceId
+          return new Promise((resolve, reject) => { resolve(); });
+        },
+        onError: (error) => {
+          console.error('MP Brick error:', error);
+          showFirebaseError('Error al procesar el pago. Intenta de nuevo.');
+        },
+      },
+    };
+
+    try {
+      await bricksBuilder.create('payment', 'paymentBrick_container', settings);
+    } catch(e) {
+      console.error('Error creando brick:', e);
+      showFirebaseError('No se pudo cargar el formulario de pago. Intenta recargar.');
     }
   };
 
