@@ -614,12 +614,20 @@
 
       // 3. Llamar a Railway para crear preferencia de pago
       showToast('⏳ Preparando tu pago…');
-      const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, nombre, plan: currentPlan })
-      });
-      const data = await resp.json();
+      let resp, data;
+      try {
+        resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, nombre, plan: currentPlan })
+        });
+        data = await resp.json();
+      } catch(fetchErr) {
+        console.error('Error fetch Railway:', fetchErr);
+        throw new Error('No se pudo conectar al servidor de pagos. Intenta de nuevo.');
+      }
+
+      console.log('Railway response:', data);
 
       if (data.id) {
         isRegistering = false;
@@ -627,7 +635,7 @@
         showToast('✅ ¡Cuenta creada! Completa tu pago 👇', true);
         mostrarBrickPago(data.id, currentPlan);
       } else {
-        throw new Error(data.error || 'No se pudo crear el pago');
+        throw new Error(data.error || 'Error del servidor: ' + JSON.stringify(data));
       }
 
     } catch (e) {
