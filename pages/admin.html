@@ -258,6 +258,16 @@
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
     .toast.ok{background:var(--green)}.toast.err{background:var(--red)}
 
+    /* ── Noticias ── */
+    .emoji-btn{width:36px;height:36px;border-radius:9px;border:2px solid transparent;background:#f8f9ff;font-size:1.1rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+    .emoji-btn.active{border-color:var(--purple2);background:var(--plight);}
+    .emoji-btn:hover{background:var(--plight);}
+    .color-btn{width:28px;height:28px;border-radius:8px;border:2.5px solid transparent;cursor:pointer;transition:all .15s;}
+    .color-btn.active{border-color:var(--dark);transform:scale(1.15);}
+    .color-btn:hover{transform:scale(1.1);}
+    .noticia-preview{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem 1rem;border-radius:12px;background:#fafbff;border:1px solid var(--line);margin-top:.8rem;}
+    .noticia-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+
     @media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr}.prev-pane.open{width:300px}}
     @media(max-width:680px){.sidebar{display:none}.main{margin-left:0;padding:1rem}.stats-grid{grid-template-columns:1fr}.prev-pane.open{width:260px}}
   </style>
@@ -314,6 +324,7 @@
       <button class="s-btn active" onclick="sp('dashboard',this)"><span class="s-ico">📊</span>Dashboard</button>
       <button class="s-btn" onclick="sp('miembros',this)"><span class="s-ico">👥</span>Miembros<span class="s-badge green" id="sbM">0</span></button>
       <div class="s-label">Contenido</div>
+      <button class="s-btn" onclick="sp('noticias',this)"><span class="s-ico">📢</span>Noticias</button>
       <button class="s-btn" onclick="sp('cursos',this)"><span class="s-ico">🎓</span>Cursos</button>
       <button class="s-btn" onclick="sp('pdfs',this)"><span class="s-ico">📄</span>PDFs</button>
       <button class="s-btn" onclick="sp('sesiones',this)"><span class="s-ico">📡</span>Sesiones en vivo</button>
@@ -369,6 +380,64 @@
           <div style="overflow-x:auto;">
             <table class="tbl"><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Vence</th><th>Fecha pago</th><th>Acciones</th></tr></thead><tbody id="ptb"><tr><td colspan="6" class="empty"><div class="ei">✅</div>Sin pendientes</td></tr></tbody></table>
           </div>
+        </div>
+      </div>
+
+
+      <!-- NOTICIAS -->
+      <div class="panel" id="panel-noticias">
+        <div class="page-title">📢 Noticias y novedades</div>
+        <div class="page-sub">Publica noticias que verán los miembros en su dashboard</div>
+
+        <!-- Formulario nueva noticia -->
+        <div class="fc" style="margin-bottom:1.5rem;">
+          <div class="ft">✏️ Publicar nueva noticia</div>
+          <div class="fg">
+            <div class="fgr">
+              <label class="fl">Emoji / Ícono</label>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.3rem;" id="emojiPicker">
+                <button type="button" onclick="selectEmoji(this,'🔬')" class="emoji-btn active">🔬</button>
+                <button type="button" onclick="selectEmoji(this,'🐾')" class="emoji-btn">🐾</button>
+                <button type="button" onclick="selectEmoji(this,'🏆')" class="emoji-btn">🏆</button>
+                <button type="button" onclick="selectEmoji(this,'📌')" class="emoji-btn">📌</button>
+                <button type="button" onclick="selectEmoji(this,'💉')" class="emoji-btn">💉</button>
+                <button type="button" onclick="selectEmoji(this,'🧪')" class="emoji-btn">🧪</button>
+                <button type="button" onclick="selectEmoji(this,'📣')" class="emoji-btn">📣</button>
+                <button type="button" onclick="selectEmoji(this,'🎓')" class="emoji-btn">🎓</button>
+                <button type="button" onclick="selectEmoji(this,'⚡')" class="emoji-btn">⚡</button>
+                <button type="button" onclick="selectEmoji(this,'🌟')" class="emoji-btn">🌟</button>
+                <button type="button" onclick="selectEmoji(this,'💊')" class="emoji-btn">💊</button>
+                <button type="button" onclick="selectEmoji(this,'🔴')" class="emoji-btn">🔴</button>
+              </div>
+            </div>
+            <div class="fgr">
+              <label class="fl">Color del ícono</label>
+              <div style="display:flex;gap:.4rem;flex-wrap:wrap;" id="colorPicker">
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#4f35b3,#6c4fd6)')" class="color-btn active" style="background:linear-gradient(135deg,#4f35b3,#6c4fd6);"></button>
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#0d2f45,#0a7c6e)')" class="color-btn" style="background:linear-gradient(135deg,#0d2f45,#0a7c6e);"></button>
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#7a4f00,#e8a020)')" class="color-btn" style="background:linear-gradient(135deg,#7a4f00,#e8a020);"></button>
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#991b1b,#d94040)')" class="color-btn" style="background:linear-gradient(135deg,#991b1b,#d94040);"></button>
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#065f46,#1e8a50)')" class="color-btn" style="background:linear-gradient(135deg,#065f46,#1e8a50);"></button>
+                <button type="button" onclick="selectColor(this,'linear-gradient(135deg,#1e3a5f,#2563eb)')" class="color-btn" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);"></button>
+              </div>
+            </div>
+          </div>
+          <div class="fg one"><div class="fgr"><label class="fl">Título de la noticia</label><input class="fi" type="text" id="nTit" placeholder="Ej: Nueva guía de vacunación 2026"></div></div>
+          <div class="fg one"><div class="fgr"><label class="fl">Descripción</label><textarea class="ta" id="nDesc" placeholder="Escribe el contenido de la noticia..."></textarea></div></div>
+          <div class="fg">
+            <div class="fgr"><label class="fl">Link (opcional)</label><input class="fi" type="url" id="nLink" placeholder="https://... (artículo, video, documento)"></div>
+            <div class="fgr"><label class="fl">Texto del link</label><input class="fi" type="text" id="nLinkTxt" placeholder="Ej: Leer más, Ver video..."></div>
+          </div>
+          <button class="bp" onclick="saveNoticia()">📢 Publicar noticia</button>
+        </div>
+
+        <!-- Tabla noticias publicadas -->
+        <div class="card">
+          <div class="card-head"><span class="card-head-title">Noticias publicadas</span></div>
+          <table class="tbl">
+            <thead><tr><th>Noticia</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="ntb"><tr><td colspan="4" class="empty"><div class="ei">⏳</div>Cargando...</td></tr></tbody>
+          </table>
         </div>
       </div>
 
@@ -675,6 +744,18 @@
       snap.forEach(d=>allP.push({id:d.id,...d.data()}));
       updSb();
     }, err=>{ console.error('Pagos error:',err); });
+
+    // ── NOTICIAS (tiempo real) ──
+    onSnapshot(collection(db,'noticias'), snap=>{
+      const items=[];
+      snap.forEach(d=>items.push({id:d.id,...d.data()}));
+      items.sort((a,b)=>{ 
+        const ta=a.creado?.toMillis?a.creado.toMillis():0;
+        const tb=b.creado?.toMillis?b.creado.toMillis():0;
+        return tb-ta;
+      });
+      renderNoticiasTable(items);
+    });
   }
   window._startRealtime = startRealtimeListeners;
 
@@ -814,6 +895,73 @@
     try{ await updatePassword(auth.currentUser,p1); if(window.st)st('✅ Contraseña actualizada','ok'); document.getElementById('cfP1').value=''; document.getElementById('cfP2').value=''; }
     catch(e){ if(window.st)st('Re-inicia sesión antes de cambiar la contraseña','err'); }
   };
+
+  /* ── NOTICIAS ── */
+  var _selEmoji = '🔬';
+  var _selColor = 'linear-gradient(135deg,#4f35b3,#6c4fd6)';
+
+  window.selectEmoji = function(btn, emoji) {
+    _selEmoji = emoji;
+    document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+  window.selectColor = function(btn, color) {
+    _selColor = color;
+    document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+
+  function renderNoticiasTable(items) {
+    const tb = document.getElementById('ntb'); if(!tb) return;
+    if(!items.length){ tb.innerHTML='<tr><td colspan="4" class="empty"><div class="ei">📢</div>Sin noticias publicadas</td></tr>'; return; }
+    tb.innerHTML='';
+    items.forEach(n=>{
+      const fecha = n.creado?.toDate ? n.creado.toDate().toLocaleDateString('es-MX') : (n.fecha||'—');
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div style="width:32px;height:32px;border-radius:8px;background:${n.color||'#6c4fd6'};display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">${n.emoji||'📢'}</div>
+          <div><div class="nm">${n.titulo||'—'}</div><div class="em" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${n.descripcion||'—'}</div></div>
+        </div>
+      </td>
+      <td>${fecha}</td>
+      <td><span class="badge pub">✅ Publicada</span></td>
+      <td><div class="ba"></div></td>`;
+      const ba=tr.querySelector('.ba');
+      const del=document.createElement('button');
+      del.className='btn-sm red'; del.textContent='Eliminar';
+      del.onclick=async()=>{ 
+        if(window.st) st('🗑 Noticia eliminada','err');
+        try{ await deleteDoc(doc(db,'noticias',n.id)); }catch(e){}
+      };
+      ba.appendChild(del);
+      tb.appendChild(tr);
+    });
+  }
+
+  window.saveNoticia = async function() {
+    const titulo = document.getElementById('nTit')?.value.trim();
+    const desc   = document.getElementById('nDesc')?.value.trim();
+    const link   = document.getElementById('nLink')?.value.trim();
+    const linkTxt= document.getElementById('nLinkTxt')?.value.trim();
+    if(!titulo){ if(window.st) st('Escribe el título de la noticia','err'); return; }
+    if(!desc)  { if(window.st) st('Escribe una descripción','err'); return; }
+    try {
+      await addDoc(collection(db,'noticias'),{
+        titulo, descripcion: desc,
+        emoji: _selEmoji, color: _selColor,
+        link: link||'', linkTexto: linkTxt||'Leer más',
+        publicado: true, creado: serverTimestamp(),
+        fecha: new Date().toLocaleDateString('es-MX')
+      });
+      if(window.st) st('📢 ¡Noticia publicada!','ok');
+      document.getElementById('nTit').value='';
+      document.getElementById('nDesc').value='';
+      document.getElementById('nLink').value='';
+      document.getElementById('nLinkTxt').value='';
+    } catch(e){ if(window.st) st('Error al publicar','err'); }
+  };
+
   window.saveCurso = async function() {
     var titulo=document.getElementById('cTit')?.value.trim(), instructor=document.getElementById('cIns')?.value.trim(), categoria=document.getElementById('cCat')?.value, mes=document.getElementById('cMes')?.value;
     if(!titulo){ st('Ingresa el título del curso','err'); return; }
@@ -866,12 +1014,12 @@
   window.entrarAdmin = entrarAdmin;
 
   /* ── Panel switching ── */
-  var panelIds = ['dashboard','miembros','pendientes','cursos','pdfs','sesiones','estadisticas','pagos','config'];
+  var panelIds = ['dashboard','miembros','pendientes','noticias','cursos','pdfs','sesiones','estadisticas','pagos','config'];
   var _currentPanel = 'dashboard';
 
   // Map admin panel → member panel name
   var panelMap = {
-    dashboard:'Inicio', miembros:'Miembros', pendientes:'Inicio',
+    dashboard:'Inicio', miembros:'Miembros', pendientes:'Inicio', noticias:'Noticias y novedades',
     cursos:'Biblioteca de cursos', pdfs:'PDFs', sesiones:'Sesiones en vivo',
     estadisticas:'Inicio', pagos:'Suscripción', config:'Inicio + Configuración'
   };
