@@ -481,19 +481,10 @@
         });
         // Redirigir a pago
         showToast('⏳ Preparando tu pago…');
-        const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan })
-        });
-        const data = await resp.json();
-        if (data.id) {
-          brickShowing = true;
-          showToast('✅ ¡Cuenta creada! Completa tu pago 👇', true);
-          mostrarBrickPago(data.id, currentPlan);
-        } else {
-          showFirebaseError('No se pudo iniciar el pago. Intenta de nuevo.');
-        }
+        showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
+        brickShowing = true;
+        const p1 = new URLSearchParams({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan });
+        setTimeout(() => { window.location.href = `${RAILWAY_URL}/pagar?${p1.toString()}`; }, 800);
       } else {
         // Ya tiene cuenta: verificar si está activa
         const pd = snap.data();
@@ -503,18 +494,9 @@
         } else {
           // Cuenta inactiva: enviar a pagar de nuevo
           showToast('⏳ Renovando membresía…');
-          const resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan })
-          });
-          const data = await resp.json();
-          if (data.id) {
-            brickShowing = true;
-            mostrarBrickPago(data.id, currentPlan);
-          } else {
-            showFirebaseError('Tu membresía está inactiva. Contacta a globalvetmexico@gmail.com.');
-          }
+          brickShowing = true;
+          const p2 = new URLSearchParams({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan });
+          setTimeout(() => { window.location.href = `${RAILWAY_URL}/pagar?${p2.toString()}`; }, 800);
         }
       }
     } catch(e) {
@@ -612,31 +594,14 @@
         uid
       });
 
-      // 3. Llamar a Railway para crear preferencia de pago
-      showToast('⏳ Preparando tu pago…');
-      let resp, data;
-      try {
-        resp = await fetch(`${RAILWAY_URL}/crear-pago`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, nombre, plan: currentPlan })
-        });
-        data = await resp.json();
-      } catch(fetchErr) {
-        console.error('Error fetch Railway:', fetchErr);
-        throw new Error('No se pudo conectar al servidor de pagos. Intenta de nuevo.');
-      }
-
-      console.log('Railway response:', data);
-
-      if (data.id) {
-        isRegistering = false;
-        brickShowing  = true;
-        showToast('✅ ¡Cuenta creada! Completa tu pago 👇', true);
-        mostrarBrickPago(data.id, currentPlan);
-      } else {
-        throw new Error(data.error || 'Error del servidor: ' + JSON.stringify(data));
-      }
+      // 3. Redirigir a Railway para pago (evita CORS)
+      showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
+      isRegistering = false;
+      brickShowing  = true;
+      const params = new URLSearchParams({ email, nombre, plan: currentPlan });
+      setTimeout(() => {
+        window.location.href = `${RAILWAY_URL}/pagar?${params.toString()}`;
+      }, 1000);
 
     } catch (e) {
       isRegistering = false;
