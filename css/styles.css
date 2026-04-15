@@ -677,3 +677,36 @@ h1, h2, h3, h4 { font-weight: 800; }
   .courses-arrow--prev { margin-right: .5rem; }
   .courses-arrow--next { margin-left: .5rem; }
 }
+
+/* ============================================================
+   BOTÓN CLUB VIP — navbar
+   MODIFICADO: acceso directo al Club GlobalVet
+   ============================================================ */
+.btn-club-vip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: linear-gradient(135deg, #3b2b86 0%, #5f45c8 100%);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .5rem 1.15rem;
+  border-radius: 50px;
+  letter-spacing: .01em;
+  text-decoration: none;
+  box-shadow: 0 3px 12px rgba(95,69,200,.35);
+  transition: transform .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.btn-club-vip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(95,69,200,.5);
+  color: #fff !important;
+}
+/* Pulso sutil para llamar la atención */
+@keyframes vip-pulse {
+  0%,100% { box-shadow: 0 3px 12px rgba(95,69,200,.35); }
+  50%      { box-shadow: 0 3px 20px rgba(95,69,200,.65); }
+}
+.btn-club-vip { animation: vip-pulse 2.8s ease-in-out infinite; }
+.btn-club-vip:hover { animation: none; }
