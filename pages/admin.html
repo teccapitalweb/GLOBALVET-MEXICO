@@ -626,7 +626,7 @@
   function showE(m){ const el=document.getElementById('loginErr'); el.textContent=m; el.classList.add('show'); }
 
   // ── Carga inicial ──
-  async function loadAll(){ await loadM(); await loadP(); loadCursosAdmin(); loadPdfsAdmin(); loadSesionesAdmin(); }
+  async function loadAll(){ loadCursosAdmin(); loadPdfsAdmin(); loadSesionesAdmin(); } // loadM y loadP ahora usan onSnapshot
   window._adminLoadAll = loadAll;
 
   // ── REALTIME LISTENERS (para el preview) ──
@@ -660,6 +660,21 @@
       renderSesionesTable(_sesSnap);
       refreshPreview();
     });
+
+    // ── MIEMBROS (tiempo real) ──
+    onSnapshot(collection(db,'usuarios'), snap=>{
+      allM=[];
+      snap.forEach(d=>allM.push({id:d.id,...d.data()}));
+      renderM(allM); renderDM(allM); updSb();
+      refreshPreview();
+    }, err=>{ console.error('Miembros error:',err); });
+
+    // ── PAGOS PENDIENTES (tiempo real) ──
+    onSnapshot(collection(db,'pagos_pendientes'), snap=>{
+      allP=[];
+      snap.forEach(d=>allP.push({id:d.id,...d.data()}));
+      updSb();
+    }, err=>{ console.error('Pagos error:',err); });
   }
   window._startRealtime = startRealtimeListeners;
 
@@ -719,22 +734,9 @@
   }
 
   // ── Miembros ──
-  async function loadM(){
-    try{
-      const snap=await getDocs(collection(db,'usuarios'));
-      allM=[];
-      snap.forEach(d=>allM.push({id:d.id,...d.data()}));
-      renderM(allM); renderDM(allM); updSb();
-    }catch(e){ if(window.st) st('Error cargando miembros','err'); }
-  }
-  async function loadP(){
-    try{
-      const snap=await getDocs(collection(db,'pagos_pendientes'));
-      allP=[];
-      snap.forEach(d=>allP.push({id:d.id,...d.data()}));
-      updSb();
-    }catch(e){}
-  }
+  // loadM y loadP ahora son onSnapshot en startRealtimeListeners
+  async function loadM(){ /* reemplazado por onSnapshot */ }
+  async function loadP(){ /* reemplazado por onSnapshot */ }
   // Fallbacks para carga directa (cuando Firebase falla / demo)
   async function loadCursosAdmin(){ try{ const s=await getDocs(collection(db,'cursos')); const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_cursosSnap.length){ _cursosSnap=d; renderCursosTable(d); const e=document.getElementById('dCursos');if(e)e.textContent=d.length; } }catch(e){} }
   async function loadPdfsAdmin()  { try{ const s=await getDocs(collection(db,'pdfs'));    const d=[]; s.forEach(x=>d.push({id:x.id,...x.data()})); if(!_pdfsSnap.length)  { _pdfsSnap=d; renderPdfsTable(d); } }catch(e){} }
