@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro — Club GlobalVet</title>
-  <meta name="description" content="Crea tu cuenta y activa tu membresía en el Club GlobalVet.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,195 +12,65 @@
   <script defer src="../js/script.js"></script>
   <style>
     :root {
-      --reg-bg: #eef3fa;
-      --reg-dark: #0d1f35;
-      --reg-teal: #0a7c6e;
-      --reg-teal-2: #12a896;
-      --reg-gold: #e8a020;
-      --reg-gold-2: #f5c842;
-      --reg-line: #dce6ef;
-      --reg-muted: #5b7080;
-      --reg-error: #d94040;
-      --ff: 'Space Grotesk', system-ui, sans-serif;
+      --reg-bg: #eef3fa; --reg-dark: #0d1f35; --reg-teal: #0a7c6e;
+      --reg-teal-2: #12a896; --reg-line: #dce6ef; --reg-muted: #5b7080;
+      --reg-error: #d94040; --ff: 'Space Grotesk', system-ui, sans-serif;
       --ffb: 'DM Sans', system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; }
-
-    .reg-page {
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 20% 30%, rgba(10,124,110,.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 70%, rgba(95,69,200,.08) 0%, transparent 50%),
-        var(--reg-bg);
-      font-family: var(--ffb);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1rem;
-    }
-
-    .reg-card {
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: 0 24px 72px rgba(13,31,53,.12), 0 4px 16px rgba(13,31,53,.06);
-      width: 100%;
-      max-width: 420px;
-      padding: 2.4rem 2.2rem 2rem;
-      position: relative;
-    }
-
-    .reg-brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .65rem;
-      margin-bottom: 1.2rem;
-    }
+    .reg-page { min-height: 100vh; background: radial-gradient(ellipse at 20% 30%, rgba(10,124,110,.1) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(95,69,200,.08) 0%, transparent 50%), var(--reg-bg); font-family: var(--ffb); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; }
+    .reg-card { background: #fff; border-radius: 28px; box-shadow: 0 24px 72px rgba(13,31,53,.12); width: 100%; max-width: 420px; padding: 2.4rem 2.2rem 2rem; }
+    .reg-brand { display: flex; align-items: center; justify-content: center; gap: .65rem; margin-bottom: 1.2rem; }
     .reg-brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
     .reg-brand span { font-family: var(--ff); font-size: .95rem; font-weight: 700; color: var(--reg-dark); }
     .reg-title { font-family: var(--ff); font-size: 1.45rem; font-weight: 700; color: var(--reg-dark); text-align: center; margin: 0 0 .25rem; }
     .reg-subtitle { font-size: .84rem; color: var(--reg-muted); text-align: center; margin: 0 0 1.4rem; }
-
-    .reg-plan-badge {
-      display: flex; align-items: center; gap: .9rem;
-      background: #f5fdf8; border: 1.5px solid rgba(10,124,110,.25);
-      border-radius: 14px; padding: .75rem 1rem; margin-bottom: 1.4rem;
-      cursor: pointer; transition: border-color .2s;
-    }
-    .reg-plan-badge:hover { border-color: var(--reg-teal); }
-    .reg-plan-icon {
-      width: 34px; height: 34px;
-      background: linear-gradient(135deg, var(--reg-teal), var(--reg-teal-2));
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; flex-shrink: 0;
-    }
-    .reg-plan-info { flex: 1; }
-    .reg-plan-name { font-family: var(--ff); font-size: .9rem; font-weight: 700; color: var(--reg-dark); margin: 0 0 .1rem; }
-    .reg-plan-type { font-size: .75rem; color: var(--reg-muted); margin: 0; }
-    .reg-plan-price { font-family: var(--ff); font-size: 1rem; font-weight: 700; color: var(--reg-teal); white-space: nowrap; }
-    .reg-plan-change { font-size: .72rem; color: var(--reg-muted); text-decoration: underline; cursor: pointer; }
-
-    .reg-tabs {
-      display: flex; background: var(--reg-bg); border-radius: 50px;
-      padding: 4px; margin-bottom: 1.4rem;
-    }
-    .reg-tab {
-      flex: 1; padding: .52rem; text-align: center;
-      font-family: var(--ff); font-size: .85rem; font-weight: 600;
-      color: var(--reg-muted); cursor: pointer; border-radius: 50px;
-      border: none; background: transparent; transition: background .2s, color .2s, box-shadow .2s;
-    }
+    .plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-bottom: 1.4rem; }
+    .plan-card { border: 2px solid var(--reg-line); border-radius: 14px; padding: .9rem; cursor: pointer; transition: all .2s; position: relative; }
+    .plan-card.active { border-color: var(--reg-teal); background: rgba(10,124,110,.05); }
+    .plan-card .badge { position: absolute; top: -9px; right: 10px; background: var(--reg-teal); color: #fff; font-size: .6rem; font-weight: 800; padding: .15rem .55rem; border-radius: 50px; }
+    .plan-name { font-family: var(--ff); font-weight: 700; font-size: .9rem; color: var(--reg-dark); margin-bottom: .2rem; }
+    .plan-price { font-family: var(--ff); font-size: 1.25rem; font-weight: 800; color: var(--reg-teal); }
+    .plan-price.dark { color: var(--reg-dark); }
+    .plan-desc { font-size: .7rem; color: var(--reg-muted); margin-top: .2rem; }
+    .reg-tabs { display: flex; background: var(--reg-bg); border-radius: 50px; padding: 4px; margin-bottom: 1.4rem; }
+    .reg-tab { flex: 1; padding: .52rem; text-align: center; font-family: var(--ff); font-size: .85rem; font-weight: 600; color: var(--reg-muted); cursor: pointer; border-radius: 50px; border: none; background: transparent; transition: all .2s; }
     .reg-tab.active { background: #fff; color: var(--reg-dark); box-shadow: 0 2px 8px rgba(13,31,53,.1); }
-
     .reg-panel { display: none; }
     .reg-panel.active { display: block; }
-
     .reg-field { margin-bottom: .9rem; }
     .reg-label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--reg-muted); margin-bottom: .35rem; }
-    .reg-input {
-      width: 100%; padding: .72rem .95rem;
-      background: #f8fbff; border: 1.5px solid var(--reg-line);
-      border-radius: 12px; font-family: var(--ffb); font-size: .9rem;
-      color: var(--reg-dark); transition: border-color .2s, box-shadow .2s; outline: none;
-    }
-    .reg-input::placeholder { color: #aab5c4; }
-    .reg-input:focus { border-color: var(--reg-teal); box-shadow: 0 0 0 3px rgba(10,124,110,.1); background: #fff; }
-    .reg-input.error { border-color: var(--reg-error); box-shadow: 0 0 0 3px rgba(217,64,64,.08); }
-    .reg-field-error { font-size: .76rem; color: var(--reg-error); margin-top: .3rem; display: none; }
-    .reg-field-error.show { display: block; }
-
-    .reg-btn-main {
-      width: 100%; padding: .88rem; background: var(--reg-dark); color: #fff;
-      font-family: var(--ff); font-weight: 700; font-size: .95rem;
-      border: none; border-radius: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: .5rem;
-      transition: transform .15s, box-shadow .15s, background .15s; margin-bottom: 1rem;
-    }
-    .reg-btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,31,53,.25); }
-    .reg-btn-main:active { transform: translateY(0); }
-    .reg-btn-main:disabled { opacity: .6; pointer-events: none; }
-    .reg-btn-main.success { background: var(--reg-teal); }
-
+    .reg-input { width: 100%; padding: .72rem .95rem; background: #f8fbff; border: 1.5px solid var(--reg-line); border-radius: 12px; font-family: var(--ffb); font-size: .9rem; color: var(--reg-dark); outline: none; transition: border-color .2s; }
+    .reg-input:focus { border-color: var(--reg-teal); }
+    .reg-input.error { border-color: var(--reg-error); }
+    .field-err { font-size: .76rem; color: var(--reg-error); margin-top: .3rem; display: none; }
+    .field-err.show { display: block; }
+    .reg-btn { width: 100%; padding: .88rem; background: var(--reg-dark); color: #fff; font-family: var(--ff); font-weight: 700; font-size: .95rem; border: none; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .5rem; transition: all .15s; margin-bottom: 1rem; }
+    .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,31,53,.25); }
+    .reg-btn:disabled { opacity: .6; pointer-events: none; }
     .reg-divider { display: flex; align-items: center; gap: .8rem; color: #c0ccd8; font-size: .78rem; margin-bottom: 1rem; }
     .reg-divider::before, .reg-divider::after { content: ''; flex: 1; height: 1px; background: var(--reg-line); }
-
-    .reg-footer-links { text-align: center; font-size: .82rem; color: var(--reg-muted); margin-bottom: .4rem; }
-    .reg-footer-links a { color: var(--reg-teal); font-weight: 700; text-decoration: none; cursor: pointer; }
-    .reg-footer-links a:hover { text-decoration: underline; }
-    .reg-club-link { text-align: center; font-size: .8rem; color: var(--reg-muted); margin-top: .9rem; }
-    .reg-club-link a { color: var(--reg-teal); font-weight: 600; text-decoration: none; }
-
-    /* Firebase error banner */
-    .reg-firebase-error {
-      background: #fff3f3; border: 1px solid #fcc; border-radius: 12px;
-      padding: .75rem 1rem; margin-bottom: 1rem;
-      font-size: .83rem; color: var(--reg-error); display: none;
-      align-items: center; gap: .5rem;
-    }
-    .reg-firebase-error.show { display: flex; }
-
-    /* Modal plan */
-    .reg-plan-modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(13,31,53,.4); backdrop-filter: blur(4px);
-      z-index: 100; align-items: center; justify-content: center; padding: 1rem;
-    }
-    .reg-plan-modal-overlay.show { display: flex; }
-    .reg-plan-modal { background: #fff; border-radius: 24px; padding: 2rem; max-width: 380px; width: 100%; box-shadow: 0 24px 60px rgba(13,31,53,.2); }
-    .reg-plan-modal h3 { font-family: var(--ff); font-size: 1.1rem; font-weight: 700; margin: 0 0 1.2rem; color: var(--reg-dark); }
-    .reg-plan-opt {
-      display: flex; align-items: center; gap: 1rem; padding: 1rem;
-      border: 2px solid var(--reg-line); border-radius: 16px; margin-bottom: .8rem;
-      cursor: pointer; transition: border-color .2s;
-    }
-    .reg-plan-opt:hover, .reg-plan-opt.selected { border-color: var(--reg-teal); background: #f5fdf8; }
-    .reg-plan-opt-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: linear-gradient(135deg, var(--reg-teal), var(--reg-teal-2)); flex-shrink: 0; }
-    .reg-plan-opt-name { font-family: var(--ff); font-weight: 700; font-size: .92rem; margin: 0 0 .1rem; }
-    .reg-plan-opt-desc { font-size: .78rem; color: var(--reg-muted); margin: 0; }
-    .reg-plan-opt-price { font-family: var(--ff); font-size: 1rem; font-weight: 700; color: var(--reg-teal); margin-left: auto; white-space: nowrap; }
-    .reg-plan-opt-save { font-size: .7rem; background: rgba(10,124,110,.12); color: var(--reg-teal); padding: .15rem .5rem; border-radius: 50px; display: block; text-align: center; margin-top: .2rem; }
-    .reg-modal-close { width: 100%; padding: .7rem; background: transparent; border: 1.5px solid var(--reg-line); border-radius: 12px; font-family: var(--ff); font-weight: 600; font-size: .88rem; cursor: pointer; margin-top: .4rem; transition: background .15s; }
-    .reg-modal-close:hover { background: var(--reg-bg); }
-
-    /* Toast */
-    .reg-toast {
-      position: fixed; bottom: 2rem; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--reg-dark); color: #fff;
-      font-family: var(--ff); font-size: .9rem; font-weight: 600;
-      padding: .9rem 1.6rem; border-radius: 50px;
-      box-shadow: 0 8px 28px rgba(13,31,53,.3); z-index: 200;
-      display: flex; align-items: center; gap: .6rem;
-      transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-      opacity: 0; white-space: nowrap;
-    }
+    .google-btn { width: 100%; padding: .75rem; border: 1.5px solid var(--reg-line); border-radius: 12px; background: #fff; font-family: var(--ff); font-size: .88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .6rem; margin-bottom: 1rem; transition: border-color .2s; }
+    .google-btn:hover { border-color: #4285F4; }
+    .reg-footer { text-align: center; font-size: .82rem; color: var(--reg-muted); margin-bottom: .4rem; }
+    .reg-footer a { color: var(--reg-teal); font-weight: 700; text-decoration: none; cursor: pointer; }
+    .alert { border-radius: 12px; padding: .75rem 1rem; margin-bottom: 1rem; font-size: .83rem; display: none; align-items: center; gap: .5rem; }
+    .alert.error { background: #fff3f3; border: 1px solid #fcc; color: var(--reg-error); }
+    .alert.show { display: flex; }
+    .spinner { width: 17px; height: 17px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .reg-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--reg-dark); color: #fff; font-family: var(--ff); font-size: .9rem; font-weight: 600; padding: .9rem 1.6rem; border-radius: 50px; z-index: 200; display: flex; align-items: center; gap: .6rem; transition: all .4s; opacity: 0; }
     .reg-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .reg-toast.green { background: var(--reg-teal); }
-
-    /* Spinner */
-    .spinner {
-      width: 17px; height: 17px; border: 2.5px solid rgba(255,255,255,.3);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin .7s linear infinite; flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    @media (max-width: 480px) {
-      .reg-card { padding: 1.8rem 1.4rem 1.6rem; border-radius: 22px; }
-      .reg-page { padding: 2rem .8rem; }
-    }
   </style>
 </head>
 <body>
-
-<!-- NAV -->
 <div class="topbar">
   <div class="container topbar-inner">
     <span>Educación veterinaria con enfoque profesional y accesible</span>
     <div class="topbar-links">
       <a href="mailto:globalvetmexico@gmail.com">globalvetmexico@gmail.com</a>
-      <a href="https://wa.me/5212381500864" target="_blank" rel="noopener">+52 1 238 150 0864</a>
+      <a href="https://wa.me/5212381500864" target="_blank">+52 1 238 150 0864</a>
     </div>
   </div>
 </div>
@@ -220,18 +89,14 @@
       <a href="testimonios.html">Testimonios</a>
       <a href="galeria.html">Galería</a>
       <a href="contacto.html">Contacto</a>
-      <a class="btn-club" href="club.html">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        Club GlobalVet
-      </a>
-      <a class="btn btn-primary nav-cta" href="https://wa.me/5212381500864" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn-club" href="club.html">★ Club GlobalVet</a>
+      <a class="btn btn-primary nav-cta" href="https://wa.me/5212381500864" target="_blank">WhatsApp</a>
     </nav>
   </div>
 </header>
 
 <div class="reg-page">
   <div class="reg-card">
-
     <div class="reg-brand">
       <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
       <span><strong>GlobalVet</strong> México</span>
@@ -239,543 +104,306 @@
     <h1 class="reg-title">Club GlobalVet</h1>
     <p class="reg-subtitle">Regístrate para activar tu membresía</p>
 
-    <!-- Plan selector cards -->
-    <div style="margin-bottom:1.4rem;">
-      <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--reg-muted);margin-bottom:.7rem;">Elige tu plan</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;">
-        <div id="planCardMensual" onclick="selectPlan('mensual')" style="border:2px solid var(--reg-teal);background:rgba(10,124,110,.05);border-radius:14px;padding:.9rem;cursor:pointer;transition:all .2s;">
-          <div style="font-family:var(--ff);font-weight:700;font-size:.9rem;color:var(--reg-dark);margin-bottom:.2rem;">Plan Mensual</div>
-          <div style="font-family:var(--ff);font-size:1.25rem;font-weight:800;color:var(--reg-teal);">$199<span style="font-size:.72rem;font-weight:500;color:#888;">/mes</span></div>
-          <div style="font-size:.7rem;color:var(--reg-muted);margin-top:.2rem;">Sin permanencia · Cancela cuando quieras</div>
-        </div>
-        <div id="planCardAnual" onclick="selectPlan('anual')" style="border:2px solid var(--reg-line);background:#fff;border-radius:14px;padding:.9rem;cursor:pointer;transition:all .2s;position:relative;">
-          <div style="position:absolute;top:-9px;right:10px;background:var(--reg-teal);color:#fff;font-size:.6rem;font-weight:800;padding:.15rem .55rem;border-radius:50px;letter-spacing:.04em;">40% OFF</div>
-          <div style="font-family:var(--ff);font-weight:700;font-size:.9rem;color:var(--reg-dark);margin-bottom:.2rem;">Plan Anual</div>
-          <div style="font-family:var(--ff);font-size:1.25rem;font-weight:800;color:var(--reg-dark);">$1,788<span style="font-size:.72rem;font-weight:500;color:#888;">/año</span></div>
-          <div style="font-size:.7rem;color:var(--reg-muted);margin-top:.2rem;">$149/mes · Ahorra $1,200</div>
-        </div>
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--reg-muted);margin-bottom:.7rem;">Elige tu plan</div>
+    <div class="plan-grid">
+      <div class="plan-card active" id="planMensual" onclick="selectPlan('mensual')">
+        <div class="plan-name">Plan Mensual</div>
+        <div class="plan-price">$199<span style="font-size:.72rem;font-weight:500;color:#888;">/mes</span></div>
+        <div class="plan-desc">Sin permanencia · Cancela cuando quieras</div>
+      </div>
+      <div class="plan-card" id="planAnual" onclick="selectPlan('anual')">
+        <div class="badge">40% OFF</div>
+        <div class="plan-name">Plan Anual</div>
+        <div class="plan-price dark">$1,788<span style="font-size:.72rem;font-weight:500;color:#888;">/año</span></div>
+        <div class="plan-desc">$149/mes · Ahorra $1,200</div>
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="reg-tabs">
       <button class="reg-tab" id="tabLogin" onclick="switchTab('login')">Iniciar sesión</button>
       <button class="reg-tab active" id="tabRegister" onclick="switchTab('register')">Registrarse</button>
     </div>
 
-    <!-- Error Firebase -->
-    <div class="reg-firebase-error" id="firebaseError">
-      <span>⚠️</span><span id="firebaseErrorMsg">Error de autenticación.</span>
-    </div>
+    <div class="alert error" id="alertError"><span>⚠️</span><span id="alertMsg">Error.</span></div>
 
     <!-- Panel Registro -->
     <div class="reg-panel active" id="panelRegister">
       <div class="reg-field">
-        <label class="reg-label" for="regNombre">Nombre completo</label>
-        <input class="reg-input" type="text" id="regNombre" placeholder="Dr. Juan Pérez" autocomplete="name">
-        <div class="reg-field-error" id="errNombre">Por favor ingresa tu nombre.</div>
+        <label class="reg-label">Nombre completo</label>
+        <input class="reg-input" type="text" id="regNombre" placeholder="Dr. Juan Pérez">
+        <div class="field-err" id="errNombre">Por favor ingresa tu nombre.</div>
       </div>
       <div class="reg-field">
-        <label class="reg-label" for="regEmail">Correo electrónico</label>
-        <input class="reg-input" type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email">
-        <div class="reg-field-error" id="errEmail">Ingresa un correo válido.</div>
+        <label class="reg-label">Correo electrónico</label>
+        <input class="reg-input" type="email" id="regEmail" placeholder="tu@email.com">
+        <div class="field-err" id="errEmail">Ingresa un correo válido.</div>
       </div>
       <div class="reg-field">
-        <label class="reg-label" for="regWa">WhatsApp</label>
-        <input class="reg-input" type="tel" id="regWa" placeholder="+52 238 000 0000" autocomplete="tel">
-        <div class="reg-field-error" id="errWa">Ingresa tu número de WhatsApp.</div>
+        <label class="reg-label">WhatsApp</label>
+        <input class="reg-input" type="tel" id="regWa" placeholder="+52 238 000 0000">
+        <div class="field-err" id="errWa">Ingresa tu número de WhatsApp.</div>
       </div>
       <div class="reg-field">
-        <label class="reg-label" for="regEsp">Especialidad</label>
+        <label class="reg-label">Especialidad</label>
         <input class="reg-input" type="text" id="regEsp" placeholder="Medicina veterinaria general…">
       </div>
       <div class="reg-field">
-        <label class="reg-label" for="regPass">Contraseña</label>
-        <input class="reg-input" type="password" id="regPass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
-        <div class="reg-field-error" id="errPass">Mínimo 6 caracteres.</div>
+        <label class="reg-label">Contraseña</label>
+        <input class="reg-input" type="password" id="regPass" placeholder="Mínimo 6 caracteres">
+        <div class="field-err" id="errPass">Mínimo 6 caracteres.</div>
       </div>
-
       <div class="reg-field" style="margin-bottom:.7rem;">
         <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;font-size:.82rem;color:var(--reg-muted);line-height:1.5;">
-          <input type="checkbox" id="regTerminos" style="margin-top:.15rem;width:15px;height:15px;accent-color:var(--reg-teal);flex-shrink:0;">
-          <span>Acepto los <a href="#" onclick="openTerminos(event)" style="color:var(--reg-teal);font-weight:700;text-decoration:underline;">Términos y Condiciones</a> y la <a href="#" onclick="openTerminos(event)" style="color:var(--reg-teal);font-weight:700;text-decoration:underline;">Política de Privacidad</a> del Club GlobalVet</span>
+          <input type="checkbox" id="regTerminos" style="margin-top:.15rem;width:15px;height:15px;accent-color:var(--reg-teal);">
+          <span>Acepto los <a href="#" onclick="openTerminos(event)" style="color:var(--reg-teal);font-weight:700;">Términos y Condiciones</a> del Club GlobalVet</span>
         </label>
-        <div class="reg-field-error" id="errTerminos">Debes aceptar los términos y condiciones.</div>
+        <div class="field-err" id="errTerminos">Debes aceptar los términos.</div>
       </div>
-      <button class="reg-btn-main" id="btnRegister" onclick="handleRegister()">
+      <button class="reg-btn" id="btnRegister" onclick="handleRegister()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
         Crear cuenta y pagar
       </button>
-
       <div class="reg-divider">o continúa con</div>
-      <button onclick="handleGoogleRegister()" style="width:100%;padding:.75rem;border:1.5px solid var(--reg-line);border-radius:12px;background:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1rem;transition:border-color .2s;" onmouseover="this.style.borderColor='#4285F4'" onmouseout="this.style.borderColor='var(--reg-line)'">
+      <button class="google-btn" onclick="handleGoogle()">
         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Registrarme con Google
       </button>
-
-      <div class="reg-footer-links">
-        ¿Ya tienes cuenta? <a onclick="switchTab('login')">Inicia sesión</a>
-      </div>
+      <div class="reg-footer">¿Ya tienes cuenta? <a onclick="switchTab('login')">Inicia sesión</a></div>
     </div>
 
     <!-- Panel Login -->
     <div class="reg-panel" id="panelLogin">
       <div class="reg-field">
-        <label class="reg-label" for="loginEmail">Correo electrónico</label>
-        <input class="reg-input" type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email">
-        <div class="reg-field-error" id="errLoginEmail">Ingresa un correo válido.</div>
+        <label class="reg-label">Correo electrónico</label>
+        <input class="reg-input" type="email" id="loginEmail" placeholder="tu@email.com">
+        <div class="field-err" id="errLoginEmail">Ingresa un correo válido.</div>
       </div>
       <div class="reg-field">
-        <label class="reg-label" for="loginPass">Contraseña</label>
-        <input class="reg-input" type="password" id="loginPass" placeholder="Tu contraseña" autocomplete="current-password">
-        <div class="reg-field-error" id="errLoginPass">Ingresa tu contraseña.</div>
+        <label class="reg-label">Contraseña</label>
+        <input class="reg-input" type="password" id="loginPass" placeholder="Tu contraseña">
+        <div class="field-err" id="errLoginPass">Ingresa tu contraseña.</div>
       </div>
-
-      <button class="reg-btn-main" id="btnLogin" onclick="handleLogin()">
+      <button class="reg-btn" id="btnLogin" onclick="handleLogin()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         Iniciar sesión
       </button>
-
       <div class="reg-divider">o continúa con</div>
-      <button onclick="handleGoogleRegister()" style="width:100%;padding:.75rem;border:1.5px solid var(--reg-line);border-radius:12px;background:#fff;font-family:var(--ff);font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1rem;transition:border-color .2s;" onmouseover="this.style.borderColor='#4285F4'" onmouseout="this.style.borderColor='var(--reg-line)'">
+      <button class="google-btn" onclick="handleGoogle()">
         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Continuar con Google
       </button>
-
-      <div class="reg-footer-links" style="margin-bottom:.5rem;">
-        <a id="forgotLink" onclick="handleForgot()">¿Olvidaste tu contraseña?</a>
-      </div>
-      <div class="reg-footer-links">
-        ¿No tienes cuenta? <a onclick="switchTab('register')">Regístrate</a>
-      </div>
+      <div class="reg-footer" style="margin-bottom:.5rem;"><a onclick="handleForgot()">¿Olvidaste tu contraseña?</a></div>
+      <div class="reg-footer">¿No tienes cuenta? <a onclick="switchTab('register')">Regístrate</a></div>
     </div>
 
-    <div class="reg-club-link">
-      ¿Aún no conoces el Club? <a href="club.html">← Ver planes y beneficios</a>
+    <div style="text-align:center;font-size:.8rem;color:var(--reg-muted);margin-top:.9rem;">
+      ¿Aún no conoces el Club? <a href="club.html" style="color:var(--reg-teal);font-weight:600;">← Ver planes y beneficios</a>
     </div>
   </div>
 </div>
 
-<!-- Modal plan -->
-<div class="reg-plan-modal-overlay" id="planModalOverlay" onclick="closePlanModal(event)">
-  <div class="reg-plan-modal">
-    <h3>Elige tu plan</h3>
-    <div class="reg-plan-opt selected" id="optMensual" onclick="selectPlan('mensual')">
-      <div class="reg-plan-opt-icon">🌿</div>
-      <div style="flex:1;">
-        <div class="reg-plan-opt-name">Plan Mensual</div>
-        <div class="reg-plan-opt-desc">Precio de fundador · Sin compromiso largo</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="reg-plan-opt-price">$199<span style="font-size:.75rem;font-weight:500;color:#888;">/mes</span></div>
-      </div>
-    </div>
-    <div class="reg-plan-opt" id="optAnual" onclick="selectPlan('anual')">
-      <div class="reg-plan-opt-icon">⭐</div>
-      <div style="flex:1;">
-        <div class="reg-plan-opt-name">Plan Anual</div>
-        <div class="reg-plan-opt-desc">Mejor precio · Mentoría grupal extra</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="reg-plan-opt-price">$1,788<span style="font-size:.75rem;font-weight:500;color:#888;">/año</span></div>
-        <span class="reg-plan-opt-save">Ahorra $1,200</span>
-      </div>
-    </div>
-    <button class="reg-modal-close" onclick="closePlanModal()">Cancelar</button>
-  </div>
-</div>
+<div class="reg-toast" id="toast"><span id="toastMsg">✓ ¡Listo!</span></div>
 
-<!-- Toast -->
-<div class="reg-toast" id="regToast"><span id="toastMsg">✓ ¡Listo!</span></div>
-
-<!-- ===================== PAGO BRICK ===================== -->
-<div id="pagoSection" style="display:none;position:fixed;inset:0;background:rgba(13,31,53,.55);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:#fff;border-radius:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:2rem 1.8rem;box-shadow:0 24px 72px rgba(13,31,53,.2);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
-      <div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#0d1f35;">Completa tu pago</div>
-        <div id="pagoResumen" style="font-size:.82rem;color:#5b7080;margin-top:.2rem;"></div>
-      </div>
-      <img src="../assets/logo/globalvet-logo.jpg" style="width:36px;height:36px;border-radius:10px;object-fit:cover;">
-    </div>
-    <div id="paymentBrick_container"></div>
-    <div style="text-align:center;margin-top:1rem;font-size:.75rem;color:#aab5c4;">🔒 Pago seguro con MercadoPago · SSL encriptado</div>
-  </div>
-</div>
-
-<!-- MP SDK -->
-<script src="https://sdk.mercadopago.com/js/v2"></script>
-
-<!-- ===================== FIREBASE ===================== -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyB_OgAmyW7XNiLUyKp6Ih92A5qxm3LNCqg",
-    authDomain: "globalvet-club.firebaseapp.com",
-    projectId: "globalvet-club",
-    storageBucket: "globalvet-club.firebasestorage.app",
-    messagingSenderId: "880780506385",
-    appId: "1:880780506385:web:be49dbc8886147a79048b0",
-    measurementId: "G-9HX8Y8G9SS"
-  };
-
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  // Flags para controlar flujo
-  let isRegistering = false;
-  let brickShowing   = false;
-
-  // Si ya hay sesión activa → redirigir al dashboard (solo si NO está en proceso de pago)
-  onAuthStateChanged(auth, (user) => {
-    if (user && !isRegistering && !brickShowing) {
-      window.location.href = 'club-dashboard.html';
-    }
-  });
-
-  // ---- Plan ----
-  let currentPlan = 'mensual';
-  const urlPlan = new URLSearchParams(window.location.search).get('plan');
-  if (urlPlan === 'anual') window.selectPlan('anual');
-
-  window.selectPlan = function(plan) {
-    currentPlan = plan;
-    const cm = document.getElementById('planCardMensual');
-    const ca = document.getElementById('planCardAnual');
-    if (plan === 'mensual') {
-      cm.style.borderColor = 'var(--reg-teal)'; cm.style.background = 'rgba(10,124,110,.05)';
-      ca.style.borderColor = 'var(--reg-line)'; ca.style.background = '#fff';
-    } else {
-      ca.style.borderColor = 'var(--reg-teal)'; ca.style.background = 'rgba(10,124,110,.05)';
-      cm.style.borderColor = 'var(--reg-line)'; cm.style.background = '#fff';
-    }
-    closePlanModal();
-  };
-
-  // Google login
-  window.handleGoogleRegister = async function() {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const snap = await getDoc(doc(db, 'usuarios', user.uid));
-      if (!snap.exists()) {
-        // Nuevo usuario: guardar como pendiente y enviar a pagar
-        await setDoc(doc(db, 'usuarios', user.uid), {
-          nombre: user.displayName || 'Miembro',
-          email: user.email,
-          whatsapp: '',
-          especialidad: '',
-          plan: currentPlan,
-          planLabel: currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual',
-          estado: 'pendiente',
-          membresiaActiva: false,
-          fechaRegistro: serverTimestamp(),
-          uid: user.uid
-        });
-        // Redirigir a pago
-        showToast('⏳ Preparando tu pago…');
-        showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
-        brickShowing = true;
-        const p1 = new URLSearchParams({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan });
-        setTimeout(() => { window.location.href = `${RAILWAY_URL}/pagar?${p1.toString()}`; }, 800);
-      } else {
-        // Ya tiene cuenta: verificar si está activa
-        const pd = snap.data();
-        if (pd.membresiaActiva === true && pd.estado === 'activo') {
-          showToast('✅ Bienvenido de nuevo 🐾', true);
-          setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
-        } else {
-          // Cuenta inactiva: enviar a pagar de nuevo
-          showToast('⏳ Renovando membresía…');
-          brickShowing = true;
-          const p2 = new URLSearchParams({ email: user.email, nombre: user.displayName || 'Miembro', plan: currentPlan });
-          setTimeout(() => { window.location.href = `${RAILWAY_URL}/pagar?${p2.toString()}`; }, 800);
-        }
-      }
-    } catch(e) {
-      showFirebaseError(translateError(e.code));
-    }
-  };
-
-  // ---- Helpers UI ----
-  function setLoading(btnId, loading, label) {
-    const btn = document.getElementById(btnId);
-    btn.disabled = loading;
-    btn.innerHTML = loading
-      ? '<div class="spinner"></div> Procesando…'
-      : label;
-  }
-
-  function showFirebaseError(msg) {
-    const el = document.getElementById('firebaseError');
-    document.getElementById('firebaseErrorMsg').textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 5000);
-  }
-
-  function showToast(msg, green = false) {
-    const t = document.getElementById('regToast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.classList.toggle('green', green);
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4000);
-  }
-
-  function translateError(code) {
-    const map = {
-      'auth/email-already-in-use':    'Este correo ya tiene una cuenta. Inicia sesión.',
-      'auth/invalid-email':           'El correo no es válido.',
-      'auth/weak-password':           'La contraseña debe tener al menos 6 caracteres.',
-      'auth/user-not-found':          'No encontramos una cuenta con ese correo.',
-      'auth/wrong-password':          'Contraseña incorrecta.',
-      'auth/invalid-credential':      'Correo o contraseña incorrectos.',
-      'auth/too-many-requests':       'Demasiados intentos. Intenta más tarde.',
-      'auth/network-request-failed':  'Sin conexión. Revisa tu internet.',
-    };
-    return map[code] || 'Ocurrió un error. Intenta de nuevo.';
-  }
-
-  function fieldErr(id, show, msg='') {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = msg || el.textContent; el.classList.toggle('show', show); }
-    const inp = document.getElementById(id.replace('err','reg')) || document.getElementById(id.replace('err',''));
-  }
-
-  const RAILWAY_URL = 'https://web-production-09f0d.up.railway.app';
-
-  // ---- REGISTRO ----
-  window.handleRegister = async function() {
-    document.getElementById('firebaseError').classList.remove('show');
-    const nombre = document.getElementById('regNombre').value.trim();
-    const email  = document.getElementById('regEmail').value.trim();
-    const wa     = document.getElementById('regWa').value.trim();
-    const esp    = document.getElementById('regEsp').value.trim();
-    const pass   = document.getElementById('regPass').value;
-
-    // Validar
-    let ok = true;
-    const showE = (id, inp, cond) => { document.getElementById(id).classList.toggle('show', cond); document.getElementById(inp).classList.toggle('error', cond); if(cond) ok=false; };
-    showE('errNombre', 'regNombre', !nombre);
-    showE('errEmail',  'regEmail',  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-    showE('errWa',     'regWa',     !wa);
-    showE('errPass',   'regPass',   pass.length < 6);
-    const terminos = document.getElementById('regTerminos').checked;
-    document.getElementById('errTerminos').classList.toggle('show', !terminos);
-    if (!terminos) ok = false;
-    if (!ok) return;
-
-    setLoading('btnRegister', true);
-    isRegistering = true;
-
-    try {
-      // 1. Crear usuario en Firebase Auth
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      const uid  = cred.user.uid;
-      await updateProfile(cred.user, { displayName: nombre });
-
-      // 2. Guardar perfil en Firestore con estado "pendiente"
-      await setDoc(doc(db, 'usuarios', uid), {
-        nombre,
-        email,
-        whatsapp:        wa,
-        especialidad:    esp || 'No especificada',
-        plan:            currentPlan,
-        planLabel:       currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual',
-        estado:          'pendiente',
-        membresiaActiva: false,
-        fechaRegistro:   serverTimestamp(),
-        uid
-      });
-
-      // 3. Redirigir a Railway para pago (evita CORS)
-      showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
-      isRegistering = false;
-      brickShowing  = true;
-      const params = new URLSearchParams({ email, nombre, plan: currentPlan });
-      setTimeout(() => {
-        window.location.href = `${RAILWAY_URL}/pagar?${params.toString()}`;
-      }, 1000);
-
-    } catch (e) {
-      isRegistering = false;
-      setLoading('btnRegister', false,
-        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y pagar');
-      showFirebaseError(e.code ? translateError(e.code) : (e.message || 'Error al procesar. Intenta de nuevo.'));
-    }
-  };
-
-  // ---- LOGIN ----
-  window.handleLogin = async function() {
-    document.getElementById('firebaseError').classList.remove('show');
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass  = document.getElementById('loginPass').value;
-
-    let ok = true;
-    const showE = (id, inp, cond) => { document.getElementById(id).classList.toggle('show', cond); document.getElementById(inp).classList.toggle('error', cond); if(cond) ok=false; };
-    showE('errLoginEmail', 'loginEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-    showE('errLoginPass',  'loginPass',  !pass);
-    if (!ok) return;
-
-    setLoading('btnLogin', true);
-
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      showToast('✅ Sesión iniciada. Bienvenido de nuevo 🐾', true);
-      setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
-    } catch (e) {
-      setLoading('btnLogin', false,
-        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Iniciar sesión');
-      showFirebaseError(translateError(e.code));
-    }
-  };
-
-  // ---- RECUPERAR CONTRASEÑA ----
-  window.handleForgot = async function() {
-    const email = document.getElementById('loginEmail').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showFirebaseError('Escribe tu correo arriba para recuperar tu contraseña.');
-      return;
-    }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showToast('📧 Revisa tu correo para restablecer tu contraseña.', true);
-    } catch(e) {
-      showFirebaseError(translateError(e.code));
-    }
-  };
-
-  // ---- BRICK DE PAGO ----
-  const MP_PUBLIC_KEY_TEST = 'TEST-dca45e8d-4bc5-43fc-bbd4-e08e6f0a6715';
-  const MP_PUBLIC_KEY_PROD = 'APP_USR-0b92ac39-a60a-48dd-aa14-1f689a3e3847';
-  const MP_PUBLIC_KEY = MP_PUBLIC_KEY_PROD; // Cambiar a TEST para pruebas
-
-  window.mostrarBrickPago = async function(preferenceId, plan) {
-    const monto = plan === 'anual' ? 1788 : 199;
-    const label = plan === 'anual' ? 'Plan Anual — $1,788 MXN/año' : 'Plan Mensual — $199 MXN/mes';
-    document.getElementById('pagoResumen').textContent = label;
-    document.getElementById('pagoSection').style.display = 'flex';
-
-    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-MX' });
-    const bricksBuilder = mp.bricks();
-
-    const settings = {
-      initialization: {
-        amount: monto,
-        preferenceId: preferenceId,
-      },
-      customization: {
-        paymentMethods: {
-          creditCard: 'all',
-          debitCard: 'all',
-          ticket: 'all',
-          bankTransfer: 'all',
-          mercadoPago: ['wallet_purchase'],
-        },
-        visual: {
-          style: {
-            theme: 'default',
-          }
-        }
-      },
-      callbacks: {
-        onReady: () => {
-          setLoading('btnRegister', false,
-            '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y pagar');
-        },
-        onSubmit: ({ selectedPaymentMethod, formData }) => {
-          // El Brick maneja el pago y redirige automáticamente vía preferenceId
-          return new Promise((resolve, reject) => { resolve(); });
-        },
-        onError: (error) => {
-          console.error('MP Brick error:', error);
-          showFirebaseError('Error al procesar el pago. Intenta de nuevo.');
-        },
-      },
-    };
-
-    try {
-      await bricksBuilder.create('payment', 'paymentBrick_container', settings);
-    } catch(e) {
-      console.error('Error creando brick:', e);
-      showFirebaseError('No se pudo cargar el formulario de pago. Intenta recargar.');
-    }
-  };
-
-  // ---- MODAL PLAN ----
-  window.openPlanModal  = () => document.getElementById('planModalOverlay').classList.add('show');
-  window.closePlanModal = (e) => {
-    if (!e || e.target === document.getElementById('planModalOverlay'))
-      document.getElementById('planModalOverlay').classList.remove('show');
-  };
-
-  // ---- TABS ----
-  window.switchTab = (tab) => {
-    document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
-    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-    document.getElementById('panelLogin').classList.toggle('active',    tab === 'login');
-    document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
-    document.getElementById('firebaseError').classList.remove('show');
-  };
-
-  // Leer ?tab=login de la URL
-  if (new URLSearchParams(window.location.search).get('tab') === 'login') {
-    window.switchTab('login');
-  }
-</script>
-
-
-<!-- MODAL TÉRMINOS Y CONDICIONES -->
-<div id="terminosModal" style="display:none;position:fixed;inset:0;background:rgba(13,31,53,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:#fff;border-radius:22px;width:100%;max-width:540px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(13,31,53,.2);">
+<!-- Modal Términos -->
+<div id="terminosModal" style="display:none;position:fixed;inset:0;background:rgba(13,31,53,.5);z-index:200;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#fff;border-radius:22px;width:100%;max-width:540px;max-height:85vh;display:flex;flex-direction:column;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid #eef1f8;">
-      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;color:#0d1f35;">Términos y Condiciones — Club GlobalVet</div>
-      <button onclick="closeTerminos()" style="background:rgba(0,0,0,.06);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;">Términos y Condiciones — Club GlobalVet</div>
+      <button onclick="closeTerminos()" style="background:rgba(0,0,0,.06);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;">✕</button>
     </div>
     <div style="overflow-y:auto;padding:1.4rem 1.5rem;font-size:.85rem;color:#5b7080;line-height:1.7;">
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">1. Membresía y Acceso</p>
+      <p style="font-weight:700;color:#0d1f35;">1. Membresía y Acceso</p>
       <p>Al registrarte en el Club GlobalVet, obtienes acceso exclusivo a videos, PDFs, sesiones en vivo y comunidad de WhatsApp. El acceso es personal e intransferible.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">2. Pagos y Suscripción</p>
-      <p>La membresía mensual tiene un costo de $199 MXN/mes con un mínimo de 3 meses. La membresía anual es de $1,788 MXN con renovación anual. Los precios pueden cambiar para nuevos miembros.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">3. Cancelación</p>
-      <p>Puedes cancelar tu membresía mensual después del tercer mes enviando un mensaje a globalvetmexico@gmail.com. No se realizan reembolsos por el mes en curso.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">4. Uso del Contenido</p>
-      <p>Todo el contenido del Club GlobalVet (videos, PDFs, materiales) es exclusivo para miembros activos. Queda prohibida su reproducción, distribución o compartición sin autorización.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">5. Privacidad</p>
-      <p>Tus datos personales (nombre, correo, WhatsApp) se usan únicamente para gestionar tu membresía y enviarte contenido del Club. No compartimos tu información con terceros.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">6. Conducta en Comunidad</p>
-      <p>Los miembros del grupo de WhatsApp deben mantener respeto y profesionalismo. GlobalVet México se reserva el derecho de retirar el acceso a quien incumpla estas normas.</p>
-      <p style="font-weight:700;color:#0d1f35;margin-bottom:.5rem;">7. Contacto</p>
-      <p>Para cualquier duda: <strong>globalvetmexico@gmail.com</strong> o WhatsApp <strong>+52 1 238 150 0864</strong></p>
+      <p style="font-weight:700;color:#0d1f35;">2. Pagos y Suscripción</p>
+      <p>La membresía mensual tiene un costo de $199 MXN/mes. La membresía anual es de $1,788 MXN.</p>
+      <p style="font-weight:700;color:#0d1f35;">3. Cancelación</p>
+      <p>Puedes cancelar enviando mensaje a globalvetmexico@gmail.com. No se realizan reembolsos por el mes en curso.</p>
+      <p style="font-weight:700;color:#0d1f35;">4. Contacto</p>
+      <p><strong>globalvetmexico@gmail.com</strong> · WhatsApp <strong>+52 1 238 150 0864</strong></p>
     </div>
     <div style="padding:1rem 1.5rem;border-top:1px solid #eef1f8;">
-      <button onclick="acceptTerminos()" style="width:100%;padding:.8rem;background:#0a7c6e;color:#fff;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;">Entendido — Acepto los términos</button>
+      <button onclick="acceptTerminos()" style="width:100%;padding:.8rem;background:#0a7c6e;color:#fff;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;cursor:pointer;">Entendido — Acepto los términos</button>
     </div>
   </div>
 </div>
 
 <script>
-  function openTerminos(e) {
-    e.preventDefault();
-    document.getElementById('terminosModal').style.display = 'flex';
+  const RAILWAY = 'https://web-production-68c31.up.railway.app';
+  let currentPlan = 'mensual';
+
+  // Plan selector
+  function selectPlan(plan) {
+    currentPlan = plan;
+    document.getElementById('planMensual').classList.toggle('active', plan === 'mensual');
+    document.getElementById('planAnual').classList.toggle('active', plan === 'anual');
   }
-  function closeTerminos() {
-    document.getElementById('terminosModal').style.display = 'none';
+
+  // Tab switcher
+  function switchTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+    hideAlert();
   }
-  function acceptTerminos() {
-    document.getElementById('regTerminos').checked = true;
-    document.getElementById('errTerminos').classList.remove('show');
-    closeTerminos();
+
+  // UI helpers
+  function showAlert(msg) {
+    document.getElementById('alertMsg').textContent = msg;
+    document.getElementById('alertError').classList.add('show');
   }
-  document.getElementById('terminosModal').addEventListener('click', function(e) {
-    if (e.target === this) closeTerminos();
+  function hideAlert() { document.getElementById('alertError').classList.remove('show'); }
+  function showToast(msg, green) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.toggle('green', !!green);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+  function setBtn(id, loading, label) {
+    const b = document.getElementById(id);
+    b.disabled = loading;
+    b.innerHTML = loading ? '<div class="spinner"></div> Procesando…' : label;
+  }
+  function errMap(code) {
+    const m = {
+      'auth/email-already-in-use': 'Este correo ya tiene una cuenta. Inicia sesión.',
+      'auth/invalid-email': 'El correo no es válido.',
+      'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+      'auth/user-not-found': 'No encontramos una cuenta con ese correo.',
+      'auth/wrong-password': 'Contraseña incorrecta.',
+      'auth/invalid-credential': 'Correo o contraseña incorrectos.',
+      'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
+    };
+    return m[code] || 'Ocurrió un error. Intenta de nuevo.';
+  }
+
+  // Modal términos
+  function openTerminos(e) { e.preventDefault(); document.getElementById('terminosModal').style.display = 'flex'; }
+  function closeTerminos() { document.getElementById('terminosModal').style.display = 'none'; }
+  function acceptTerminos() { document.getElementById('regTerminos').checked = true; document.getElementById('errTerminos').classList.remove('show'); closeTerminos(); }
+
+  // Ir a pagar
+  function irAPagar(email, nombre, plan) {
+    const params = new URLSearchParams({ email, nombre, plan });
+    window.location.href = `${RAILWAY}/pagar?${params.toString()}`;
+  }
+
+  // URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('plan') === 'anual') selectPlan('anual');
+  if (urlParams.get('tab') === 'login') switchTab('login');
+</script>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const app  = initializeApp({ apiKey: "AIzaSyB_OgAmyW7XNiLUyKp6Ih92A5qxm3LNCqg", authDomain: "globalvet-club.firebaseapp.com", projectId: "globalvet-club", storageBucket: "globalvet-club.firebasestorage.app", messagingSenderId: "880780506385", appId: "1:880780506385:web:be49dbc8886147a79048b0" });
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  let pagando = false;
+
+  // Auto-redirect si ya tiene sesión activa y membresía
+  onAuthStateChanged(auth, async user => {
+    if (user && !pagando) {
+      try {
+        const snap = await getDoc(doc(db, 'usuarios', user.uid));
+        if (snap.exists() && snap.data().membresiaActiva === true) {
+          window.location.href = 'club-dashboard.html';
+        }
+      } catch(e) {}
+    }
   });
+
+  // REGISTRO
+  window.handleRegister = async function() {
+    hideAlert();
+    const nombre = document.getElementById('regNombre').value.trim();
+    const email  = document.getElementById('regEmail').value.trim();
+    const wa     = document.getElementById('regWa').value.trim();
+    const esp    = document.getElementById('regEsp').value.trim();
+    const pass   = document.getElementById('regPass').value;
+    const terms  = document.getElementById('regTerminos').checked;
+
+    let ok = true;
+    const chk = (eid, iid, cond) => { document.getElementById(eid).classList.toggle('show', cond); document.getElementById(iid).classList.toggle('error', cond); if(cond) ok=false; };
+    chk('errNombre', 'regNombre', !nombre);
+    chk('errEmail',  'regEmail',  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    chk('errWa',     'regWa',     !wa);
+    chk('errPass',   'regPass',   pass.length < 6);
+    document.getElementById('errTerminos').classList.toggle('show', !terms);
+    if (!terms) ok = false;
+    if (!ok) return;
+
+    setBtn('btnRegister', true);
+    pagando = true;
+
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(cred.user, { displayName: nombre });
+      await setDoc(doc(db, 'usuarios', cred.user.uid), { nombre, email, whatsapp: wa, especialidad: esp || 'No especificada', plan: currentPlan, planLabel: currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual', estado: 'pendiente', membresiaActiva: false, fechaRegistro: serverTimestamp(), uid: cred.user.uid });
+      showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
+      setTimeout(() => irAPagar(email, nombre, currentPlan), 1200);
+    } catch(e) {
+      pagando = false;
+      setBtn('btnRegister', false, '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Crear cuenta y pagar');
+      showAlert(errMap(e.code));
+    }
+  };
+
+  // LOGIN
+  window.handleLogin = async function() {
+    hideAlert();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    let ok = true;
+    const chk = (eid, iid, cond) => { document.getElementById(eid).classList.toggle('show', cond); document.getElementById(iid).classList.toggle('error', cond); if(cond) ok=false; };
+    chk('errLoginEmail', 'loginEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    chk('errLoginPass',  'loginPass',  !pass);
+    if (!ok) return;
+    setBtn('btnLogin', true);
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      showToast('✅ Bienvenido de nuevo 🐾', true);
+      setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
+    } catch(e) {
+      setBtn('btnLogin', false, '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Iniciar sesión');
+      showAlert(errMap(e.code));
+    }
+  };
+
+  // GOOGLE
+  window.handleGoogle = async function() {
+    pagando = true;
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const user = result.user;
+      const snap = await getDoc(doc(db, 'usuarios', user.uid));
+      if (snap.exists() && snap.data().membresiaActiva === true) {
+        showToast('✅ Bienvenido de nuevo 🐾', true);
+        setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1000);
+        return;
+      }
+      if (!snap.exists()) {
+        await setDoc(doc(db, 'usuarios', user.uid), { nombre: user.displayName || 'Miembro', email: user.email, whatsapp: '', especialidad: '', plan: currentPlan, planLabel: currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual', estado: 'pendiente', membresiaActiva: false, fechaRegistro: serverTimestamp(), uid: user.uid });
+      }
+      showToast('✅ Redirigiendo a pago…', true);
+      setTimeout(() => irAPagar(user.email, user.displayName || 'Miembro', currentPlan), 1000);
+    } catch(e) {
+      pagando = false;
+      showAlert(errMap(e.code));
+    }
+  };
+
+  // RECUPERAR CONTRASEÑA
+  window.handleForgot = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('Escribe tu correo arriba para recuperarlo.'); return; }
+    try { await sendPasswordResetEmail(auth, email); showToast('📧 Revisa tu correo.', true); } catch(e) { showAlert(errMap(e.code)); }
+  };
 </script>
 </body>
 </html>
