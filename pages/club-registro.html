@@ -228,7 +228,7 @@
 </div>
 
 <script>
-  const RAILWAY = 'https://globalvet-webhook.onrender.com';
+  // MODIFICADO: desconectado MercadoPago. Aquí iba: const RAILWAY = 'https://globalvet-webhook.onrender.com';
   let currentPlan = 'mensual';
 
   // Plan selector
@@ -284,9 +284,10 @@
   function acceptTerminos() { document.getElementById('regTerminos').checked = true; document.getElementById('errTerminos').classList.remove('show'); closeTerminos(); }
 
   // Ir a pagar
+  // MODIFICADO: desconectado MercadoPago. Función queda como stub — aquí se conectará el nuevo procesador.
   function irAPagar(email, nombre, plan) {
-    const params = new URLSearchParams({ email, nombre, plan });
-    window.location.href = `${RAILWAY}/pagar?${params.toString()}`;
+    console.log('[pago] Listo para cobrar:', { email, nombre, plan });
+    // TODO: window.location.href = <URL_CHECKOUT_' + plan + '>;
   }
 
   // URL params
