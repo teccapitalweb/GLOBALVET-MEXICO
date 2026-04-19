@@ -1168,15 +1168,14 @@
 
   let currentVideoId = null;
 
-  function loadYT(ytIdOrLink) {
-    if (!ytIdOrLink) return;
-    currentVideoId = ytIdOrLink;
-    const url = toEmbedURL(ytIdOrLink);
-    // Agregar autoplay SOLO si es YouTube (Drive no lo soporta igual)
-    const finalUrl = url.includes('youtube.com')
-      ? url + '&autoplay=1'
-      : url;
-    document.getElementById('ytFrame').src = finalUrl;
+  function loadYT(linkOrId) {
+    if (!linkOrId) return;
+    currentVideoId = linkOrId;
+    // Mismo patrón que OdonTeck — Drive inline
+    const link = String(linkOrId);
+    const fileMatch = link.match(/\/file\/d\/([^/]+)/);
+    const embedURL = fileMatch ? `https://drive.google.com/file/d/${fileMatch[1]}/preview` : link;
+    document.getElementById('ytFrame').src = embedURL;
   }
 
   function buildSessionBtns(sessions, activeIdx) {
@@ -1352,7 +1351,11 @@
 
     document.getElementById('cmSesDesc').innerHTML = infoHtml;
 
-    document.getElementById('cmFrame').src = ses.ytId ? toEmbedURL(ses.ytId) : '';
+    // Reproductor — patrón idéntico a OdonTeck (Drive inline, sin funciones intermedias)
+    const link = ses.ytId || '';
+    const fileMatch = link.match(/\/file\/d\/([^/]+)/);
+    const embedURL = fileMatch ? `https://drive.google.com/file/d/${fileMatch[1]}/preview` : link;
+    document.getElementById('cmFrame').src = embedURL;
     // Botón completado
     const btnDone = document.getElementById('cmBtnDone');
     if (prog[idx]) {
