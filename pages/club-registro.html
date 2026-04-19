@@ -202,6 +202,63 @@
   </div>
 </div>
 
+<!-- PANTALLA INTERMEDIA DE PAGO (se muestra después del registro/login) -->
+<div class="reg-page" id="payScreen" style="display:none;">
+  <div class="reg-card" style="text-align:center;">
+    <div class="reg-brand" style="justify-content:center;">
+      <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+      <span><strong>GlobalVet</strong> México</span>
+    </div>
+
+    <!-- Pasos visuales -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin:1.2rem 0 1.6rem;font-size:.75rem;font-family:var(--ff);">
+      <div style="display:flex;align-items:center;gap:.35rem;color:var(--reg-teal);font-weight:700;">
+        <span style="width:22px;height:22px;border-radius:50%;background:var(--reg-teal);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;">✓</span>
+        Registro
+      </div>
+      <span style="color:#cfd8e3;">→</span>
+      <div style="display:flex;align-items:center;gap:.35rem;color:var(--reg-dark);font-weight:700;">
+        <span style="width:22px;height:22px;border-radius:50%;background:var(--reg-dark);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;">2</span>
+        Pago
+      </div>
+      <span style="color:#cfd8e3;">→</span>
+      <div style="display:flex;align-items:center;gap:.35rem;color:#a9b4c2;font-weight:500;">
+        <span style="width:22px;height:22px;border-radius:50%;background:#eef3fa;color:#a9b4c2;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;">3</span>
+        Acceso
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#f0f9f7 0%,#e6f4f1 100%);border-radius:18px;padding:1.8rem 1.2rem;margin-bottom:1rem;">
+      <div style="width:64px;height:64px;border-radius:50%;background:#fff;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(10,124,110,.15);">
+        <svg viewBox="0 0 60 60" width="42" height="42">
+          <path d="M30 5C16.2 5 5 16.2 5 30s11.2 25 25 25 25-11.2 25-25S43.8 5 30 5z" fill="#96BF48"/>
+          <path d="M38 22h-3c0-2.8-2.2-5-5-5s-5 2.2-5 5h-3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V24c0-1.1-.9-2-2-2zm-8 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3-10h-6c0-1.7 1.3-3 3-3s3 1.3 3 3z" fill="#fff"/>
+        </svg>
+      </div>
+      <div style="font-family:var(--ff);font-size:1.15rem;font-weight:700;color:var(--reg-dark);margin-bottom:.4rem;">Completa tu pago con Shopify</div>
+      <div style="font-size:.85rem;color:var(--reg-muted);line-height:1.5;margin-bottom:1.2rem;">Tu cuenta fue creada 🎉<br>Ahora activa tu membresía. La suscripción se renueva automáticamente y puedes cancelar cuando quieras.</div>
+
+      <div style="background:#fff;border-radius:12px;padding:.9rem 1rem;margin-bottom:1.3rem;border:1px solid var(--reg-line);">
+        <div style="font-family:var(--ff);font-weight:700;color:var(--reg-dark);font-size:.95rem;" id="payPlanName">Plan Mensual</div>
+        <div style="font-family:var(--ff);font-weight:800;color:var(--reg-teal);font-size:1.3rem;margin-top:.15rem;" id="payPlanPrice">$199 MXN/mes</div>
+      </div>
+
+      <button onclick="abrirPagoShopify()" id="btnPagarShopify" style="width:100%;padding:.95rem;background:var(--reg-teal);color:#fff;font-family:var(--ff);font-weight:700;font-size:1rem;border:none;border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;box-shadow:0 6px 18px rgba(10,124,110,.35);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Pagar con Shopify
+      </button>
+
+      <div style="font-size:.72rem;color:var(--reg-muted);margin-top:.9rem;display:flex;align-items:center;justify-content:center;gap:.4rem;">
+        <span style="color:#0a7c6e;">🔒</span> Pago 100% seguro · Sin permanencia
+      </div>
+    </div>
+
+    <div style="font-size:.75rem;color:var(--reg-muted);line-height:1.6;">
+      Si ya pagaste y no entraste automáticamente, <a onclick="verificarYEntrar()" style="color:var(--reg-teal);font-weight:700;cursor:pointer;">haz clic aquí</a> para verificar tu acceso.
+    </div>
+  </div>
+</div>
+
 <div class="reg-toast" id="toast"><span id="toastMsg">✓ ¡Listo!</span></div>
 
 <!-- Modal Términos -->
@@ -291,11 +348,40 @@
     anual:   'https://pfueck-wm.myshopify.com/cart/45322917478454:1?selling_plan=2071724086'
   };
 
-  // Ir a pagar — abre popup de Shopify. El listener de Firestore (en el módulo
-  // de abajo) detecta cuando el webhook confirma el pago y redirige al dashboard.
+  const PLAN_INFO = {
+    mensual: { name: 'Plan Mensual', price: '$199 MXN/mes' },
+    anual:   { name: 'Plan Anual',   price: '$1,788 MXN/año' }
+  };
+
+  // Guardamos los datos del usuario para usarlos cuando haga clic en "Pagar"
+  let _pagoData = { email: '', nombre: '', plan: 'mensual' };
+
+  // irAPagar() — NO abre Shopify automáticamente. Solo muestra la pantalla
+  // intermedia con el botón "Pagar con Shopify". El usuario hace clic ahí,
+  // y ESE clic directo es el que abre el popup (así el navegador no lo bloquea).
   function irAPagar(email, nombre, plan) {
+    _pagoData = { email, nombre, plan };
+
+    // Ocultar el formulario de registro y mostrar la pantalla de pago
+    document.querySelector('.reg-page').style.display = 'none';
+    const payScreen = document.getElementById('payScreen');
+    payScreen.style.display = 'flex';
+
+    // Personalizar la info del plan en la pantalla
+    const info = PLAN_INFO[plan] || PLAN_INFO.mensual;
+    document.getElementById('payPlanName').textContent  = info.name;
+    document.getElementById('payPlanPrice').textContent = info.price;
+
+    window.scrollTo(0, 0);
+    console.log('[pago] Pantalla intermedia mostrada:', _pagoData);
+  }
+
+  // Cuando el usuario hace clic en "Pagar con Shopify" → abrir popup real
+  // (ESTO SÍ ES ACCIÓN DIRECTA DEL USUARIO, el navegador NO lo bloquea)
+  window.abrirPagoShopify = function() {
+    const { email, plan } = _pagoData;
     const baseUrl  = SHOPIFY_URLS[plan] || SHOPIFY_URLS.mensual;
-    const finalUrl = baseUrl + '&checkout[email]=' + encodeURIComponent(email);
+    const finalUrl = email ? baseUrl + '&checkout[email]=' + encodeURIComponent(email) : baseUrl;
 
     // Abrir popup centrado
     const w = 820, h = 720;
@@ -308,19 +394,29 @@
     );
 
     if (!window._shopWin) {
-      showAlert('Tu navegador bloqueó la ventana de pago. Habilita popups e intenta de nuevo.');
+      // Muy raro que pase, pero por si acaso — caemos a redirect normal
+      window.location.href = finalUrl;
       return;
     }
 
-    showToast('💳 Completa tu pago en la ventana de Shopify…', true);
-    console.log('[pago] Abriendo Shopify:', { email, nombre, plan });
-
-    // Arrancar listener que detecta cuando el webhook confirma el pago
+    // Arrancar listener para detectar pago confirmado
     const u = window._currentUid;
     if (u && typeof window.escucharPagoShopify === 'function') {
       window.escucharPagoShopify(u);
     }
-  }
+
+    // Cambiar el botón a estado "esperando"
+    const btn = document.getElementById('btnPagarShopify');
+    btn.innerHTML = '<div class="spinner"></div> Esperando confirmación…';
+    btn.disabled = true;
+    btn.style.opacity = '.7';
+  };
+
+  // Botón manual "Ya pagué" por si el listener no detectó el pago
+  window.verificarYEntrar = async function() {
+    showToast('🔎 Verificando tu pago…', true);
+    setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1200);
+  };
 
   // URL params
   const urlParams = new URLSearchParams(window.location.search);
