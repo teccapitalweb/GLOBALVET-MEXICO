@@ -283,11 +283,43 @@
   function closeTerminos() { document.getElementById('terminosModal').style.display = 'none'; }
   function acceptTerminos() { document.getElementById('regTerminos').checked = true; document.getElementById('errTerminos').classList.remove('show'); closeTerminos(); }
 
-  // Ir a pagar
-  // MODIFICADO: desconectado MercadoPago. Función queda como stub — aquí se conectará el nuevo procesador.
+  // ─── SHOPIFY — Checkout Links ──────────────────────────────────
+  // Links de suscripción recurrente de la tienda pfueck-wm.myshopify.com
+  // (el "selling_plan" activa la renovación automática).
+  const SHOPIFY_URLS = {
+    mensual: 'https://pfueck-wm.myshopify.com/cart/45322908696630:1?selling_plan=2071691318',
+    anual:   'https://pfueck-wm.myshopify.com/cart/45322917478454:1?selling_plan=2071724086'
+  };
+
+  // Ir a pagar — abre popup de Shopify. El listener de Firestore (en el módulo
+  // de abajo) detecta cuando el webhook confirma el pago y redirige al dashboard.
   function irAPagar(email, nombre, plan) {
-    console.log('[pago] Listo para cobrar:', { email, nombre, plan });
-    // TODO: window.location.href = <URL_CHECKOUT_' + plan + '>;
+    const baseUrl  = SHOPIFY_URLS[plan] || SHOPIFY_URLS.mensual;
+    const finalUrl = baseUrl + '&checkout[email]=' + encodeURIComponent(email);
+
+    // Abrir popup centrado
+    const w = 820, h = 720;
+    const left = Math.round((screen.width  - w) / 2);
+    const top  = Math.round((screen.height - h) / 2);
+    window._shopWin = window.open(
+      finalUrl,
+      'ShopifyCheckout',
+      `width=${w},height=${h},left=${left},top=${top},scrollbars=yes,resizable=yes`
+    );
+
+    if (!window._shopWin) {
+      showAlert('Tu navegador bloqueó la ventana de pago. Habilita popups e intenta de nuevo.');
+      return;
+    }
+
+    showToast('💳 Completa tu pago en la ventana de Shopify…', true);
+    console.log('[pago] Abriendo Shopify:', { email, nombre, plan });
+
+    // Arrancar listener que detecta cuando el webhook confirma el pago
+    const u = window._currentUid;
+    if (u && typeof window.escucharPagoShopify === 'function') {
+      window.escucharPagoShopify(u);
+    }
   }
 
   // URL params
@@ -300,12 +332,32 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const app  = initializeApp({ apiKey: "AIzaSyB_OgAmyW7XNiLUyKp6Ih92A5qxm3LNCqg", authDomain: "globalvet-club.firebaseapp.com", projectId: "globalvet-club", storageBucket: "globalvet-club.firebasestorage.app", messagingSenderId: "880780506385", appId: "1:880780506385:web:be49dbc8886147a79048b0" });
   const auth = getAuth(app);
   const db   = getFirestore(app);
   let pagando = false;
+
+  // ─── LISTENER POST-PAGO SHOPIFY ──────────────────────────────
+  // Cuando el usuario abre el popup de Shopify, quedamos escuchando su documento
+  // en Firestore. El webhook del backend pondrá membresiaActiva=true cuando
+  // Shopify confirme el pago. Aquí lo detectamos y redirigimos al dashboard.
+  window.escucharPagoShopify = function(uid) {
+    let yaActivo = false;
+    getDoc(doc(db, 'usuarios', uid)).then(snap => {
+      yaActivo = snap.exists() && snap.data().membresiaActiva === true;
+      const unsubscribe = onSnapshot(doc(db, 'usuarios', uid), s => {
+        const data = s.exists() ? s.data() : {};
+        if (!yaActivo && data.membresiaActiva === true) {
+          unsubscribe();
+          if (window._shopWin && !window._shopWin.closed) window._shopWin.close();
+          showToast('✅ ¡Pago confirmado! Entrando a tu Club…', true);
+          setTimeout(() => { window.location.href = 'club-dashboard.html'; }, 1500);
+        }
+      });
+    });
+  };
 
   // Auto-redirect si ya tiene sesión activa y membresía
   onAuthStateChanged(auth, async user => {
@@ -346,6 +398,7 @@
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(cred.user, { displayName: nombre });
       await setDoc(doc(db, 'usuarios', cred.user.uid), { nombre, email, whatsapp: wa, especialidad: esp || 'No especificada', plan: currentPlan, planLabel: currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual', estado: 'pendiente', membresiaActiva: false, fechaRegistro: serverTimestamp(), uid: cred.user.uid });
+      window._currentUid = cred.user.uid;
       showToast('✅ ¡Cuenta creada! Redirigiendo a pago…', true);
       setTimeout(() => irAPagar(email, nombre, currentPlan), 1200);
     } catch(e) {
@@ -391,6 +444,7 @@
       if (!snap.exists()) {
         await setDoc(doc(db, 'usuarios', user.uid), { nombre: user.displayName || 'Miembro', email: user.email, whatsapp: '', especialidad: '', plan: currentPlan, planLabel: currentPlan === 'anual' ? 'Plan Anual' : 'Plan Mensual', estado: 'pendiente', membresiaActiva: false, fechaRegistro: serverTimestamp(), uid: user.uid });
       }
+      window._currentUid = user.uid;
       showToast('✅ Redirigiendo a pago…', true);
       setTimeout(() => irAPagar(user.email, user.displayName || 'Miembro', currentPlan), 1000);
     } catch(e) {
