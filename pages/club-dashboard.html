@@ -1074,6 +1074,41 @@
     const m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
     return m ? m[1] : url.replace(/\s/g, '').substring(0, 11);
   }
+
+  // Convierte cualquier link (YouTube o Drive) al URL embebible correcto.
+  // Las grabaciones de Google Meet se guardan automáticamente en Google Drive,
+  // así que el admin puede pegar directamente el link de Drive y esta función
+  // lo convierte al formato /preview que se puede incrustar en el iframe.
+  function toEmbedURL(linkOrId) {
+    if (!linkOrId) return '';
+    const s = String(linkOrId).trim();
+
+    // 1) Google Drive / Grabaciones de Meet
+    //    Formato: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    const driveFileMatch = s.match(/\/file\/d\/([^/?]+)/);
+    if (driveFileMatch) {
+      return 'https://drive.google.com/file/d/' + driveFileMatch[1] + '/preview';
+    }
+    //    Formato alternativo: https://drive.google.com/open?id=FILE_ID
+    const driveIdMatch = s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (driveIdMatch && s.includes('drive.google.com')) {
+      return 'https://drive.google.com/file/d/' + driveIdMatch[1] + '/preview';
+    }
+
+    // 2) YouTube — link completo o ID de 11 caracteres
+    const ytMatch = s.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch) {
+      return 'https://www.youtube.com/embed/' + ytMatch[1] + '?rel=0&modestbranding=1';
+    }
+    // Si es solo un ID de YouTube (11 chars, sin URL)
+    if (/^[a-zA-Z0-9_-]{11}$/.test(s)) {
+      return 'https://www.youtube.com/embed/' + s + '?rel=0&modestbranding=1';
+    }
+
+    // 3) Fallback — si no es ninguno de los anteriores, devolver el link tal cual
+    //    (por si es otro proveedor como Vimeo en el futuro)
+    return s;
+  }
 </script>
 
 <script>
@@ -1090,31 +1125,35 @@
     setTimeout(()=>t.classList.remove('show'),3500);
   }
   window.st=st;
-  // ===== BIBLIOTECA DE VIDEOS CON YOUTUBE =====
+  // ===== BIBLIOTECA DE VIDEOS (Grabaciones de Meet en Google Drive) =====
+  // NOTA: el campo se sigue llamando "ytId" por compatibilidad, pero ahora
+  // acepta cualquier link que pase por toEmbedURL() — YouTube, Drive o Meet.
   const vd = {
     endo: {
       t: 'Endocrinología canina básica',
       m: 'MVZ. Pariz Emmanuel Lores Morales · Endocrinología veterinaria',
       sessions: [
-        { label: 'Sesión 1', ytId: 'FZD2xrncqb0' },
-        { label: 'Sesión 2', ytId: 'nDwizCDDgTY' }
+        { label: 'Sesión 1 — Fundamentos', ytId: 'https://drive.google.com/file/d/1OhdLgJvUrf3VgalLp6thXlaRF7XkXdRt/view' },
+        { label: 'Sesión 2 — Diagnóstico', ytId: 'https://drive.google.com/file/d/1CkjGDr59dXXhov0YTYBy6c28wD6IQeVA/view' }
       ]
     },
     onco: {
       t: 'Bases de oncología veterinaria',
       m: 'MVZ. Erika Arroyo León · Oncología veterinaria',
       sessions: [
-        { label: 'Sesión 1', ytId: 'byGO0J4mgok' },
-        { label: 'Sesión 2', ytId: 'RXegH8Qk5Pw' },
-        { label: 'Sesión 3', ytId: 'Ao0gXgSdb54' }
+        { label: 'Sesión 1', ytId: 'https://drive.google.com/file/d/1m6X_2wMJGu9NMTKjY7uFIbkS0N-KvNFN/view' },
+        { label: 'Sesión 2', ytId: 'https://drive.google.com/file/d/1GuE1YUYpUBWo1KykhDy7AB9xL6Usx0Wt/view' },
+        { label: 'Sesión 3', ytId: 'https://drive.google.com/file/d/1EKsDW1twWP0wfUrzOEVSAfhaLBF2tv0Y/view' }
       ]
     },
     hema: {
       t: 'Hematología clínica en pequeñas especies',
       m: 'Del laboratorio al diagnóstico veterinario',
       sessions: [
-        { label: 'Sesión 1', ytId: 'de8WtzUByQA' },
-        { label: 'Sesión 2', ytId: 'NhTHkGDCUmA' }
+        { label: 'Sesión 1',     ytId: 'https://drive.google.com/file/d/1EJZj7N7s2ebHa0PgrBl7p59c9EWxnmtV/view' },
+        { label: 'Sesión 2',     ytId: 'https://drive.google.com/file/d/1QhuF9JKcf1ix8qM03e5gSgTnWjzq-_qp/view' },
+        { label: 'Sesión 3',     ytId: 'https://drive.google.com/file/d/1Q6l8FI-qipXi9VP071QX0ddFJ1z96H1q/view' },
+        { label: 'Sesión 4 y 5', ytId: 'https://drive.google.com/file/d/1SbmTho4RQUF3JfRCaaSqhXDK518I-leR/view' }
       ]
     },
     med:    { t: 'Medicina veterinaria',                      m: 'Formación continua · Atención integral del paciente', sessions: [] },
@@ -1127,11 +1166,15 @@
 
   let currentVideoId = null;
 
-  function loadYT(ytId) {
-    if (!ytId) return;
-    currentVideoId = ytId;
-    document.getElementById('ytFrame').src =
-      'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0&modestbranding=1';
+  function loadYT(ytIdOrLink) {
+    if (!ytIdOrLink) return;
+    currentVideoId = ytIdOrLink;
+    const url = toEmbedURL(ytIdOrLink);
+    // Agregar autoplay SOLO si es YouTube (Drive no lo soporta igual)
+    const finalUrl = url.includes('youtube.com')
+      ? url + '&autoplay=1'
+      : url;
+    document.getElementById('ytFrame').src = finalUrl;
   }
 
   function buildSessionBtns(sessions, activeIdx) {
@@ -1198,8 +1241,8 @@
       thumbPos: 'center 75%',
       nuevo: true,
       sesiones: [
-        { label: 'Sesión 1 — Fundamentos', desc: 'Introducción a la endocrinología canina. Anatomía y fisiología de las principales glándulas: hipófisis, tiroides, adrenales y páncreas.', duracion: '18 min', temas: ['Eje hipotálamo-hipófisis', 'Glándulas endocrinas principales', 'Mecanismos de retroalimentación', 'Toma de muestra correcta'], ytId: 'FZD2xrncqb0' },
-        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico diferencial: hipotiroidismo vs hipertiroidismo en perros. Interpretación de T4 total, T4 libre y TSH canina con casos clínicos reales.', duracion: '22 min', temas: ['Interpretación de T4 y TSH', 'Signos clínicos clave', 'Tratamiento con levotiroxina', 'Seguimiento y monitoreo'], ytId: 'nDwizCDDgTY' }
+        { label: 'Sesión 1 — Fundamentos', desc: 'Introducción a la endocrinología canina. Anatomía y fisiología de las principales glándulas: hipófisis, tiroides, adrenales y páncreas.', duracion: '18 min', temas: ['Eje hipotálamo-hipófisis', 'Glándulas endocrinas principales', 'Mecanismos de retroalimentación', 'Toma de muestra correcta'], ytId: 'https://drive.google.com/file/d/1OhdLgJvUrf3VgalLp6thXlaRF7XkXdRt/view' },
+        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico diferencial: hipotiroidismo vs hipertiroidismo en perros. Interpretación de T4 total, T4 libre y TSH canina con casos clínicos reales.', duracion: '22 min', temas: ['Interpretación de T4 y TSH', 'Signos clínicos clave', 'Tratamiento con levotiroxina', 'Seguimiento y monitoreo'], ytId: 'https://drive.google.com/file/d/1CkjGDr59dXXhov0YTYBy6c28wD6IQeVA/view' }
       ]
     },
     {
@@ -1210,8 +1253,10 @@
       thumbPos: 'center 70%',
       nuevo: true,
       sesiones: [
-        { label: 'Sesión 1 — Hemograma completo', desc: 'Interpretación sistemática del hemograma en perros y gatos. Valores de referencia, errores frecuentes y alteraciones más comunes en práctica general.', duracion: '20 min', temas: ['Eritrograma: anemia vs policitemia', 'Leucograma: inflamación vs infección', 'Plaquetas y coagulación básica', 'Casos de práctica diaria'], ytId: 'de8WtzUByQA' },
-        { label: 'Sesión 2 — Anemias y policitemias', desc: 'Clasificación morfológica y fisiopatológica de las anemias. Diagnóstico diferencial y protocolo de manejo clínico paso a paso con frotis sanguíneo.', duracion: '25 min', temas: ['Anemia regenerativa vs no regenerativa', 'Lectura del frotis sanguíneo', 'Eritroblastos y cuerpos de Heinz', 'Protocolo de transfusión básica'], ytId: 'NhTHkGDCUmA' }
+        { label: 'Sesión 1 — Hemograma completo', desc: 'Interpretación sistemática del hemograma en perros y gatos. Valores de referencia, errores frecuentes y alteraciones más comunes en práctica general.', duracion: '20 min', temas: ['Eritrograma: anemia vs policitemia', 'Leucograma: inflamación vs infección', 'Plaquetas y coagulación básica', 'Casos de práctica diaria'], ytId: 'https://drive.google.com/file/d/1EJZj7N7s2ebHa0PgrBl7p59c9EWxnmtV/view' },
+        { label: 'Sesión 2 — Anemias y policitemias', desc: 'Clasificación morfológica y fisiopatológica de las anemias. Diagnóstico diferencial y protocolo de manejo clínico paso a paso con frotis sanguíneo.', duracion: '25 min', temas: ['Anemia regenerativa vs no regenerativa', 'Lectura del frotis sanguíneo', 'Eritroblastos y cuerpos de Heinz', 'Protocolo de transfusión básica'], ytId: 'https://drive.google.com/file/d/1QhuF9JKcf1ix8qM03e5gSgTnWjzq-_qp/view' },
+        { label: 'Sesión 3', desc: 'Continuación del curso de hematología clínica con casos de práctica diaria.', duracion: '—', temas: [], ytId: 'https://drive.google.com/file/d/1Q6l8FI-qipXi9VP071QX0ddFJ1z96H1q/view' },
+        { label: 'Sesión 4 y 5', desc: 'Sesiones combinadas del curso de hematología clínica.', duracion: '—', temas: [], ytId: 'https://drive.google.com/file/d/1SbmTho4RQUF3JfRCaaSqhXDK518I-leR/view' }
       ]
     },
     {
@@ -1222,9 +1267,9 @@
       thumbPos: 'center 65%',
       nuevo: true,
       sesiones: [
-        { label: 'Sesión 1 — Fundamentos oncológicos', desc: 'Introducción a la oncología veterinaria: biología tumoral, clasificación de neoplasias y estadificación clínica en perros y gatos.', duracion: '15 min', temas: ['Neoplasias benignas vs malignas', 'Sistema TNM en veterinaria', 'Tumores más frecuentes en consulta', '¿Cuándo referir al oncólogo?'], ytId: 'byGO0J4mgok' },
-        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico citológico e histopatológico: cuándo y cómo tomar muestras, técnicas de biopsia y cómo interpretar los reportes de patología.', duracion: '20 min', temas: ['PAAF vs biopsia incisional/excisional', 'Envío correcto de muestras', 'Interpretación del reporte histopatológico', 'Márgenes quirúrgicos limpios'], ytId: 'RXegH8Qk5Pw' },
-        { label: 'Sesión 3 — Quimioterapia básica', desc: 'Protocolos de quimioterapia básica para el médico veterinario general. Caso clínico completo de linfoma multicéntrico canino con protocolo CHOP.', duracion: '28 min', temas: ['Protocolo CHOP simplificado', 'Manejo de efectos secundarios', 'Comunicación con el propietario', 'Calidad de vida del paciente oncológico'], ytId: 'Ao0gXgSdb54' }
+        { label: 'Sesión 1 — Fundamentos oncológicos', desc: 'Introducción a la oncología veterinaria: biología tumoral, clasificación de neoplasias y estadificación clínica en perros y gatos.', duracion: '15 min', temas: ['Neoplasias benignas vs malignas', 'Sistema TNM en veterinaria', 'Tumores más frecuentes en consulta', '¿Cuándo referir al oncólogo?'], ytId: 'https://drive.google.com/file/d/1m6X_2wMJGu9NMTKjY7uFIbkS0N-KvNFN/view' },
+        { label: 'Sesión 2 — Diagnóstico', desc: 'Diagnóstico citológico e histopatológico: cuándo y cómo tomar muestras, técnicas de biopsia y cómo interpretar los reportes de patología.', duracion: '20 min', temas: ['PAAF vs biopsia incisional/excisional', 'Envío correcto de muestras', 'Interpretación del reporte histopatológico', 'Márgenes quirúrgicos limpios'], ytId: 'https://drive.google.com/file/d/1GuE1YUYpUBWo1KykhDy7AB9xL6Usx0Wt/view' },
+        { label: 'Sesión 3 — Quimioterapia básica', desc: 'Protocolos de quimioterapia básica para el médico veterinario general. Caso clínico completo de linfoma multicéntrico canino con protocolo CHOP.', duracion: '28 min', temas: ['Protocolo CHOP simplificado', 'Manejo de efectos secundarios', 'Comunicación con el propietario', 'Calidad de vida del paciente oncológico'], ytId: 'https://drive.google.com/file/d/1EKsDW1twWP0wfUrzOEVSAfhaLBF2tv0Y/view' }
       ]
     }
   ];
@@ -1305,9 +1350,7 @@
 
     document.getElementById('cmSesDesc').innerHTML = infoHtml;
 
-    document.getElementById('cmFrame').src = ses.ytId
-      ? 'https://www.youtube.com/embed/' + ses.ytId + '?rel=0&modestbranding=1'
-      : '';
+    document.getElementById('cmFrame').src = ses.ytId ? toEmbedURL(ses.ytId) : '';
     // Botón completado
     const btnDone = document.getElementById('cmBtnDone');
     if (prog[idx]) {
