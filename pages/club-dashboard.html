@@ -873,7 +873,9 @@
           desc     : s.descripcion || '',
           duracion : '—',
           temas    : [],
-          ytId     : extractYtId(s.urlVideo   || ''),
+          // FIX: pasar el URL completo — toEmbedURL() detectará si es Drive o YouTube.
+          // Antes: extractYtId() truncaba los links de Drive a basura.
+          ytId     : s.urlVideo    || '',
           urlImagen: s.urlImagen   || ''
         }));
         nuevos.push({
