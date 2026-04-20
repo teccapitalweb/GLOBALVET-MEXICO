@@ -204,6 +204,38 @@
     .curso-card.locked .curso-btn{background:var(--line);color:var(--muted);cursor:not-allowed;pointer-events:none}
     .curso-card.locked .curso-btn:hover{background:var(--line);transform:none}
 
+    /* ═══ Panel de Noticias Veterinarias ═══ */
+    .pulse-noticias{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef4444;margin-left:6px;animation:pnPulse 1.8s infinite}
+    @keyframes pnPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+    .noticias-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.6rem}
+    .noticias-header h3{font-family:var(--ff);font-size:1.05rem;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:.5rem;margin:0}
+    .noticias-header .pulse-live{width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;animation:pnPulse 1.8s infinite}
+    .noticias-source-btns{display:flex;gap:6px;flex-wrap:wrap}
+    .noticias-source-btn{background:var(--bg);border:1px solid var(--line);color:var(--muted);font-size:.7rem;font-weight:600;padding:5px 10px;border-radius:100px;cursor:pointer;font-family:var(--ffb);transition:all .15s}
+    .noticias-source-btn:hover{background:var(--plight);color:var(--purple)}
+    .noticias-source-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+    .noticias-grid{display:grid;grid-template-columns:1fr;gap:14px}
+    .noticia-card{display:grid;grid-template-columns:180px 1fr;gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .18s;cursor:pointer;overflow:hidden}
+    .noticia-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px -12px rgba(79,53,179,.25);border-color:var(--purple)}
+    .noticia-thumb{width:180px;height:120px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,rgba(79,53,179,.15),rgba(108,79,214,.3));position:relative;flex-shrink:0;display:grid;place-items:center}
+    .noticia-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .noticia-thumb-fallback{font-size:2.2rem;opacity:.55}
+    .noticia-body{display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+    .noticia-source-row{display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .noticia-source-row .noticia-fecha{color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none}
+    .noticia-title{font-size:1rem;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .noticia-excerpt{font-size:.85rem;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .noticia-card .noticia-cta{font-size:.8rem;color:var(--purple);font-weight:600;margin-top:8px;display:inline-flex;align-items:center;gap:4px}
+    .noticias-skeleton{background:linear-gradient(90deg,var(--bg) 0%,#eaeef8 50%,var(--bg) 100%);background-size:200% 100%;animation:noticiasSkel 1.3s ease-in-out infinite;border-radius:14px;height:148px}
+    @keyframes noticiasSkel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .noticias-empty{text-align:center;padding:30px 20px;background:var(--bg);border-radius:14px;color:var(--muted);font-size:.9rem}
+    .noticias-empty strong{display:block;color:var(--dark);margin-bottom:6px;font-size:1rem}
+    .noticias-ver-mas{margin-top:16px;width:100%;padding:13px;background:#fff;border:1.5px solid var(--purple);color:var(--purple);border-radius:14px;font-family:var(--ffb);font-weight:700;font-size:.92rem;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .noticias-ver-mas:hover{background:var(--purple);color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px -6px rgba(79,53,179,.3)}
+    .noticias-ver-mas__arrow{transition:transform .25s}
+    .noticias-ver-mas.expandido .noticias-ver-mas__arrow{transform:rotate(180deg)}
+    @media(max-width:640px){.noticia-card{grid-template-columns:110px 1fr;gap:12px;padding:10px}.noticia-thumb{width:110px;height:90px}.noticia-title{font-size:.92rem}.noticia-excerpt{display:none}.noticias-header{flex-direction:column;align-items:flex-start;gap:10px}}
+
     /* ═══ Modal de compartir (certificado minimalista) ═══ */
     .share-overlay{position:fixed;inset:0;background:rgba(10,16,32,.7);z-index:10002;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
     .share-overlay.open{display:flex}
@@ -254,6 +286,7 @@
     <button class="nbtn" onclick="sp('biblioteca',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="7" height="18" rx="1"/><rect x="9.5" y="3" width="7" height="18" rx="1"/><rect x="17" y="3" width="5" height="18" rx="1"/></svg>Biblioteca de cursos<span class="nbadge">3</span></button>
     <button class="nbtn" onclick="sp('sesiones',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sesiones en vivo<div class="ndotb"></div></button>
     <button class="nbtn" onclick="sp('pdfs',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDFs<span class="nbadge red">2</span></button>
+    <button class="nbtn" onclick="sp('noticias',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>Noticias<span class="pulse-noticias"></span></button>
     <div class="slabel">Contenido mensual</div>
     <button class="nbtn" onclick="sp('contenido-mensual',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Archivo mensual<span class="nbadge org">14</span></button>
     <div class="slabel">Mi cuenta</div>
@@ -353,18 +386,6 @@
           </div>
           <span style="background:#e5e7eb;color:#6b7280;font-size:.68rem;font-weight:800;padding:.18rem .55rem;border-radius:50px;">6 cursos</span>
         </div>
-      </div>
-
-      <!-- ═══ SECCIÓN DE LOGROS ═══ -->
-      <div style="background:#fff;border-radius:18px;padding:1.2rem 1.4rem;margin-top:1.4rem;border:1px solid var(--line);">
-        <div class="logros-header">
-          <h3>🏆 Mis logros</h3>
-          <span class="contador" id="logrosContador">0 / 6</span>
-        </div>
-        <div class="logros-prog-wrap">
-          <div class="logros-prog-fill" id="logrosProgFill" style="width:0%;"></div>
-        </div>
-        <div class="logros-grid" id="logrosGrid"></div>
       </div>
 
     </div>
@@ -476,6 +497,24 @@
       </div>
     </div>
 
+    <!-- NOTICIAS VETERINARIAS -->
+    <div class="panel" id="panel-noticias">
+      <div class="stitle">📰 Noticias veterinarias</div>
+      <div class="noticias-header">
+        <h3><span class="pulse-live"></span> Últimas noticias del sector</h3>
+        <div class="noticias-source-btns" id="noticias-source-btns"></div>
+      </div>
+      <div class="noticias-grid" id="noticias-grid">
+        <div class="noticias-skeleton"></div>
+        <div class="noticias-skeleton"></div>
+        <div class="noticias-skeleton"></div>
+      </div>
+      <button class="noticias-ver-mas" id="noticias-ver-mas-btn" style="display:none;" onclick="toggleVerMasNoticias(this)">
+        <span id="noticias-ver-mas-txt">📰 Leer más noticias del día</span>
+        <span class="noticias-ver-mas__arrow">▼</span>
+      </button>
+    </div>
+
     <!-- CONTENIDO MENSUAL -->
     <div class="panel" id="panel-contenido-mensual">
       <div class="stitle">📋 Contenido mensual</div>
@@ -549,6 +588,18 @@
           <div style="font-family:var(--ff);font-size:1.5rem;font-weight:800;color:var(--gold);">1</div>
           <div style="font-size:.74rem;color:var(--muted);margin-top:.2rem;">Certificados</div>
         </div>
+      </div>
+
+      <!-- ═══ SECCIÓN DE LOGROS ═══ -->
+      <div style="background:#fff;border-radius:18px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;border:1px solid var(--line);">
+        <div class="logros-header">
+          <h3>🏆 Mis logros</h3>
+          <span class="contador" id="logrosContador">0 / 6</span>
+        </div>
+        <div class="logros-prog-wrap">
+          <div class="logros-prog-fill" id="logrosProgFill" style="width:0%;"></div>
+        </div>
+        <div class="logros-grid" id="logrosGrid"></div>
       </div>
 
       <!-- Formulario -->
@@ -2329,6 +2380,252 @@
     link.click();
     st('📥 Certificado descargado', true);
   };
+
+  // ═══════════════════════════════════════════════════════════════
+  // ═══ SISTEMA DE NOTICIAS VETERINARIAS (patrón AgroTec)        ═══
+  // ═══════════════════════════════════════════════════════════════
+  const FUENTES_NOTICIAS = [
+    { id: 'gnews-vet',   nombre: '🩺 Medicina veterinaria', rss: 'https://news.google.com/rss/search?q=medicina+veterinaria+mexico+when:7d&hl=es-419&gl=MX&ceid=MX:es-419' },
+    { id: 'gnews-peq',   nombre: '🐕 Pequeñas especies',    rss: 'https://news.google.com/rss/search?q=(perros+OR+gatos)+salud+veterinaria+mexico+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+    { id: 'gnews-gran',  nombre: '🐄 Grandes especies',     rss: 'https://news.google.com/rss/search?q=(ganado+OR+bovino+OR+porcino)+veterinaria+mexico+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+    { id: 'gnews-exo',   nombre: '🦜 Exóticos',             rss: 'https://news.google.com/rss/search?q=(aves+OR+reptiles)+exoticos+veterinaria+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+    { id: 'gnews-inv',   nombre: '🔬 Investigación',        rss: 'https://news.google.com/rss/search?q=investigacion+veterinaria+ciencia+animal+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+    { id: 'gnews-omsa',  nombre: '🌍 OMSA/OIE',             rss: 'https://news.google.com/rss/search?q=(OMSA+OR+OIE)+salud+animal+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' }
+  ];
+
+  const CORS_PROXIES = [
+    u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
+  ];
+
+  let NOTICIAS_CACHE = {};
+  let NOTICIAS_FUENTE_ACTIVA = 'todas';
+  let NOTICIAS_EXPANDIDAS = false;
+  const NOTICIAS_INICIALES = 4;
+  const NOTICIAS_TOTAL_MAX = 12;
+  let _noticiasCargadas = false;
+
+  function extraerPrimeraImagenVet(html) {
+    if (!html) return null;
+    const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    return m ? m[1] : null;
+  }
+
+  function limpiarHtmlVet(html, maxLen = 200) {
+    if (!html) return '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    let texto = (tmp.textContent || tmp.innerText || '').trim().replace(/\s+/g, ' ');
+    if (texto.length > maxLen) texto = texto.substring(0, maxLen).trim() + '…';
+    return texto;
+  }
+
+  function formatearFechaVet(pubDate) {
+    if (!pubDate) return '';
+    const d = new Date(pubDate);
+    if (isNaN(d)) return '';
+    const diffMs = Date.now() - d.getTime();
+    const diffH = diffMs / (1000 * 60 * 60);
+    if (diffH < 1) return 'Hace unos minutos';
+    if (diffH < 24) return `Hace ${Math.floor(diffH)}h`;
+    const diffD = Math.floor(diffH / 24);
+    if (diffD < 7) return `Hace ${diffD}d`;
+    return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function parsearXmlRssVet(xmlText, fuente) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlText, 'text/xml');
+    if (xml.querySelector('parsererror')) {
+      console.warn(`[Noticias] XML inválido de ${fuente.id}`);
+      return [];
+    }
+    const items = Array.from(xml.querySelectorAll('item, entry')).slice(0, 8);
+    return items.map(it => {
+      const getText = (sel) => {
+        const el = it.querySelector(sel);
+        return el ? (el.textContent || '').trim() : '';
+      };
+      const titulo = getText('title');
+      let link = getText('link');
+      if (!link) {
+        const linkEl = it.querySelector('link');
+        if (linkEl) link = linkEl.getAttribute('href') || '';
+      }
+      const pubDate = getText('pubDate') || getText('published') || getText('updated');
+      const descrip = getText('description') || getText('summary') || getText('content');
+      let imagen = null;
+      const mediaTh = it.getElementsByTagNameNS('*', 'thumbnail')[0];
+      const mediaCt = it.getElementsByTagNameNS('*', 'content')[0];
+      const enclos = it.querySelector('enclosure');
+      if (mediaTh) imagen = mediaTh.getAttribute('url');
+      else if (mediaCt && mediaCt.getAttribute('url')) imagen = mediaCt.getAttribute('url');
+      else if (enclos) imagen = enclos.getAttribute('url');
+      else imagen = extraerPrimeraImagenVet(descrip);
+      return {
+        titulo: titulo || '(Sin título)',
+        link,
+        pubDate,
+        imagen,
+        excerpt: limpiarHtmlVet(descrip, 180),
+        fuente: fuente.nombre,
+        fuenteId: fuente.id
+      };
+    }).filter(n => n.titulo && n.link);
+  }
+
+  async function fetchConProxyVet(url, proxyIndex = 0) {
+    if (proxyIndex >= CORS_PROXIES.length) throw new Error('Todos los proxies fallaron');
+    try {
+      const proxyUrl = CORS_PROXIES[proxyIndex](url);
+      const resp = await fetch(proxyUrl, { headers: { 'Accept': 'application/rss+xml, application/xml, text/xml' } });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      if (!text || text.length < 50) throw new Error('Respuesta vacía');
+      return text;
+    } catch (e) {
+      console.warn(`[Noticias] Proxy ${proxyIndex} falló:`, e.message, '→ siguiente');
+      return fetchConProxyVet(url, proxyIndex + 1);
+    }
+  }
+
+  async function fetchFeedVet(fuente) {
+    try {
+      const xmlText = await fetchConProxyVet(fuente.rss);
+      const items = parsearXmlRssVet(xmlText, fuente);
+      console.log(`[Noticias] ${fuente.id}: ${items.length} notas ✓`);
+      return items;
+    } catch (e) {
+      console.warn(`[Noticias] ${fuente.id} falló:`, e.message);
+      return [];
+    }
+  }
+
+  window.cargarNoticiasVet = async function() {
+    const grid = document.getElementById('noticias-grid');
+    const btns = document.getElementById('noticias-source-btns');
+    if (!grid) return;
+    console.log('[Noticias] Cargando', FUENTES_NOTICIAS.length, 'fuentes...');
+    const resultados = await Promise.all(FUENTES_NOTICIAS.map(f =>
+      fetchFeedVet(f).then(items => ({ id: f.id, items }))
+    ));
+    resultados.forEach(r => { NOTICIAS_CACHE[r.id] = r.items; });
+    const totalItems = Object.values(NOTICIAS_CACHE).reduce((a, arr) => a + arr.length, 0);
+    console.log(`[Noticias] Total: ${totalItems}`);
+    const fuentesActivas = FUENTES_NOTICIAS.filter(f => (NOTICIAS_CACHE[f.id] || []).length > 0);
+    if (btns) {
+      if (fuentesActivas.length === 0) {
+        btns.innerHTML = '<button class="noticias-source-btn" onclick="cargarNoticiasVet()">🔄 Reintentar</button>';
+      } else {
+        const html = ['<button class="noticias-source-btn active" onclick="filtrarNoticiasVet(\'todas\', this)">Todas</button>']
+          .concat(fuentesActivas.map(f =>
+            `<button class="noticias-source-btn" onclick="filtrarNoticiasVet('${f.id}', this)">${f.nombre}</button>`
+          )).join('');
+        btns.innerHTML = html;
+      }
+    }
+    renderNoticiasVet('todas');
+    _noticiasCargadas = true;
+  };
+
+  window.filtrarNoticiasVet = function(fuenteId, btn) {
+    NOTICIAS_FUENTE_ACTIVA = fuenteId;
+    NOTICIAS_EXPANDIDAS = false;
+    const btns = document.querySelectorAll('.noticias-source-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderNoticiasVet(fuenteId);
+  };
+
+  function renderNoticiasVet(fuenteId) {
+    const grid = document.getElementById('noticias-grid');
+    const btnVerMas = document.getElementById('noticias-ver-mas-btn');
+    if (!grid) return;
+    let items = [];
+    if (fuenteId === 'todas') {
+      Object.values(NOTICIAS_CACHE).forEach(arr => items = items.concat(arr));
+      items.sort((a, b) => new Date(b.pubDate || 0) - new Date(a.pubDate || 0));
+      const vistos = new Set();
+      items = items.filter(n => {
+        const key = n.titulo.substring(0, 60).toLowerCase();
+        if (vistos.has(key)) return false;
+        vistos.add(key);
+        return true;
+      });
+      items = items.slice(0, NOTICIAS_TOTAL_MAX);
+    } else {
+      items = (NOTICIAS_CACHE[fuenteId] || []).slice(0, NOTICIAS_TOTAL_MAX);
+    }
+    if (items.length === 0) {
+      grid.innerHTML = `
+        <div class="noticias-empty">
+          <strong>🐾 Sin noticias disponibles ahora</strong>
+          Intenta más tarde o <a href="#" onclick="cargarNoticiasVet();return false;" style="color:var(--purple);font-weight:600;">recarga</a>.
+        </div>`;
+      if (btnVerMas) btnVerMas.style.display = 'none';
+      return;
+    }
+    const mostrarCuantas = NOTICIAS_EXPANDIDAS ? items.length : Math.min(NOTICIAS_INICIALES, items.length);
+    const itemsMostrar = items.slice(0, mostrarCuantas);
+    grid.innerHTML = itemsMostrar.map(n => {
+      const thumb = n.imagen
+        ? `<img src="${n.imagen}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;noticia-thumb-fallback&quot;>📰</span>'">`
+        : `<span class="noticia-thumb-fallback">📰</span>`;
+      const link = n.link ? n.link.replace(/"/g, '&quot;') : '#';
+      return `
+        <a class="noticia-card" href="${link}" target="_blank" rel="noopener noreferrer">
+          <div class="noticia-thumb">${thumb}</div>
+          <div class="noticia-body">
+            <div>
+              <div class="noticia-source-row">
+                <span>${n.fuente}</span>
+                <span class="noticia-fecha">· ${formatearFechaVet(n.pubDate)}</span>
+              </div>
+              <div class="noticia-title">${n.titulo}</div>
+              <div class="noticia-excerpt">${n.excerpt}</div>
+            </div>
+            <span class="noticia-cta">Leer nota completa →</span>
+          </div>
+        </a>`;
+    }).join('');
+    if (btnVerMas) {
+      if (items.length > NOTICIAS_INICIALES) {
+        btnVerMas.style.display = 'flex';
+        const txt = document.getElementById('noticias-ver-mas-txt');
+        if (txt) {
+          if (NOTICIAS_EXPANDIDAS) {
+            txt.textContent = '⬆ Mostrar menos';
+            btnVerMas.classList.add('expandido');
+          } else {
+            txt.textContent = `📰 Leer más noticias del día (${items.length - NOTICIAS_INICIALES})`;
+            btnVerMas.classList.remove('expandido');
+          }
+        }
+      } else {
+        btnVerMas.style.display = 'none';
+      }
+    }
+  }
+
+  window.toggleVerMasNoticias = function(btn) {
+    NOTICIAS_EXPANDIDAS = !NOTICIAS_EXPANDIDAS;
+    renderNoticiasVet(NOTICIAS_FUENTE_ACTIVA || 'todas');
+    if (!NOTICIAS_EXPANDIDAS) {
+      const grid = document.getElementById('noticias-grid');
+      if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Cargar noticias 100ms después de que cargue el dashboard
+  setTimeout(() => cargarNoticiasVet(), 100);
+
+  // Recargar al volver a la pestaña
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && _noticiasCargadas) {
+      cargarNoticiasVet();
+    }
+  });
 
 </script>
 
