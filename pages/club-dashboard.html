@@ -318,8 +318,9 @@
       #cursoModal.show .cm-wrap{max-width:100vw !important;max-height:100vh !important;width:100vw !important;height:100vh !important;min-height:100vh !important;border-radius:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;box-sizing:border-box;overflow:hidden !important;}
       .cm-top{padding:.9rem 1rem !important;position:sticky;top:0;z-index:10;background:#12103a;flex-shrink:0;box-sizing:border-box;}
       /* 🎯 Apilar video y sesiones verticalmente en móvil */
-      .cm-body{flex-direction:column !important;min-height:0 !important;overflow-y:auto !important;overflow-x:hidden !important;flex:1 1 auto !important;display:flex !important;gap:0 !important;width:100% !important;box-sizing:border-box;}
-      .cm-player{width:100% !important;max-width:100% !important;flex-shrink:0;box-sizing:border-box;}
+      .cm-body{flex-direction:column !important;min-height:0 !important;overflow-y:auto !important;overflow-x:hidden !important;flex:1 1 auto !important;display:flex !important;gap:0 !important;width:100% !important;box-sizing:border-box;-webkit-overflow-scrolling:touch;}
+      .cm-player{width:100% !important;max-width:100% !important;flex-shrink:0;box-sizing:border-box;background:#000;}
+      /* Video más grande en móvil para buena visibilidad */
       .cm-video{padding-top:56.25% !important;width:100% !important;position:relative !important;overflow:hidden !important;background:#000;box-sizing:border-box;}
       .cm-video iframe{position:absolute !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100% !important;height:100% !important;max-width:100% !important;border:none !important;display:block !important;}
       .cm-info{padding:.9rem 1rem !important;box-sizing:border-box;width:100%;}
@@ -522,6 +523,19 @@
         .cm-player{flex:1;min-width:0}
         .cm-video{background:#000;position:relative;padding-top:56.25%}
         .cm-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+
+        /* ═══ Spinner mini (esquina inferior derecha, sutil) ═══ */
+        .cm-loading-mini{position:absolute;bottom:8px;right:8px;z-index:2;opacity:0;transition:opacity .25s;pointer-events:none;}
+        .cm-loading-mini.show{opacity:1;}
+        .cm-spinner-mini{width:22px;height:22px;border:2.5px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.85);border-radius:50%;animation:cmSpin .8s linear infinite;}
+        @keyframes cmSpin{to{transform:rotate(360deg)}}
+
+        /* ═══ Barra de controles compactos (debajo del video) ═══ */
+        .cm-controls{display:flex;gap:.4rem;padding:.55rem .8rem;background:rgba(0,0,0,.35);border-bottom:1px solid rgba(255,255,255,.05);overflow-x:auto;scrollbar-width:none;}
+        .cm-controls::-webkit-scrollbar{display:none;}
+        .cm-ctrl-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.38rem .7rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.85);font-family:var(--ff);font-size:.72rem;font-weight:600;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+        .cm-ctrl-btn:hover,.cm-ctrl-btn:active{background:rgba(139,92,246,.25);border-color:rgba(139,92,246,.4);color:#fff;}
+        .cm-ctrl-btn svg{opacity:.85;}
         .cm-info{padding:1rem 1.4rem}
         .cm-mod-label{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
         .cm-session-title{font-family:var(--ff);font-weight:700;color:#fff;font-size:1rem;margin-bottom:.4rem}
@@ -855,8 +869,23 @@
     </div>
     <div class="cm-body">
       <div class="cm-player">
-        <div class="cm-video">
+        <div class="cm-video" id="cmVideoWrap">
           <iframe id="cmFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen playsinline loading="lazy"></iframe>
+          <!-- Spinner sutil esquina inferior derecha -->
+          <div id="cmLoading" class="cm-loading-mini">
+            <div class="cm-spinner-mini"></div>
+          </div>
+        </div>
+        <!-- Barra de controles compactos (debajo del video, nunca lo tapa) -->
+        <div class="cm-controls">
+          <button class="cm-ctrl-btn" onclick="abrirVideoFullscreen()" title="Pantalla completa" aria-label="Pantalla completa">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg>
+            <span>Pantalla completa</span>
+          </button>
+          <button class="cm-ctrl-btn" onclick="abrirEnDrive()" title="Abrir en Drive" aria-label="Abrir en Drive">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span>Abrir en Drive</span>
+          </button>
         </div>
         <div class="cm-info">
           <div class="cm-mod-label" id="cmModLabel">Módulo 1</div>
@@ -2110,7 +2139,21 @@
     // Reproductor — patrón idéntico a OdonTeck (Drive inline, sin funciones intermedias)
     const link = ses.ytId || '';
     const fileMatch = link.match(/\/file\/d\/([^/]+)/);
-    const embedURL = fileMatch ? `https://drive.google.com/file/d/${fileMatch[1]}/preview` : link;
+    const fileId = fileMatch ? fileMatch[1] : '';
+    const embedURL = fileId ? `https://drive.google.com/file/d/${fileId}/preview` : link;
+    // URL para "Abrir en pantalla completa" (nueva pestaña)
+    const fullURL = fileId ? `https://drive.google.com/file/d/${fileId}/view` : link;
+    window._currentVideoURL = fullURL;
+
+    // Mostrar loading mientras carga el iframe
+    const loadingEl = document.getElementById('cmLoading');
+    const frameEl = document.getElementById('cmFrame');
+    if (loadingEl) loadingEl.classList.add('show');
+    if (frameEl) {
+      frameEl.onload = () => {
+        setTimeout(() => { if (loadingEl) loadingEl.classList.remove('show'); }, 400);
+      };
+    }
     document.getElementById('cmFrame').src = embedURL;
     // Botón completado
     const btnDone = document.getElementById('cmBtnDone');
@@ -2196,6 +2239,40 @@
   });
 
   window.abrirCurso = abrirCurso;
+
+  // 🎬 Abrir video en pantalla completa / nueva pestaña
+  // Util para iOS donde el iframe de Drive a veces no reproduce inline
+  window.abrirVideoFullscreen = function() {
+    const url = window._currentVideoURL;
+    if (!url) {
+      st('⚠️ No hay video cargado');
+      return;
+    }
+    // Intentar fullscreen nativo primero en el iframe
+    const iframe = document.getElementById('cmFrame');
+    const vw = document.getElementById('cmVideoWrap');
+    if (vw && vw.requestFullscreen) {
+      vw.requestFullscreen().catch(() => {
+        // Si falla fullscreen (ej: iOS Safari), abrir Drive en nueva pestaña
+        window.open(url, '_blank', 'noopener,noreferrer');
+      });
+    } else if (vw && vw.webkitRequestFullscreen) {
+      vw.webkitRequestFullscreen();
+    } else {
+      // Fallback: abrir en nueva pestaña
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  // 🔗 Abrir video directo en Google Drive
+  window.abrirEnDrive = function() {
+    const url = window._currentVideoURL;
+    if (!url) {
+      st('⚠️ No hay video cargado');
+      return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   // Filtros de contenido mensual
   window.filterMes = function(mes, btn) {
