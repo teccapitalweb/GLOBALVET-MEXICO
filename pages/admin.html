@@ -818,10 +818,16 @@
     // Mostrar banner de migración si Firestore está vacío
     if (window.toggleMigrBanner) window.toggleMigrBanner(data.length);
     if(!data.length){ tbody.innerHTML='<tr><td colspan="6" class="empty">Sin cursos publicados aún</td></tr>'; return; }
+
+    // 🎯 Ordenar por el campo 'orden' (corresponde al orden pedagógico / drip semanal)
+    // Los cursos migrados tienen orden 1-29. Los sin orden van al final.
+    const ordenados = [...data].sort((a, b) => (a.orden || 999) - (b.orden || 999));
+
     tbody.innerHTML='';
-    data.forEach(c=>{
+    ordenados.forEach((c, idx)=>{
       const tr=document.createElement('tr');
-      tr.innerHTML='<td><div class="nm">'+(c.titulo||'—')+'</div><div class="em">'+(c.instructor||'—')+'</div></td>'
+      const semanaLabel = c.orden ? `<span style="display:inline-block;background:var(--plight);color:var(--purple);font-size:.68rem;font-weight:800;padding:.15rem .5rem;border-radius:50px;margin-right:.5rem;">Sem ${c.orden}</span>` : '';
+      tr.innerHTML='<td>'+semanaLabel+'<div style="display:inline-block;vertical-align:middle;"><div class="nm">'+(c.titulo||'—')+'</div><div class="em">'+(c.instructor||'—')+'</div></div></td>'
         +'<td>'+(c.instructor||'—')+'</td><td>'+(c.categoria||'—')+'</td><td>'+(c.mes||'—')+'</td>'
         +'<td><span class="badge pub">✅ Publicado</span></td><td><div class="ba"></div></td>';
       const ba=tr.querySelector('.ba');
@@ -1011,6 +1017,7 @@
       const ba=tr.querySelector('.ba');
       const btn=document.createElement('button'); btn.className='btn-sm '+(a?'red':'green'); btn.textContent=a?'Desactivar':'Activar'; btn.onclick=()=>window.toggleM(m.id,!a); ba.appendChild(btn);
       const wa=document.createElement('a'); wa.href='https://wa.me/'+((m.whatsapp||'').replace(/\D/g,'')); wa.target='_blank'; wa.className='btn-sm gold'; wa.style.textDecoration='none'; wa.textContent='WhatsApp'; ba.appendChild(wa);
+      const del=document.createElement('button'); del.className='btn-sm red'; del.textContent='🗑️ Eliminar'; del.style.marginLeft='.3rem'; del.onclick=()=>window.eliminarMiembro(m.id, m.nombre||m.email||'este usuario'); ba.appendChild(del);
       tb.appendChild(tr);
     });
   }
@@ -1034,6 +1041,16 @@
   window.toggleM=async(uid,activate)=>{
     try{ await updateDoc(doc(db,'usuarios',uid),{membresiaActiva:activate,estado:activate?'activo':'cancelado'}); if(window.st)st(activate?'✅ Activado':'❌ Desactivado',activate?'ok':'err'); await loadM(); }
     catch(e){ if(window.st)st('Error','err'); }
+  };
+  window.eliminarMiembro=async(uid, nombre)=>{
+    if(!confirm('¿Eliminar a "'+nombre+'" definitivamente?\n\nEsta acción no se puede deshacer. El usuario desaparecerá del sistema.')) return;
+    try{
+      await deleteDoc(doc(db,'usuarios',uid));
+      if(window.st)st('🗑️ Usuario eliminado','err');
+    }catch(e){
+      console.error(e);
+      if(window.st)st('Error al eliminar: '+e.message,'err');
+    }
   };
   window.filterM=(v)=>{ const q=v.toLowerCase(); renderM(allM.filter(m=>(m.nombre||'').toLowerCase().includes(q)||(m.email||'').toLowerCase().includes(q)||(m.whatsapp||'').includes(q))); };
   window.openMo=(id)=>document.getElementById(id).classList.add('show');
