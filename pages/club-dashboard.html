@@ -2909,8 +2909,57 @@
 
   function extraerPrimeraImagenVet(html) {
     if (!html) return null;
-    const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-    return m ? m[1] : null;
+    // Buscar todas las imágenes, no solo la primera
+    const imgs = html.match(/<img[^>]+src=["']([^"']+)["']/gi) || [];
+    for (const imgTag of imgs) {
+      const m = imgTag.match(/src=["']([^"']+)["']/i);
+      if (!m) continue;
+      const url = m[1];
+      // Filtrar pixeles de tracking, favicons, emojis muy pequeños
+      if (/\b(pixel|1x1|tracking|spacer|blank|transparent)\b/i.test(url)) continue;
+      if (/gstatic|googleusercontent.*=s\d{1,2}-/i.test(url)) continue; // favicons de Google tiny
+      // Preferir imágenes de tamaño razonable si se ve el sz
+      return url;
+    }
+    return null;
+  }
+
+  // Extrae el dominio de una URL (para generar logos)
+  function extraerDominioDeLink(link) {
+    if (!link) return null;
+    try {
+      const u = new URL(link);
+      let host = u.hostname.replace(/^www\./, '');
+      // Si es link de Google News (redirige), extraer el dominio real del parámetro 'url'
+      if (host.includes('news.google.com') && u.searchParams.get('url')) {
+        return extraerDominioDeLink(u.searchParams.get('url'));
+      }
+      return host;
+    } catch(e) { return null; }
+  }
+
+  // Genera URL de favicon grande (usando Google favicon API) como imagen de fallback
+  function generarImagenFallback(link, fuenteId) {
+    const dominio = extraerDominioDeLink(link);
+    if (dominio) {
+      // Google favicon API da imágenes decentes de 128px
+      return `https://www.google.com/s2/favicons?domain=${dominio}&sz=128`;
+    }
+    return null;
+  }
+
+  // Obtiene una imagen OG (Open Graph) si es posible via API pública
+  // NOTA: solo funciona con dominios que permitan CORS, si no falla silenciosamente
+  function mejorarImagenVet(noticia) {
+    // Si ya tiene imagen, la dejamos
+    if (noticia.imagen && noticia.imagen.startsWith('http')) return noticia;
+    // Si no, generamos fallback con favicon del dominio
+    const fallback = generarImagenFallback(noticia.link, noticia.fuenteId);
+    if (fallback) {
+      noticia.imagen = fallback;
+      noticia._imagenEsFavicon = true; // marca para saber que es fallback
+    }
+    return noticia;
   }
 
   function limpiarHtmlVet(html, maxLen = 200) {
@@ -2957,14 +3006,24 @@
       const pubDate = getText('pubDate') || getText('published') || getText('updated');
       const descrip = getText('description') || getText('summary') || getText('content');
       let imagen = null;
+      // 1. Intentar media:thumbnail
       const mediaTh = it.getElementsByTagNameNS('*', 'thumbnail')[0];
+      // 2. Intentar media:content
       const mediaCt = it.getElementsByTagNameNS('*', 'content')[0];
+      // 3. Intentar enclosure
       const enclos = it.querySelector('enclosure');
       if (mediaTh) imagen = mediaTh.getAttribute('url');
       else if (mediaCt && mediaCt.getAttribute('url')) imagen = mediaCt.getAttribute('url');
       else if (enclos) imagen = enclos.getAttribute('url');
+      // 4. Buscar en description (HTML embebido) - mejorado
       else imagen = extraerPrimeraImagenVet(descrip);
-      return {
+      // 5. También buscar en content:encoded que es frecuente en RSS
+      if (!imagen) {
+        const contentEncoded = it.getElementsByTagNameNS('*', 'encoded')[0];
+        if (contentEncoded) imagen = extraerPrimeraImagenVet(contentEncoded.textContent || '');
+      }
+
+      const noticia = {
         titulo: titulo || '(Sin título)',
         link,
         pubDate,
@@ -2973,6 +3032,9 @@
         fuente: fuente.nombre,
         fuenteId: fuente.id
       };
+
+      // 6. Fallback final: favicon del dominio
+      return mejorarImagenVet(noticia);
     }).filter(n => n.titulo && n.link);
   }
 
@@ -3085,9 +3147,19 @@
         'gnews-omsa': '🌍'
       };
       const emojiCat = emojiPorFuente[n.fuenteId] || '🐾';
-      const thumb = n.imagen
-        ? `<img src="${n.imagen}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;noticia-thumb-fallback&quot;>${emojiCat}</span>'">`
-        : `<span class="noticia-thumb-fallback">${emojiCat}</span>`;
+      // Si la imagen es un favicon (fallback), la mostramos de forma bonita con el emoji de fondo
+      let thumb;
+      if (n.imagen && n._imagenEsFavicon) {
+        // Favicon pequeño sobre fondo gradiente con emoji sutil
+        thumb = `
+          <span class="noticia-thumb-fallback" style="opacity:.28;">${emojiCat}</span>
+          <img src="${n.imagen}" alt="" loading="lazy" style="position:absolute;bottom:6px;right:6px;width:28px;height:28px;border-radius:6px;background:#fff;padding:3px;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:3;object-fit:contain;" onerror="this.style.display='none'">
+        `;
+      } else if (n.imagen) {
+        thumb = `<img src="${n.imagen}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;noticia-thumb-fallback&quot;>${emojiCat}</span>'">`;
+      } else {
+        thumb = `<span class="noticia-thumb-fallback">${emojiCat}</span>`;
+      }
       const link = n.link ? n.link.replace(/"/g, '&quot;') : '#';
       return `
         <a class="noticia-card" href="${link}" target="_blank" rel="noopener noreferrer">
