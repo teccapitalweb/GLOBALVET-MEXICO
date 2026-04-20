@@ -217,7 +217,7 @@
     .noticias-grid{display:grid;grid-template-columns:1fr;gap:14px}
     .noticia-card{display:grid;grid-template-columns:180px 1fr;gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .18s;cursor:pointer;overflow:hidden}
     .noticia-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px -12px rgba(79,53,179,.25);border-color:var(--purple)}
-    .noticia-thumb{width:180px;height:120px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,rgba(79,53,179,.22),rgba(108,79,214,.38));background-image:linear-gradient(135deg,rgba(79,53,179,.22),rgba(108,79,214,.38)),url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%234f35b3' fill-opacity='0.15'%3E%3Cpath d='M20 18c0 2.2-1.3 4-3 4s-3-1.8-3-4 1.3-4 3-4 3 1.8 3 4zm8-3c0 2.2-1.3 4-3 4s-3-1.8-3-4 1.3-4 3-4 3 1.8 3 4zm8 3c0 2.2-1.3 4-3 4s-3-1.8-3-4 1.3-4 3-4 3 1.8 3 4zm5 7c0 1.7-1.1 3-2.5 3S36 24.7 36 23s1.1-3 2.5-3S41 21.3 41 23zm-29 0c0 1.7-1.1 3-2.5 3S7 24.7 7 23s1.1-3 2.5-3S12 21.3 12 23zm14 11c-4.5 0-8-2.5-8-5 0-1.5 1-3 2.5-3 1 0 1.5.5 2 1 .5.5 1.5 1 3.5 1s3-.5 3.5-1c.5-.5 1-1 2-1 1.5 0 2.5 1.5 2.5 3 0 2.5-3.5 5-8 5z'/%3E%3C/g%3E%3C/svg%3E");background-size:auto,60px 60px;background-repeat:no-repeat,repeat;position:relative;flex-shrink:0;display:grid;place-items:center}
+    .noticia-thumb{width:180px;height:120px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,rgba(79,53,179,.22),rgba(108,79,214,.38));position:relative;flex-shrink:0;display:grid;place-items:center}
     .noticia-thumb img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:2}
     .noticia-thumb-fallback{font-size:2.8rem;filter:drop-shadow(0 2px 4px rgba(79,53,179,.25));z-index:1;animation:emojiFloat 3s ease-in-out infinite}
     @keyframes emojiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -2512,12 +2512,19 @@
     const mostrarCuantas = NOTICIAS_EXPANDIDAS ? items.length : Math.min(NOTICIAS_INICIALES, items.length);
     const itemsMostrar = items.slice(0, mostrarCuantas);
     grid.innerHTML = itemsMostrar.map(n => {
-      // Emojis veterinarios aleatorios para cuando no hay imagen
-      const emojisVet = ['🐶','🐱','🐄','🐰','🦜','🦎','🐴','🐷','🐹','🐦','🐾','🩺','🐕','🐐'];
-      const emojiRandom = emojisVet[Math.floor(Math.random() * emojisVet.length)];
+      // Emoji fijo según la categoría de la noticia
+      const emojiPorFuente = {
+        'gnews-vet':  '🩺',
+        'gnews-peq':  '🐕',
+        'gnews-gran': '🐄',
+        'gnews-exo':  '🦜',
+        'gnews-inv':  '🔬',
+        'gnews-omsa': '🌍'
+      };
+      const emojiCat = emojiPorFuente[n.fuenteId] || '🐾';
       const thumb = n.imagen
-        ? `<img src="${n.imagen}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;noticia-thumb-fallback&quot;>' + ['🐶','🐱','🐄','🐰','🦜','🦎','🐴','🐷','🐹','🐦','🐾','🩺','🐕','🐐'][Math.floor(Math.random()*14)] + '</span>'">`
-        : `<span class="noticia-thumb-fallback">${emojiRandom}</span>`;
+        ? `<img src="${n.imagen}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;noticia-thumb-fallback&quot;>${emojiCat}</span>'">`
+        : `<span class="noticia-thumb-fallback">${emojiCat}</span>`;
       const link = n.link ? n.link.replace(/"/g, '&quot;') : '#';
       return `
         <a class="noticia-card" href="${link}" target="_blank" rel="noopener noreferrer">
