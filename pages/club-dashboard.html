@@ -947,8 +947,8 @@
         const sesiones = (c.sesiones || []).map((s, i) => ({
           label    : s.nombre      || ('Sesión ' + (i + 1)),
           desc     : s.descripcion || '',
-          duracion : '—',
-          temas    : [],
+          duracion : s.duracion    || '—',
+          temas    : s.temas       || [],
           // FIX: pasar el URL completo — toEmbedURL() detectará si es Drive o YouTube.
           // Antes: extractYtId() truncaba los links de Drive a basura.
           ytId     : s.urlVideo    || '',
@@ -958,17 +958,25 @@
           id        : d.id,
           titulo    : c.titulo     || 'Sin título',
           instructor: c.instructor || '—',
-          thumb     : sesiones[0]?.urlImagen || '../assets/img/cursos/medicina-veterinaria.jpg',
-          thumbPos  : 'center top',
+          thumb     : c.thumb      || sesiones[0]?.urlImagen || '../assets/img/cursos/medicina-veterinaria.jpg',
+          thumbPos  : c.thumbPos   || 'center center',
+          orden     : c.orden      || 999,
           nuevo     : true,
           sesiones
         });
       });
 
-      // Merge con los base (sin duplicar por id)
-      const baseIds = cursosBase.map(c => c.id);
-      const merged  = [...cursosBase, ...nuevos.filter(c => !baseIds.includes(c.id))];
-      cursosData    = merged;
+      // 🎯 Estrategia de fuente de verdad:
+      // Si Firestore tiene cursos → SOLO esos (se migraron, son la fuente oficial)
+      // Si Firestore está vacío  → usar cursosBase como fallback
+      if (nuevos.length > 0) {
+        // Ordenar por el campo 'orden' (1,2,3... corresponde al drip semanal)
+        nuevos.sort((a, b) => (a.orden || 999) - (b.orden || 999));
+        cursosData = nuevos;
+      } else {
+        cursosData = [...cursosBase];
+      }
+
       renderCursos();
       // Actualiza badge sidebar
       const badge = document.querySelector('.nbtn[onclick*="biblioteca"] .nbadge');
@@ -1717,6 +1725,11 @@
 
   // cursosData — global, actualizado por onSnapshot del módulo Firebase
   let cursosData = [...cursosBase];
+  window._cursosBase = cursosBase;  // Exponer para fallback
+  window._setCursosData = function(arr) {
+    cursosData = arr;
+    if (typeof renderCursos === 'function') renderCursos();
+  };
 
   let cursoActivo = null;
   let sesionActiva = 0;
