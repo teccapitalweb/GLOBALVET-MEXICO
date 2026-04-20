@@ -62,6 +62,32 @@
     .reg-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--reg-dark); color: #fff; font-family: var(--ff); font-size: .9rem; font-weight: 600; padding: .9rem 1.6rem; border-radius: 50px; z-index: 200; display: flex; align-items: center; gap: .6rem; transition: all .4s; opacity: 0; }
     .reg-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .reg-toast.green { background: var(--reg-teal); }
+
+    /* ═══ MÓVIL ═══ */
+    @media(max-width:640px){
+      .reg-page{padding:1.2rem .8rem;}
+      .reg-card{padding:1.4rem 1.1rem;border-radius:18px;max-width:100%;}
+      .reg-title{font-size:1.2rem;}
+      .reg-subtitle{font-size:.78rem;margin-bottom:1rem;}
+      .plan-card{padding:.75rem;}
+      .plan-card .name{font-size:.82rem;}
+      .plan-card .price{font-size:1.05rem;}
+      .reg-tabs{margin-bottom:1rem;}
+      .reg-tab{font-size:.78rem;padding:.45rem;}
+      .reg-input{font-size:16px !important;padding:.75rem .85rem;}
+      .reg-btn{padding:.95rem;font-size:.92rem;}
+      /* Topbar arriba */
+      .topbar{padding:.7rem 1rem;}
+      .topbar-nav{display:none;}
+      /* Pantalla de pago Shopify */
+      #paymentScreen{padding:1.2rem .8rem !important;}
+    }
+
+    @media(max-width:400px){
+      .reg-card{padding:1.1rem .9rem;}
+      .reg-title{font-size:1.05rem;}
+      .reg-btn{padding:.85rem;font-size:.88rem;}
+    }
   </style>
 </head>
 <body>
