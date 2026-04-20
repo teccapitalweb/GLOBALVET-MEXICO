@@ -286,7 +286,6 @@
     <button class="nbtn" onclick="sp('biblioteca',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="7" height="18" rx="1"/><rect x="9.5" y="3" width="7" height="18" rx="1"/><rect x="17" y="3" width="5" height="18" rx="1"/></svg>Biblioteca de cursos<span class="nbadge">3</span></button>
     <button class="nbtn" onclick="sp('sesiones',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sesiones en vivo<div class="ndotb"></div></button>
     <button class="nbtn" onclick="sp('pdfs',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDFs<span class="nbadge red">2</span></button>
-    <button class="nbtn" onclick="sp('noticias',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>Noticias<span class="pulse-noticias"></span></button>
     <div class="slabel">Contenido mensual</div>
     <button class="nbtn" onclick="sp('contenido-mensual',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Archivo mensual<span class="nbadge org">14</span></button>
     <div class="slabel">Mi cuenta</div>
@@ -329,64 +328,20 @@
         </div>
       </div>
 
-      <!-- Noticias y novedades -->
-      <div class="stitle" style="margin-bottom:.8rem;">📢 Noticias y novedades <span class="scnt" style="font-size:.78rem;font-weight:600;color:var(--purple);cursor:pointer;">Ver cursos →</span></div>
-      <div style="background:var(--surface);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:1.4rem;">
-
-        <div style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background=''">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--purple2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem;">🔬</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.25rem;">Nueva tendencia: IA aplicada al diagnóstico veterinario</div>
-            <div style="font-size:.79rem;color:var(--muted);line-height:1.55;margin-bottom:.35rem;">La inteligencia artificial está transformando la medicina veterinaria en 2026. GlobalVet México te mantiene a la vanguardia con casos clínicos actualizados cada semana, aplicables desde el lunes en tu consultorio.</div>
-            <div style="font-size:.72rem;color:#aab5c4;font-weight:600;">13 abr 2026 · GlobalVet México</div>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background=''">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#0d2f45,#0a7c6e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem;">🐾</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.25rem;">Nuevas guías de anestesia veterinaria WSAVA 2026</div>
-            <div style="font-size:.79rem;color:var(--muted);line-height:1.55;margin-bottom:.35rem;">La WSAVA publicó sus guías actualizadas de anestesia y analgesia. En GlobalVet preparamos un resumen práctico con los cambios más importantes que debes aplicar en tu práctica diaria.</div>
-            <div style="font-size:.72rem;color:#aab5c4;font-weight:600;">10 abr 2026 · GlobalVet México</div>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.4rem;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background=''">
-          <div style="width:36px;height:36px;background:linear-gradient(135deg,#7a4f00,#e8a020);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem;">🏆</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.25rem;">Club GlobalVet: un año formando veterinarios de excelencia</div>
-            <div style="font-size:.79rem;color:var(--muted);line-height:1.55;margin-bottom:.35rem;">Más de 47 miembros activos en 12 estados de México. Gracias a ti seguimos creciendo. ¡El precio de fundador de $199/mes es una forma de agradecerte tu confianza desde el inicio!</div>
-            <div style="font-size:.72rem;color:#aab5c4;font-weight:600;">7 abr 2026 · GlobalVet México</div>
-          </div>
-        </div>
+      <!-- ═══ NOTICIAS VETERINARIAS (del sector) ═══ -->
+      <div class="noticias-header">
+        <h3><span class="pulse-live"></span> 📰 Noticias veterinarias</h3>
+        <div class="noticias-source-btns" id="noticias-source-btns"></div>
       </div>
-
-      <!-- Contenido reciente -->
-      <div class="stitle" style="margin-bottom:.8rem;">🎬 Contenido reciente <span class="scnt">Ver todo</span></div>
-      <div class="clist" style="margin-bottom:1.4rem;">
-        <div class="crow" onclick="abrirCurso('endo')"><div class="cthumb" style="background:none;overflow:hidden;"><img src="../assets/img/cursos/endocrinologia.jpg" alt="Endocrinología" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div><div class="cinfo"><div class="ctitle">Endocrinología canina básica</div><div class="cmeta">MVZ. Pariz Emmanuel Lores Morales · Curso</div></div><div class="cacts"><span class="tag tn2">Nuevo</span></div></div>
-        <div class="crow" onclick="abrirCurso('hema')"><div class="cthumb" style="background:none;overflow:hidden;"><img src="../assets/img/cursos/hematologia.jpg" alt="Hematología" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div><div class="cinfo"><div class="ctitle">Hematología clínica en pequeñas especies</div><div class="cmeta">Del laboratorio al diagnóstico veterinario · Curso</div></div><div class="cacts"><span class="tag tn2">Nuevo</span></div></div>
-        <div class="crow" onclick="abrirCurso('onco')"><div class="cthumb" style="background:none;overflow:hidden;"><img src="../assets/img/cursos/oncologia.jpg" alt="Oncología" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div><div class="cinfo"><div class="ctitle">Bases de oncología veterinaria</div><div class="cmeta">MVZ. Erika Arroyo León · Curso</div></div><div class="cacts"><span class="tag tn2">Nuevo</span></div></div>
+      <div class="noticias-grid" id="noticias-grid">
+        <div class="noticias-skeleton"></div>
+        <div class="noticias-skeleton"></div>
+        <div class="noticias-skeleton"></div>
       </div>
-
-      <!-- Biblioteca por mes -->
-      <div class="stitle" style="margin-bottom:.8rem;">📋 Biblioteca por mes</div>
-      <div style="background:var(--surface);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:1rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;" onclick="sp('contenido-mensual',null)" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background=''">
-          <div style="display:flex;align-items:center;gap:.8rem;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span style="font-size:.88rem;font-weight:700;color:var(--dark);">Abril 2026</span>
-          </div>
-          <span style="background:rgba(232,160,32,.15);color:#9a5f00;font-size:.68rem;font-weight:800;padding:.18rem .55rem;border-radius:50px;">8 cursos</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;cursor:pointer;transition:background .15s;" onclick="sp('contenido-mensual',null)" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background=''">
-          <div style="display:flex;align-items:center;gap:.8rem;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span style="font-size:.88rem;font-weight:600;color:var(--muted);">Marzo 2026</span>
-          </div>
-          <span style="background:#e5e7eb;color:#6b7280;font-size:.68rem;font-weight:800;padding:.18rem .55rem;border-radius:50px;">6 cursos</span>
-        </div>
-      </div>
+      <button class="noticias-ver-mas" id="noticias-ver-mas-btn" style="display:none;" onclick="toggleVerMasNoticias(this)">
+        <span id="noticias-ver-mas-txt">📰 Leer más noticias del día</span>
+        <span class="noticias-ver-mas__arrow">▼</span>
+      </button>
 
     </div>
 
@@ -495,24 +450,6 @@
         <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📋</div><div class="cinfo"><div class="ctitle">Checklist preoperatorio — Cirugía de tejidos blandos</div><div class="cmeta">PDF · 3 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
         <div class="crow"><div class="cthumb tgo" style="font-size:.9rem">🏆</div><div class="cinfo"><div class="ctitle">Certificado educación continua — Marzo 2026</div><div class="cmeta">8 horas de actualización · GlobalVet México</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando certificado…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
       </div>
-    </div>
-
-    <!-- NOTICIAS VETERINARIAS -->
-    <div class="panel" id="panel-noticias">
-      <div class="stitle">📰 Noticias veterinarias</div>
-      <div class="noticias-header">
-        <h3><span class="pulse-live"></span> Últimas noticias del sector</h3>
-        <div class="noticias-source-btns" id="noticias-source-btns"></div>
-      </div>
-      <div class="noticias-grid" id="noticias-grid">
-        <div class="noticias-skeleton"></div>
-        <div class="noticias-skeleton"></div>
-        <div class="noticias-skeleton"></div>
-      </div>
-      <button class="noticias-ver-mas" id="noticias-ver-mas-btn" style="display:none;" onclick="toggleVerMasNoticias(this)">
-        <span id="noticias-ver-mas-txt">📰 Leer más noticias del día</span>
-        <span class="noticias-ver-mas__arrow">▼</span>
-      </button>
     </div>
 
     <!-- CONTENIDO MENSUAL -->
@@ -2507,24 +2444,29 @@
     const btns = document.getElementById('noticias-source-btns');
     if (!grid) return;
     console.log('[Noticias] Cargando', FUENTES_NOTICIAS.length, 'fuentes...');
+
+    // Renderizar SIEMPRE las 6 categorías desde el inicio (aunque no tengan datos aún)
+    // Esto evita el "salto" visual cuando cargan los feeds
+    if (btns) {
+      const html = ['<button class="noticias-source-btn active" onclick="filtrarNoticiasVet(\'todas\', this)">Todas</button>']
+        .concat(FUENTES_NOTICIAS.map(f =>
+          `<button class="noticias-source-btn" onclick="filtrarNoticiasVet('${f.id}', this)">${f.nombre}</button>`
+        )).join('');
+      btns.innerHTML = html;
+    }
+
     const resultados = await Promise.all(FUENTES_NOTICIAS.map(f =>
       fetchFeedVet(f).then(items => ({ id: f.id, items }))
     ));
     resultados.forEach(r => { NOTICIAS_CACHE[r.id] = r.items; });
     const totalItems = Object.values(NOTICIAS_CACHE).reduce((a, arr) => a + arr.length, 0);
     console.log(`[Noticias] Total: ${totalItems}`);
-    const fuentesActivas = FUENTES_NOTICIAS.filter(f => (NOTICIAS_CACHE[f.id] || []).length > 0);
-    if (btns) {
-      if (fuentesActivas.length === 0) {
-        btns.innerHTML = '<button class="noticias-source-btn" onclick="cargarNoticiasVet()">🔄 Reintentar</button>';
-      } else {
-        const html = ['<button class="noticias-source-btn active" onclick="filtrarNoticiasVet(\'todas\', this)">Todas</button>']
-          .concat(fuentesActivas.map(f =>
-            `<button class="noticias-source-btn" onclick="filtrarNoticiasVet('${f.id}', this)">${f.nombre}</button>`
-          )).join('');
-        btns.innerHTML = html;
-      }
+
+    // Si absolutamente todas las fuentes fallaron, mostrar botón reintentar
+    if (totalItems === 0 && btns) {
+      btns.innerHTML = '<button class="noticias-source-btn" onclick="cargarNoticiasVet()">🔄 Reintentar</button>';
     }
+
     renderNoticiasVet('todas');
     _noticiasCargadas = true;
   };
