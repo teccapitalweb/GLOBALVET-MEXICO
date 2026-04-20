@@ -270,7 +270,14 @@
     <span class="tnav-badge">Miembro</span>
   </div>
   <div class="tnav-r">
-    <button class="tnav-bell"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="ndot"></div></button>
+    <button class="tnav-bell" onclick="toggleNotifDrop(event)" style="position:relative;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="ndot" style="display:none;"></div></button>
+    <div id="notifDropdown" style="display:none;position:absolute;top:56px;right:16px;width:360px;max-height:70vh;overflow-y:auto;background:#fff;border-radius:14px;box-shadow:0 12px 32px rgba(13,31,53,.18);z-index:200;">
+      <div style="padding:.85rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--plight);">
+        <div style="font-family:var(--ff);font-weight:700;font-size:.92rem;color:var(--dark);">🔔 Notificaciones</div>
+        <button onclick="marcarTodasLeidas();event.stopPropagation();" style="background:transparent;border:none;color:var(--purple);font-size:.72rem;font-weight:600;cursor:pointer;">Marcar todas</button>
+      </div>
+      <div id="notifList"></div>
+    </div>
     <div class="tnav-user">
       <div class="tnav-av" id="topAv">?</div>
       <div class="tnav-ui"><div class="tnav-name" id="topName">—</div><div class="tnav-status">Miembro activo</div></div>
@@ -420,11 +427,13 @@
         </div>
       </div>
 
-      <!-- Grabaciones (estáticas) -->
+      <!-- Grabaciones (aparecerán cuando publiques desde el admin) -->
       <div class="stitle" style="font-size:.82rem;color:var(--muted);margin-bottom:.6rem;">🎬 Grabaciones anteriores</div>
-      <div class="clist">
-        <div class="crow" onclick="ov('qaciru')"><div class="cthumb tg" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Q&A Cirugía — Dra. Sánchez</div><div class="cmeta">Sesión grabada · Marzo · 55 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button><span class="tag tv">Visto</span></div></div>
-        <div class="crow" onclick="ov('qabien')"><div class="cthumb tt" style="font-size:.9rem">🎬</div><div class="cinfo"><div class="ctitle">Grabación: Bienestar animal — Dr. Torres</div><div class="cmeta">Sesión grabada · Febrero · 48 min</div></div><div class="cacts"><button class="cabt">▶ Ver</button></div></div>
+      <div class="clist" id="grabacionesList">
+        <div style="padding:2rem 1.2rem;text-align:center;font-size:.85rem;color:var(--muted);background:var(--bg);border-radius:14px;">
+          <div style="font-size:1.8rem;margin-bottom:.6rem;">📼</div>
+          Las grabaciones aparecerán aquí cuando se publiquen.
+        </div>
       </div>
     </div>
 
@@ -443,13 +452,13 @@
         </div>
       </div>
 
-      <!-- PDFs base (estáticos) -->
+      <!-- PDFs base (aparecerán cuando se publiquen desde el admin) -->
       <div class="stitle" style="font-size:.82rem;color:var(--muted);margin-bottom:.6rem;">📁 Material base</div>
-      <div class="clist">
-        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Protocolo de primeros auxilios veterinarios</div><div class="cmeta">PDF descargable · 6 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag tn2">Nuevo</span></div></div>
-        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📄</div><div class="cinfo"><div class="ctitle">Guía manejo clínico en práctica diaria</div><div class="cmeta">PDF · 4 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
-        <div class="crow"><div class="cthumb tg" style="font-size:.9rem">📋</div><div class="cinfo"><div class="ctitle">Checklist preoperatorio — Cirugía de tejidos blandos</div><div class="cmeta">PDF · 3 páginas</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
-        <div class="crow"><div class="cthumb tgo" style="font-size:.9rem">🏆</div><div class="cinfo"><div class="ctitle">Certificado educación continua — Marzo 2026</div><div class="cmeta">8 horas de actualización · GlobalVet México</div></div><div class="cacts"><button class="cabt dl" onclick="st('📥 Descargando certificado…')">↓ Abrir</button><span class="tag td">Descargado</span></div></div>
+      <div class="clist" id="pdfsBaseList">
+        <div style="padding:2rem 1.2rem;text-align:center;font-size:.85rem;color:var(--muted);background:var(--bg);border-radius:14px;">
+          <div style="font-size:1.8rem;margin-bottom:.6rem;">📄</div>
+          El material educativo aparecerá aquí cuando se publique.
+        </div>
       </div>
     </div>
 
@@ -589,18 +598,19 @@
       <!-- Cancelar -->
       <div class="wbox">
         <div class="wt">⚠️ Cancelar membresía</div>
-        <div class="wd">Si cancelas, perderás acceso inmediatamente a videos, PDFs, sesiones y comunidad. Tus datos se guardan por si quieres regresar, pero al volver pagarás el precio vigente.</div>
+        <div class="wd">Si cancelas, mantendrás acceso completo al Club hasta el final de tu período pagado. Después de esa fecha, la cuenta se desactiva automáticamente. Puedes volver cuando quieras al precio vigente.</div>
         <button class="bact re" onclick="confirmarCancelacion()">Cancelar mi membresía</button>
       </div>
 
       <!-- Modal de confirmación de cancelación -->
       <div id="cancelModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:1rem;">
-        <div style="background:#fff;border-radius:22px;max-width:400px;width:100%;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,.2);">
+        <div style="background:#fff;border-radius:22px;max-width:420px;width:100%;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,.2);">
           <div style="font-size:2.5rem;text-align:center;margin-bottom:.8rem;">😢</div>
           <div style="font-family:var(--ff);font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:.6rem;color:var(--dark);">¿Seguro que quieres cancelar?</div>
-          <div style="font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:1.4rem;line-height:1.6;">Perderás acceso a todo el contenido del Club GlobalVet. Tus datos quedarán guardados si decides regresar.</div>
+          <div style="font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:.8rem;line-height:1.6;">Seguirás pudiendo entrar al Club hasta que termine tu período pagado.</div>
+          <div id="textoFechaAcceso" style="background:var(--plight);border-radius:10px;padding:.7rem .9rem;font-size:.82rem;color:var(--dark);text-align:center;margin-bottom:1.3rem;line-height:1.5;">Tendrás acceso completo hasta el fin de tu período pagado.</div>
           <div style="display:flex;gap:.7rem;">
-            <button onclick="document.getElementById('cancelModal').style.display='none'" style="flex:1;padding:.75rem;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:var(--ff);font-weight:700;cursor:pointer;">Mantener membresía</button>
+            <button onclick="document.getElementById('cancelModal').style.display='none'" style="flex:1;padding:.75rem;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:var(--ff);font-weight:700;cursor:pointer;">Mantener</button>
             <button onclick="ejecutarCancelacion()" id="btnConfirmCancel" style="flex:1;padding:.75rem;border-radius:12px;border:none;background:var(--red);color:#fff;font-family:var(--ff);font-weight:700;cursor:pointer;">Sí, cancelar</button>
           </div>
         </div>
@@ -639,10 +649,10 @@
 
   <!-- RIGHT PANEL -->
   <aside class="rp">
-    <div class="rpc dk">
+    <div class="rpc dk" id="proximaSesionCard" style="display:none;">
       <div class="rplbl">📅 Próxima sesión</div>
-      <div class="rpst">Q&A Endocrinología</div>
-      <div class="rpsm">Dr. Juárez · 23 de abril · 8:00 PM</div>
+      <div class="rpst" id="proximaSesionTitulo">—</div>
+      <div class="rpsm" id="proximaSesionMeta">—</div>
       <div class="cd">
         <div class="cdb"><div class="cdn" id="cdD">00</div><div class="cdl">Días</div></div>
         <div class="cdb"><div class="cdn" id="cdH">00</div><div class="cdl">Hrs</div></div>
@@ -667,23 +677,24 @@
       <div class="rpbd">En todos los cursos de GlobalVet México</div>
       <a href="https://wa.me/5212381500864?text=Hola%2C%20me%20interesa%20el%2020%25%20de%20descuento%20en%20los%20cursos%20disponibles" target="_blank" class="rpbtn pu" style="display:flex;align-items:center;justify-content:center;text-decoration:none;">Ver cursos disponibles</a>
     </div>
-    <div class="rpc">
-      <div class="rplbl">📊 Mi actividad</div>
-      <div class="actr"><span class="actl">Videos</span><div class="actbw"><div class="actb" style="width:70%;background:var(--purple)"></div></div><span class="actv">7/10</span></div>
-      <div class="actr"><span class="actl">PDFs</span><div class="actbw"><div class="actb" style="width:75%;background:var(--gold)"></div></div><span class="actv">3/4</span></div>
-      <div class="actr"><span class="actl">Lives</span><div class="actbw"><div class="actb" style="width:50%;background:var(--red)"></div></div><span class="actv">2/4</span></div>
-      <div class="addbtns">
-        <button class="addbtn" style="background:rgba(79,53,179,.12);color:var(--purple)" onclick="sp('biblioteca',null)">+ Video</button>
-        <button class="addbtn" style="background:rgba(232,160,32,.12);color:#9a5f00" onclick="sp('pdfs',null)">+ PDF</button>
-        <button class="addbtn" style="background:rgba(217,64,64,.12);color:var(--red)" onclick="sp('sesiones',null)">+ Live</button>
+    <!-- ═══ WIDGET 1: Tu próximo curso ═══ -->
+    <div class="rpc dk" id="widgetProxCurso" style="padding:0;overflow:hidden;">
+      <div id="proxCursoContent" style="padding:1rem;">
+        <div class="rplbl">🎓 Tu próximo curso</div>
+        <div style="font-size:.8rem;color:rgba(255,255,255,.55);padding:.5rem 0;">Cargando…</div>
       </div>
     </div>
-    <div class="rpc dk">
-      <div class="rpcl">🏆 Certificado Abril</div>
-      <div class="rpct">Educación continua</div>
-      <div class="rpcd">Completa 3/4 videos + 1 live</div>
-      <button class="rpbtn go" onclick="st('📥 Descargando certificado…')">Ver mi progreso</button>
+
+    <!-- ═══ WIDGET 2: Racha de estudio ═══ -->
+    <div class="rpc" id="widgetRacha">
+      <div class="rplbl">🔥 Tu racha de estudio</div>
+      <div id="rachaContent" style="text-align:center;padding:.4rem 0 .2rem;">
+        <div id="rachaDiasNum" style="font-family:var(--ff);font-size:2.6rem;font-weight:800;color:var(--purple);line-height:1;">0</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">días consecutivos</div>
+      </div>
+      <div id="rachaMensaje" style="font-size:.78rem;color:var(--muted);text-align:center;margin-top:.5rem;line-height:1.45;">Completa una clase hoy para empezar tu racha</div>
     </div>
+
     <div class="rpc">
       <div class="rplbl">📩 Contacto GlobalVet</div>
       <a href="mailto:globalvetmexico@gmail.com" style="font-size:.8rem;color:var(--purple);font-weight:700;">globalvetmexico@gmail.com</a>
@@ -930,12 +941,46 @@
       onSnapshot(doc(db, 'usuarios', uid), snap => {
         if (!snap.exists()) return;
         const data = snap.data();
+
+        // 🎯 Cancelación DIFERIDA: verificar si la fecha de fin ya pasó
+        if (data.cancelacionProgramada && data.membresiaActivaHasta?.toDate) {
+          const ahora = new Date();
+          const finAcceso = data.membresiaActivaHasta.toDate();
+          if (ahora > finAcceso) {
+            // Ya venció el período → expulsar
+            updateDoc(doc(db, 'usuarios', uid), {
+              membresiaActiva: false,
+              estado: 'cancelado'
+            }).finally(() => {
+              signOut(auth).then(() => {
+                window.location.href = 'club-registro.html?tab=login&razon=vencida';
+              });
+            });
+            return;
+          }
+          // Si estamos en período de gracia, mostrar banner informativo
+          mostrarBannerCancelacion(finAcceso);
+        }
+
+        // Expulsión normal: si está explícitamente desactivado
         if (data.membresiaActiva === false || data.estado === 'cancelado') {
           signOut(auth).then(() => {
             window.location.href = 'club-registro.html?tab=login';
           });
         }
       });
+    }
+
+    // Banner informativo cuando la cuenta está en cancelación programada
+    function mostrarBannerCancelacion(fechaFin) {
+      if (document.getElementById('cancelBanner')) return; // ya existe
+      const dias = Math.ceil((fechaFin - new Date()) / 86400000);
+      const banner = document.createElement('div');
+      banner.id = 'cancelBanner';
+      banner.style.cssText = 'background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:.6rem 1.2rem;text-align:center;font-size:.82rem;font-weight:600;position:sticky;top:52px;z-index:80;display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;';
+      banner.innerHTML = `⏳ Cancelación programada · Mantienes acceso hasta <strong>${fechaFin.toLocaleDateString('es-MX', {day:'numeric', month:'long'})}</strong> (${dias} días)`;
+      const layout = document.getElementById('dashLayout');
+      if (layout && layout.parentNode) layout.parentNode.insertBefore(banner, layout);
     }
 
     // ── 2. CURSOS ─────────────────────────────────────
@@ -1111,20 +1156,58 @@
   };
 
   window.confirmarCancelacion = () => {
-    document.getElementById('cancelModal').style.display = 'flex';
+    // Calcular fecha fin de período basándose en último cobro o fecha de registro
+    const finPeriodo = calcularFinPeriodo();
+    const modal = document.getElementById('cancelModal');
+    const textoFechaEl = document.getElementById('textoFechaAcceso');
+    if (textoFechaEl) {
+      textoFechaEl.innerHTML = `Tendrás acceso completo hasta el <strong style="color:var(--purple);">${finPeriodo.toLocaleDateString('es-MX', {day:'numeric', month:'long', year:'numeric'})}</strong>.`;
+    }
+    modal.style.display = 'flex';
   };
+
+  // Calcula fin del período pagado actual
+  function calcularFinPeriodo() {
+    // Si ya hay fecha de fin de período guardada, usarla
+    if (window.pd && window.pd.membresiaActivaHasta?.toDate) {
+      return window.pd.membresiaActivaHasta.toDate();
+    }
+    // Estimar fin de período: fechaRegistro + 30 días (mensual) o 365 (anual) * N periodos
+    const fechaBase = window.pd?.fechaRegistro?.toDate
+      ? window.pd.fechaRegistro.toDate()
+      : new Date();
+    const esAnual = (window.pd?.plan === 'anual') || (window.pd?.planLabel || '').toLowerCase().includes('anual');
+    const diasCiclo = esAnual ? 365 : 30;
+    const ahora = new Date();
+    // Cuántos ciclos han pasado desde fechaRegistro
+    const diasTranscurridos = Math.floor((ahora - fechaBase) / 86400000);
+    const ciclosCompletos = Math.floor(diasTranscurridos / diasCiclo) + 1;
+    const finCiclo = new Date(fechaBase.getTime() + ciclosCompletos * diasCiclo * 86400000);
+    return finCiclo;
+  }
+  window.calcularFinPeriodo = calcularFinPeriodo;
+
   window.ejecutarCancelacion = async () => {
     const btn = document.getElementById('btnConfirmCancel');
-    btn.textContent = 'Cancelando…'; btn.disabled = true;
+    btn.textContent = 'Procesando…'; btn.disabled = true;
     try {
+      const finPeriodo = calcularFinPeriodo();
+      // 🎯 Cancelación DIFERIDA:
+      // - membresiaActiva sigue en true hasta que llegue la fecha
+      // - estado se marca como 'cancelando' (no 'cancelado' todavía)
+      // - Guardamos la fecha de fin para que al llegar, el sistema la desactive
       await updateDoc(doc(db, 'usuarios', cu.uid), {
-        membresiaActiva: false, estado: 'cancelado', fechaCancelacion: serverTimestamp()
+        estado: 'cancelando',
+        cancelacionProgramada: true,
+        fechaCancelacion: serverTimestamp(),
+        membresiaActivaHasta: finPeriodo
       });
-      await signOut(auth);
-      window.location.href = 'club.html';
+      document.getElementById('cancelModal').style.display = 'none';
+      st('✅ Cancelación programada. Mantienes acceso hasta ' + finPeriodo.toLocaleDateString('es-MX', {day:'numeric', month:'long'}), true);
     } catch(e) {
       btn.textContent = 'Sí, cancelar'; btn.disabled = false;
-      window.st('❌ Error. Escríbenos a globalvetmexico@gmail.com');
+      console.error(e);
+      if (window.st) window.st('❌ Error. Escríbenos a globalvetmexico@gmail.com');
     }
   };
 
@@ -2126,6 +2209,10 @@
     document.getElementById('logroToastDesc').textContent  = logro.desc;
     const t = document.getElementById('logroToast');
     t.classList.add('show');
+    // Agregar al panel de notificaciones también
+    if (typeof window.agregarNotif === 'function') {
+      window.agregarNotif(logro.emoji, `¡Logro desbloqueado: ${logro.nombre}!`, logro.desc, 'success');
+    }
     setTimeout(() => t.classList.remove('show'), 4500);
   }
 
@@ -2317,6 +2404,248 @@
     link.click();
     st('📥 Certificado descargado', true);
   };
+
+  // ═══════════════════════════════════════════════════════════════
+  // ═══ WIDGET: TU PRÓXIMO CURSO (CTA)                           ═══
+  // ═══════════════════════════════════════════════════════════════
+  window.renderWidgetProxCurso = function() {
+    const el = document.getElementById('proxCursoContent');
+    if (!el) return;
+    if (!cursosData || cursosData.length === 0) return;
+
+    const desbloqueados = typeof cursosDesbloqueadosCount === 'function' ? cursosDesbloqueadosCount() : 1;
+    let curso = null;
+    for (let i = 0; i < Math.min(desbloqueados, cursosData.length); i++) {
+      const c = cursosData[i];
+      const prog = getProgreso(c.id);
+      const completadas = prog.filter(Boolean).length;
+      if (completadas > 0 && completadas < c.sesiones.length) {
+        curso = { ...c, completadas, total: c.sesiones.length, empezado: true };
+        break;
+      }
+    }
+    if (!curso) {
+      for (let i = 0; i < Math.min(desbloqueados, cursosData.length); i++) {
+        const c = cursosData[i];
+        const prog = getProgreso(c.id);
+        const completadas = prog.filter(Boolean).length;
+        if (completadas < c.sesiones.length) {
+          curso = { ...c, completadas, total: c.sesiones.length, empezado: false };
+          break;
+        }
+      }
+    }
+
+    if (!curso) {
+      el.innerHTML = `
+        <div class="rplbl">🎓 ¡Completaste todo!</div>
+        <div style="padding:.8rem 0;">
+          <div style="font-size:.82rem;color:rgba(255,255,255,.85);line-height:1.5;">Has completado todos los cursos disponibles. Próximamente más contenido.</div>
+        </div>`;
+      return;
+    }
+
+    const pct = Math.round((curso.completadas / curso.total) * 100);
+    const thumbSafe = (curso.thumb || '').replace(/'/g, "\\'");
+    el.innerHTML = `
+      <div style="position:relative;height:105px;overflow:hidden;margin:-1rem -1rem .8rem;">
+        <img src="${thumbSafe}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,16,64,.25) 0%,rgba(26,16,64,.9) 100%);"></div>
+        <div style="position:absolute;bottom:8px;left:12px;right:12px;">
+          <div style="font-size:.68rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:.15rem;">${curso.empezado ? '📘 Continúa donde quedaste' : '🎓 Tu próximo curso'}</div>
+          <div style="font-family:var(--ff);font-size:.88rem;font-weight:700;color:#fff;line-height:1.25;">${curso.titulo}</div>
+        </div>
+      </div>
+      ${curso.empezado ? `
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-bottom:.3rem;">${curso.completadas}/${curso.total} sesiones · ${pct}%</div>
+        <div style="height:4px;background:rgba(255,255,255,.15);border-radius:50px;overflow:hidden;margin-bottom:.7rem;"><div style="height:100%;background:linear-gradient(90deg,var(--purple2),#ffb800);width:${pct}%;border-radius:50px;"></div></div>
+      ` : `
+        <div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:.7rem;">${curso.total} sesiones · Sin comenzar</div>
+      `}
+      <button onclick="abrirCurso('${curso.id}')" style="width:100%;padding:.6rem;background:var(--purple);color:#fff;border:none;border-radius:10px;font-family:var(--ff);font-weight:700;font-size:.82rem;cursor:pointer;">
+        ▶ ${curso.empezado ? 'Continuar' : 'Empezar ahora'}
+      </button>
+    `;
+  };
+
+  // ═══ WIDGET: RACHA DE ESTUDIO ═══
+  window.renderWidgetRacha = function() {
+    const numEl = document.getElementById('rachaDiasNum');
+    const msgEl = document.getElementById('rachaMensaje');
+    if (!numEl || !msgEl) return;
+    const s = getStats();
+    const dias = s.rachaDias || 0;
+    numEl.textContent = dias;
+    if (dias === 0) msgEl.textContent = 'Completa una clase hoy para empezar tu racha 💪';
+    else if (dias === 1) msgEl.textContent = '¡Acabas de empezar! Mantén la racha mañana 🔥';
+    else if (dias < 7) msgEl.innerHTML = `🔥 Llevas <strong>${dias} días</strong> — ¡sigue así!`;
+    else if (dias < 30) msgEl.innerHTML = `🔥 <strong>¡Increíble!</strong> ${dias} días de racha`;
+    else msgEl.innerHTML = `🌟 <strong>¡Leyenda!</strong> ${dias} días de racha perfecta`;
+  };
+
+  setTimeout(() => {
+    if (typeof renderWidgetProxCurso === 'function') renderWidgetProxCurso();
+    if (typeof renderWidgetRacha === 'function') renderWidgetRacha();
+  }, 800);
+
+  // ═══════════════════════════════════════════════════════════════
+  // ═══ NOTIFICACIONES AUTOMÁTICAS DEL SISTEMA (Nivel 1)         ═══
+  // ═══════════════════════════════════════════════════════════════
+  const NOTIF_KEY = 'gv_notifs';
+  const NOTIF_READ_KEY = 'gv_notifs_read';
+
+  function getNotifs() {
+    try { return JSON.parse(localStorage.getItem(NOTIF_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function setNotifsStore(arr) {
+    try { localStorage.setItem(NOTIF_KEY, JSON.stringify(arr.slice(0, 30))); } catch(e) {}
+  }
+  window.agregarNotif = function(icon, titulo, mensaje, tipo) {
+    const notifs = getNotifs();
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (notifs.some(n => n.titulo === titulo && n.fecha === hoy)) return;
+    notifs.unshift({
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      icon: icon || '📢',
+      titulo, mensaje, tipo: tipo || 'info',
+      fecha: hoy, timestamp: Date.now()
+    });
+    setNotifsStore(notifs);
+    actualizarBadgeNotifs();
+    if (typeof window.renderPanelNotifs === 'function') window.renderPanelNotifs();
+  };
+
+  function getNotifsNoLeidas() {
+    try {
+      const leidas = JSON.parse(localStorage.getItem(NOTIF_READ_KEY) || '[]');
+      return getNotifs().filter(n => !leidas.includes(n.id));
+    } catch(e) { return getNotifs(); }
+  }
+  window.marcarTodasLeidas = function() {
+    const ids = getNotifs().map(n => n.id);
+    localStorage.setItem(NOTIF_READ_KEY, JSON.stringify(ids));
+    actualizarBadgeNotifs();
+    if (typeof window.renderPanelNotifs === 'function') window.renderPanelNotifs();
+  };
+
+  function actualizarBadgeNotifs() {
+    const count = getNotifsNoLeidas().length;
+    const badge = document.querySelector('.ndot');
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count > 9 ? '9+' : count;
+        badge.style.display = '';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  }
+
+  function generarNotificacionesAutomaticas() {
+    if (!cursosData || cursosData.length === 0) return;
+
+    // 1. Nuevo curso desbloqueado
+    const desbloqueados = typeof cursosDesbloqueadosCount === 'function' ? cursosDesbloqueadosCount() : 1;
+    const ultimoVisto = parseInt(localStorage.getItem('gv_ultimo_curso_desbloqueado') || '0');
+    if (desbloqueados > ultimoVisto && desbloqueados > 1) {
+      const cursoNuevo = cursosData[desbloqueados - 1];
+      if (cursoNuevo) {
+        window.agregarNotif('🎉', '¡Nuevo curso disponible!', `"${cursoNuevo.titulo}" ya está desbloqueado.`, 'success');
+      }
+      localStorage.setItem('gv_ultimo_curso_desbloqueado', String(desbloqueados));
+    }
+
+    // 2. Hitos de racha
+    const s = getStats();
+    const dias = s.rachaDias || 0;
+    const rachaHito = parseInt(localStorage.getItem('gv_racha_hito') || '0');
+    if (dias >= 3 && rachaHito < 3) {
+      window.agregarNotif('🔥', '¡3 días de racha!', 'Llevas 3 días consecutivos estudiando. Sigue así 💪', 'success');
+      localStorage.setItem('gv_racha_hito', '3');
+    }
+    if (dias >= 7 && rachaHito < 7) {
+      window.agregarNotif('🔥', '¡Semana perfecta!', '7 días consecutivos. Eres muy constante.', 'success');
+      localStorage.setItem('gv_racha_hito', '7');
+    }
+    if (dias >= 30 && rachaHito < 30) {
+      window.agregarNotif('🌟', '¡Leyenda!', '30 días consecutivos. Eres top del Club.', 'success');
+      localStorage.setItem('gv_racha_hito', '30');
+    }
+
+    // 3. Aniversario mensual
+    if (window.pd && window.pd.fechaRegistro?.toDate) {
+      const fechaReg = window.pd.fechaRegistro.toDate();
+      const meses = Math.floor((Date.now() - fechaReg.getTime()) / (1000*60*60*24*30));
+      const mesesNotif = parseInt(localStorage.getItem('gv_meses_notif') || '0');
+      if (meses > mesesNotif && meses >= 1) {
+        const txt = meses === 1 ? '1 mes' : `${meses} meses`;
+        window.agregarNotif('🎂', `¡${txt} como miembro!`, 'Gracias por seguir aprendiendo con nosotros.', 'success');
+        localStorage.setItem('gv_meses_notif', String(meses));
+      }
+    }
+
+    actualizarBadgeNotifs();
+  }
+
+  setTimeout(generarNotificacionesAutomaticas, 1500);
+
+  // Renderizar el panel de notificaciones
+  window.renderPanelNotifs = function() {
+    const cont = document.getElementById('notifList');
+    if (!cont) return;
+    const notifs = getNotifs();
+    if (notifs.length === 0) {
+      cont.innerHTML = `
+        <div style="padding:2rem 1.2rem;text-align:center;font-size:.85rem;color:var(--muted);background:var(--bg);border-radius:14px;">
+          <div style="font-size:1.8rem;margin-bottom:.6rem;">🔔</div>
+          No tienes notificaciones por ahora.<br>
+          <span style="font-size:.78rem;">Recibirás avisos cuando se desbloqueen cursos nuevos, logros y más.</span>
+        </div>`;
+      return;
+    }
+    const leidas = new Set(JSON.parse(localStorage.getItem(NOTIF_READ_KEY) || '[]'));
+    cont.innerHTML = notifs.map(n => {
+      const isRead = leidas.has(n.id);
+      const fecha = new Date(n.timestamp || Date.now());
+      const diffH = (Date.now() - fecha.getTime()) / 3600000;
+      let tiempo = diffH < 1 ? 'Hace unos minutos' : diffH < 24 ? `Hace ${Math.floor(diffH)}h` : `Hace ${Math.floor(diffH/24)}d`;
+      return `
+        <div style="display:flex;align-items:flex-start;gap:.8rem;padding:.9rem 1rem;border-bottom:1px solid var(--line);${isRead ? 'opacity:.62' : 'background:rgba(79,53,179,.04)'}">
+          <div style="font-size:1.6rem;flex-shrink:0;">${n.icon}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--ff);font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.15rem;">${n.titulo}</div>
+            <div style="font-size:.79rem;color:var(--muted);line-height:1.5;margin-bottom:.25rem;">${n.mensaje}</div>
+            <div style="font-size:.68rem;color:#aab5c4;font-weight:600;">${tiempo}</div>
+          </div>
+          ${!isRead ? '<div style="width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:.4rem;"></div>' : ''}
+        </div>`;
+    }).join('');
+  };
+
+  setTimeout(() => window.renderPanelNotifs(), 1800);
+
+  // Toggle del dropdown de notificaciones
+  window.toggleNotifDrop = function(e) {
+    if (e) e.stopPropagation();
+    const d = document.getElementById('notifDropdown');
+    if (!d) return;
+    if (d.style.display === 'none') {
+      d.style.display = 'block';
+      if (typeof window.renderPanelNotifs === 'function') window.renderPanelNotifs();
+    } else {
+      d.style.display = 'none';
+    }
+  };
+
+  // Cerrar dropdown al hacer click fuera
+  document.addEventListener('click', (e) => {
+    const d = document.getElementById('notifDropdown');
+    const bell = document.querySelector('.tnav-bell');
+    if (!d || !bell) return;
+    if (d.style.display === 'block' && !d.contains(e.target) && !bell.contains(e.target)) {
+      d.style.display = 'none';
+    }
+  });
 
   // ═══════════════════════════════════════════════════════════════
   // ═══ SISTEMA DE NOTICIAS VETERINARIAS (patrón AgroTec)        ═══
