@@ -95,30 +95,45 @@ export function formatUnlockDate(date) {
 }
 
 // ═══ SIDEBAR COMPARTIDO ═══
-// Se renderiza en todas las páginas del club con el item activo marcado
+// Estructura idéntica al dashboard monolítico, con labels de sección
 export function renderSidebar(activeKey = '') {
-  const items = [
-    { key:'dashboard',    label:'Inicio',          href:'club-dashboard.html',             icon:'🏠' },
-    { key:'biblioteca',   label:'Biblioteca',      href:'club-dashboard.html#biblioteca',  icon:'📚' },
-    { key:'videos',       label:'Videos',          href:'club-videos.html',                icon:'🎥' },
-    { key:'pdfs',         label:'PDFs',            href:'club-dashboard.html#pdfs',        icon:'📄' },
-    { key:'herramientas', label:'Herramientas clínicas', href:'club-herramientas.html',    icon:'🩺' },
-    { key:'sesiones',     label:'Sesiones en vivo', href:'club-dashboard.html#sesiones',   icon:'🔴' },
-    { key:'certificados', label:'Constancias',     href:'club-certificados.html',          icon:'🏆' },
-    { key:'logros',       label:'Logros',          href:'club-logros.html',                icon:'⭐' },
-    { key:'noticias',     label:'Noticias',        href:'club-noticias.html',              icon:'📰' },
-    { key:'foro',         label:'Foro',            href:'club-foro.html',                  icon:'💬' },
-    { key:'referidos',    label:'Referidos',       href:'club-referidos.html',             icon:'🎁' },
-    { key:'perfil',       label:'Perfil',          href:'club-dashboard.html#perfil',      icon:'👤' }
+  const groups = [
+    { label: 'Principal', items: [
+      { key:'dashboard',    label:'Inicio',                 href:'club-dashboard.html#inicio',     icon:'🏠' },
+      { key:'biblioteca',   label:'Biblioteca de cursos',   href:'club-dashboard.html#biblioteca', icon:'📚' },
+      { key:'sesiones',     label:'Sesiones en vivo',       href:'club-dashboard.html#sesiones',   icon:'🔴' },
+      { key:'pdfs',         label:'PDFs',                   href:'club-dashboard.html#pdfs',       icon:'📄' },
+      { key:'videos',       label:'Videos prácticos',       href:'club-videos.html',               icon:'🎥' },
+      { key:'herramientas', label:'Herramientas clínicas',  href:'club-herramientas.html',         icon:'🩺', badge:'NEW' }
+    ]},
+    { label: 'Contenido mensual', items: [
+      { key:'noticias',     label:'Noticias veterinarias', href:'club-noticias.html', icon:'📰' }
+    ]},
+    { label: 'Comunidad', items: [
+      { key:'foro',         label:'Foro',           href:'club-foro.html',         icon:'💬' },
+      { key:'logros',       label:'Logros',         href:'club-logros.html',       icon:'⭐' },
+      { key:'referidos',    label:'Referidos',      href:'club-referidos.html',    icon:'🎁' },
+      { key:'certificados', label:'Mis constancias', href:'club-certificados.html', icon:'🏆' }
+    ]},
+    { label: 'Mi cuenta', items: [
+      { key:'perfil',       label:'Mi perfil',       href:'club-dashboard.html#perfil',       icon:'👤' },
+      { key:'suscripcion',  label:'Suscripción',     href:'club-dashboard.html#suscripcion',  icon:'💳' },
+      { key:'config',       label:'Configuración',   href:'club-dashboard.html#config',       icon:'⚙️' }
+    ]}
   ];
-  return `
-    <div class="slabel">Club VIP</div>
-    ${items.map(it => `
-      <a href="${it.href}" class="nbtn ${it.key === activeKey ? 'active' : ''}">
-        <span style="font-size:1rem;line-height:1;">${it.icon}</span>
-        <span>${it.label}</span>
-      </a>
-    `).join('')}
+
+  const renderItem = (it) => `
+    <a href="${it.href}" class="nbtn ${it.key === activeKey ? 'active' : ''}">
+      <span style="font-size:1rem;line-height:1;width:15px;display:inline-flex;justify-content:center;">${it.icon}</span>
+      <span>${it.label}</span>
+      ${it.badge ? `<span class="nbadge" style="background:var(--green);">${it.badge}</span>` : ''}
+    </a>
+  `;
+
+  return groups.map(g => `
+    <div class="slabel">${g.label}</div>
+    ${g.items.map(renderItem).join('')}
+  `).join('') + `
     <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);">
       <a href="../index.html" class="nbtn" style="color:var(--muted);font-size:.78rem;">← Volver al sitio</a>
     </div>
