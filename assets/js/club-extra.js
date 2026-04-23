@@ -98,17 +98,18 @@ export function formatUnlockDate(date) {
 // Se renderiza en todas las páginas del club con el item activo marcado
 export function renderSidebar(activeKey = '') {
   const items = [
-    { key:'dashboard',  label:'Inicio',          href:'club-dashboard.html',   icon:'🏠' },
-    { key:'biblioteca', label:'Biblioteca',      href:'club-dashboard.html#biblioteca', icon:'📚' },
-    { key:'videos',     label:'Videos',          href:'club-videos.html',      icon:'🎥' },
-    { key:'pdfs',       label:'PDFs',            href:'club-dashboard.html#pdfs',       icon:'📄' },
-    { key:'sesiones',   label:'Sesiones en vivo', href:'club-dashboard.html#sesiones',  icon:'🔴' },
-    { key:'certificados', label:'Certificados',  href:'club-certificados.html', icon:'🏆' },
-    { key:'logros',     label:'Logros',          href:'club-logros.html',      icon:'⭐' },
-    { key:'noticias',   label:'Noticias',        href:'club-noticias.html',    icon:'📰' },
-    { key:'foro',       label:'Foro',            href:'club-foro.html',        icon:'💬' },
-    { key:'referidos',  label:'Referidos',       href:'club-referidos.html',   icon:'🎁' },
-    { key:'perfil',     label:'Perfil',          href:'club-dashboard.html#perfil',     icon:'👤' }
+    { key:'dashboard',    label:'Inicio',          href:'club-dashboard.html',             icon:'🏠' },
+    { key:'biblioteca',   label:'Biblioteca',      href:'club-dashboard.html#biblioteca',  icon:'📚' },
+    { key:'videos',       label:'Videos',          href:'club-videos.html',                icon:'🎥' },
+    { key:'pdfs',         label:'PDFs',            href:'club-dashboard.html#pdfs',        icon:'📄' },
+    { key:'herramientas', label:'Herramientas clínicas', href:'club-herramientas.html',    icon:'🩺' },
+    { key:'sesiones',     label:'Sesiones en vivo', href:'club-dashboard.html#sesiones',   icon:'🔴' },
+    { key:'certificados', label:'Constancias',     href:'club-certificados.html',          icon:'🏆' },
+    { key:'logros',       label:'Logros',          href:'club-logros.html',                icon:'⭐' },
+    { key:'noticias',     label:'Noticias',        href:'club-noticias.html',              icon:'📰' },
+    { key:'foro',         label:'Foro',            href:'club-foro.html',                  icon:'💬' },
+    { key:'referidos',    label:'Referidos',       href:'club-referidos.html',             icon:'🎁' },
+    { key:'perfil',       label:'Perfil',          href:'club-dashboard.html#perfil',      icon:'👤' }
   ];
   return `
     <div class="slabel">Club VIP</div>
@@ -164,6 +165,62 @@ export function toast(msg, isError = false) {
   el.style.background = isError ? 'var(--red)' : 'var(--dark)';
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══ EMISOR DE CONSTANCIAS ═══
+/**
+ * Genera una constancia con folio único y la guarda en Firestore.
+ * Devuelve el folio generado (o null si falló).
+ *
+ * Uso:
+ *   const folio = await emitirConstancia(session, {
+ *     cursoId: 'hematologia-clinica',
+ *     cursoTitulo: 'Hematología clínica en pequeñas especies',
+ *     cursoArea: 'Medicina interna',
+ *     totalClases: 5
+ *   });
+ *   if (folio) window.location.href = `ver-certificado.html?folio=${folio}`;
+ */
+export async function emitirConstancia(session, curso) {
+  if (!session || !session.uid) return null;
+
+  // Verificar si ya existe una constancia para este curso + usuario (evita duplicados)
+  try {
+    const existentes = await getDocs(query(
+      collection(db, 'certificados'),
+      where('uid', '==', session.uid),
+      where('cursoId', '==', curso.cursoId)
+    ));
+    if (!existentes.empty) {
+      // Ya tiene constancia, devolver folio existente
+      return existentes.docs[0].data().folio;
+    }
+  } catch(e) {}
+
+  // Generar folio único: GV-YYYY-XXXXXX (año + 6 chars alfanuméricos)
+  const año = new Date().getFullYear();
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const folio = `GV-${año}-${rand}`;
+
+  try {
+    await addDoc(collection(db, 'certificados'), {
+      folio,
+      uid: session.uid,
+      nombre: session.name,
+      email: session.email,
+      cursoId: curso.cursoId,
+      cursoTitulo: curso.cursoTitulo,
+      cursoArea: curso.cursoArea || 'Medicina veterinaria',
+      totalClases: curso.totalClases || null,
+      completadoEn: serverTimestamp(),
+      emisor: 'GlobalVet México',
+      activo: true
+    });
+    return folio;
+  } catch (err) {
+    console.error('Error emitiendo constancia:', err);
+    return null;
+  }
 }
 
 // Exportar Firebase handles para que las páginas los usen

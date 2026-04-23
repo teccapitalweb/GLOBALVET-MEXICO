@@ -73,10 +73,12 @@ if (session.role !== 'admin') {
       <button class="tab active" data-p="videos">🎥 Videos</button>
       <button class="tab" data-p="pdfs">📄 PDFs</button>
       <button class="tab" data-p="noticias">📰 Noticias</button>
+      <button class="tab" data-p="certs">🏆 Constancias</button>
     </div>
     <div id="p-videos" class="panel-a active">Cargando…</div>
     <div id="p-pdfs" class="panel-a">Cargando…</div>
-    <div id="p-noticias" class="panel-a">Cargando…</div>`;
+    <div id="p-noticias" class="panel-a">Cargando…</div>
+    <div id="p-certs" class="panel-a">Cargando…</div>`;
 
   document.querySelectorAll('.tab').forEach(t => {
     t.addEventListener('click', () => {
@@ -87,8 +89,99 @@ if (session.role !== 'admin') {
     });
   });
 
-  await Promise.all([renderList('videos'), renderList('pdfs'), renderList('noticias')]);
+  await Promise.all([renderList('videos'), renderList('pdfs'), renderList('noticias'), renderCerts()]);
 }
+
+// Panel especial de constancias: emisión manual para cualquier miembro
+async function renderCerts() {
+  const panel = document.getElementById('p-certs');
+  let certs = [];
+  try {
+    const snap = await getDocs(query(collection(db, 'certificados'), orderBy('completadoEn', 'desc')));
+    certs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e){ console.log(e.message); }
+
+  panel.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:.5rem;flex-wrap:wrap;">
+      <strong>${certs.length} constancia${certs.length !== 1 ? 's' : ''} emitida${certs.length !== 1 ? 's' : ''}</strong>
+      <button class="btn btn-primary" onclick="window._emitirManual()">+ Emitir nueva</button>
+    </div>
+    ${certs.length === 0 ? '<div class="empty">Aún no hay constancias.</div>' :
+      certs.slice(0, 30).map(c => {
+        const fecha = c.completadoEn?.toDate ? c.completadoEn.toDate().toLocaleDateString('es-MX') : '—';
+        return `
+          <div class="item-row">
+            <div class="item-row-info">
+              <div class="item-row-title">${c.cursoTitulo || '—'}</div>
+              <div class="item-row-meta">
+                <strong>${c.nombre || '—'}</strong> · Folio: <code>${c.folio || c.id}</code> · ${fecha}
+              </div>
+            </div>
+            <div class="item-row-actions">
+              <a href="ver-certificado.html?folio=${c.folio || c.id}" target="_blank" class="btn btn-small btn-edit">Ver</a>
+              <button class="btn btn-small btn-del" onclick='window._delCert("${c.id}", ${JSON.stringify(c.folio || c.id)})'>🗑️</button>
+            </div>
+          </div>`;
+      }).join('')}
+    ${certs.length > 30 ? `<div class="hint" style="text-align:center;margin-top:1rem;color:var(--muted);font-size:.82rem;">Mostrando las 30 más recientes de ${certs.length}.</div>` : ''}
+  `;
+}
+
+window._emitirManual = () => {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>🏆 Emitir constancia manual</h3>
+    <p class="hint" style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">Genera una constancia con folio único para un miembro específico.</p>
+    <div class="field"><label>UID del miembro</label><input type="text" id="cf_uid" placeholder="UID de Firebase Auth"></div>
+    <div class="field"><label>Nombre completo del miembro</label><input type="text" id="cf_nombre" placeholder="Dr. Juan Pérez"></div>
+    <div class="field"><label>Email del miembro</label><input type="text" id="cf_email" placeholder="correo@ejemplo.com"></div>
+    <div class="field"><label>Título del curso</label><input type="text" id="cf_titulo" placeholder="Hematología clínica en pequeñas especies"></div>
+    <div class="field"><label>Área</label><input type="text" id="cf_area" placeholder="Medicina interna" value="Medicina veterinaria"></div>
+    <div class="field"><label>Total de clases</label><input type="number" id="cf_clases" placeholder="5" value="5"></div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="window._saveCert()">Emitir constancia</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+};
+
+window._saveCert = async () => {
+  const uid = document.getElementById('cf_uid').value.trim();
+  const nombre = document.getElementById('cf_nombre').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const cursoTitulo = document.getElementById('cf_titulo').value.trim();
+  const cursoArea = document.getElementById('cf_area').value.trim();
+  const totalClases = parseInt(document.getElementById('cf_clases').value) || null;
+  if (!uid || !nombre || !cursoTitulo) { toast('Completa UID, nombre y curso', true); return; }
+
+  const año = new Date().getFullYear();
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const folio = `GV-${año}-${rand}`;
+
+  try {
+    await addDoc(collection(db, 'certificados'), {
+      folio, uid, nombre, email,
+      cursoId: cursoTitulo.toLowerCase().replace(/\s+/g,'-').slice(0,40),
+      cursoTitulo, cursoArea, totalClases,
+      completadoEn: serverTimestamp(),
+      emisor: 'GlobalVet México',
+      activo: true
+    });
+    toast(`✅ Constancia emitida: ${folio}`);
+    document.getElementById('modal').classList.remove('open');
+    await renderCerts();
+  } catch (err) {
+    toast('Error: ' + err.message, true);
+  }
+};
+
+window._delCert = async (id, folio) => {
+  if (!confirm(`¿Eliminar la constancia ${folio}? Esta acción no se puede deshacer.`)) return;
+  try {
+    await deleteDoc(doc(db, 'certificados', id));
+    toast('🗑️ Constancia eliminada');
+    await renderCerts();
+  } catch(err) { toast('Error al eliminar', true); }
+};
 
 const FIELDS = {
   videos:   [['title','Título'],['area','Área'],['duration','Duración (ej: 12 min)'],['driveId','ID de Google Drive']],
