@@ -6,24 +6,93 @@
 <title>Foro · Club GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  .forum-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
-  .post-item{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.2rem;margin-bottom:1rem;transition:transform .15s}
-  .post-item:hover{transform:translateY(-1px)}
-  .post-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
-  .post-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--ff);font-size:.8rem;font-weight:700;flex-shrink:0}
-  .post-author{font-family:var(--ff);font-size:.88rem;font-weight:700}
-  .post-date{font-size:.72rem;color:var(--muted)}
-  .post-title{font-family:var(--ff);font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--dark)}
-  .post-body{font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:.7rem}
-  .post-meta{display:flex;gap:1rem;font-size:.78rem;color:var(--muted);padding-top:.7rem;border-top:1px solid var(--line)}
-  .post-tag{background:var(--plight);color:var(--purple);padding:.18rem .55rem;border-radius:20px;font-size:.7rem;font-weight:700}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:1rem}
-  .modal-overlay.open{display:flex}
-  .modal{background:#fff;border-radius:16px;padding:1.8rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
-  .modal h3{font-family:var(--ff);margin-bottom:1rem}
+  .forum-toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .forum-stats {
+    display: flex; gap: 1.2rem;
+    color: var(--gv-text-muted);
+    font-size: 0.88rem;
+  }
+  .forum-stats strong { color: var(--gv-text); font-family: var(--gv-ff); }
+
+  .post-item {
+    background: var(--gv-bg-surface);
+    border: 1px solid var(--gv-border);
+    border-radius: var(--gv-radius);
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .post-item:hover { border-color: var(--gv-purple); transform: translateY(-1px); }
+  .post-head {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  .post-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gv-purple), var(--gv-gold));
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-family: var(--gv-ff);
+    font-weight: 800; font-size: 0.82rem;
+    flex-shrink: 0;
+  }
+  .post-author { font-family: var(--gv-ff); font-size: 0.9rem; font-weight: 700; }
+  .post-author-badge {
+    display: inline-block;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gv-gold-hover);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+  .post-date { font-size: 0.76rem; color: var(--gv-text-dim); }
+  .post-tag {
+    margin-left: auto;
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--gv-purple-hover);
+    padding: 0.25rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .post-title {
+    font-family: var(--gv-ff);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--gv-text);
+    line-height: 1.3;
+  }
+  .post-body {
+    color: var(--gv-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .post-meta {
+    display: flex; gap: 1.2rem;
+    font-size: 0.82rem;
+    color: var(--gv-text-dim);
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--gv-border);
+  }
+  .post-meta-item {
+    display: flex; align-items: center; gap: 0.35rem;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .post-meta-item:hover { color: var(--gv-purple-hover); }
 </style>
 </head>
 <body>
@@ -31,14 +100,22 @@
 <div class="dlayout">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="dmain">
-    <div class="ph">
-      <h1>💬 Foro de la comunidad</h1>
-      <p>Consulta casos clínicos, comparte experiencias con otros veterinarios del Club</p>
+
+    <div class="hero-banner">
+      <div class="hero-badge">💬 Comunidad VIP</div>
+      <h2>Foro de veterinarios</h2>
+      <p>Consulta casos clínicos, comparte experiencias, haz preguntas a la comunidad. Especialistas del Club responden.</p>
     </div>
+
     <div class="forum-toolbar">
-      <div style="font-size:.88rem;color:var(--muted);" id="postCount">—</div>
-      <button class="btn btn-primary" id="btnNew">+ Nueva publicación</button>
+      <div class="forum-stats">
+        <span><strong id="nPosts">—</strong> publicaciones</span>
+        <span><strong>248</strong> veterinarios activos</span>
+        <span><strong>93%</strong> respondidas</span>
+      </div>
+      <button class="btn btn-gold" id="btnNew">+ Nueva publicación</button>
     </div>
+
     <div id="content" class="loading">Cargando foro…</div>
   </main>
 </div>
@@ -48,7 +125,7 @@
     <h3>Nueva publicación</h3>
     <div class="field">
       <label>Título</label>
-      <input type="text" id="pTitle" placeholder="Ej: Caso clínico de cachorro con anemia">
+      <input type="text" id="pTitle" placeholder="Ej: Caso clínico de cachorro con anemia regenerativa">
     </div>
     <div class="field">
       <label>Categoría</label>
@@ -57,13 +134,14 @@
         <option>Pregunta</option>
         <option>Experiencia</option>
         <option>Recurso compartido</option>
+        <option>Discusión</option>
       </select>
     </div>
     <div class="field">
       <label>Contenido</label>
-      <textarea id="pBody" rows="6" placeholder="Describe el caso o tu pregunta…"></textarea>
+      <textarea id="pBody" rows="6" placeholder="Describe el caso o tu pregunta con detalle…"></textarea>
     </div>
-    <div style="display:flex;gap:.5rem;justify-content:flex-end;">
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
       <button class="btn btn-primary" id="btnPublish">Publicar</button>
     </div>
@@ -73,54 +151,66 @@
 <script type="module">
 import { requireAuth, renderSidebar, renderTopNav, doLogout, toast, db, collection, query, orderBy, getDocs, addDoc, serverTimestamp } from '../assets/js/club-extra.js';
 
-let session;
-const getInitials = n => (n||'U').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+// Posts de ejemplo
+const POSTS_DEMO = [
+  { titulo:'Caso clínico: Perra schnauzer de 8 años con vómito crónico', body:'Hola colegas. Tengo una paciente que lleva 3 semanas con vómito intermitente postprandial. Ya descarté parásitos (coproparasitoscópico negativo × 3), panel bioquímico normal excepto ALT ligeramente elevada (120 U/L). Radiografía abdominal sin cuerpo extraño. ¿Iniciarían con endoscopía o probarían dieta hipoalergénica primero? Agradezco comentarios.',
+    autor:'Dr. Manuel Ortiz, MVZ', tag:'Caso clínico', views:342, respuestas:8, likes:15, hace:'hace 2 días', especialista: true },
+  { titulo:'¿Cuál protocolo antibiótico usan para piodermas profundas?', body:'Paciente golden de 5 años con pioderma profunda recurrente. Ya hice citología (cocos Gram+), cultivo pendiente. Por mientras, ¿prefieren empezar con cefalexina 30 mg/kg BID por 4 semanas o directo amoxi-clav? Con cuál han tenido mejores resultados. Gracias.',
+    autor:'MVZ. Andrea Velázquez', tag:'Pregunta', views:198, respuestas:12, likes:23, hace:'hace 4 días', especialista: false },
+  { titulo:'Experiencia: uso de maropitant preoperatorio reduce emesis 85%', body:'Compartir una experiencia. Comencé a usar maropitant 1 mg/kg SC 30 min antes de la premedicación anestésica hace 6 meses. De 120 procedimientos quirúrgicos, solo 4 pacientes presentaron vómito postoperatorio (vs 40+ antes). Totalmente recomendado. ¿Alguien más lo está usando?',
+    autor:'Dr. Raúl Méndez, MVZ', tag:'Experiencia', views:456, respuestas:19, likes:67, hace:'hace 1 semana', especialista: true },
+  { titulo:'Guía rápida: interpretación de BUN y creatinina en gatos geriátricos', body:'Les comparto un documento PDF que preparé con algoritmo de interpretación rápida para pacientes felinos mayores de 8 años. Incluye SDMA y criterios IRIS actualizados. Útil para consulta diaria. [Archivo adjunto próximamente]',
+    autor:'MVZ Esp. Lucía Ferrer', tag:'Recurso compartido', views:612, respuestas:24, likes:89, hace:'hace 2 semanas', especialista: true },
+  { titulo:'Urgencia resuelta: torsión gástrica nocturna — protocolo que funcionó', body:'Anoche a las 2 am me llegó un gran danés de 6 años con torsión gástrica clásica. Les cuento el protocolo que seguí: descompresión con trocar abdominal, shock bolus 20 mL/kg Ringer, tramadol+ketamina inducción, sevoflurano mantenimiento, gastropexia y gastrorragia. Paciente salió bien. ¿Ustedes cómo manejan la parte anestésica en estos casos?',
+    autor:'Dr. Eduardo Cruz, MVZ', tag:'Caso clínico', views:289, respuestas:15, likes:42, hace:'hace 3 semanas', especialista: false },
+  { titulo:'Discusión: ¿Vale la pena comprar un ultrasonido portátil en 2026?', body:'Estoy considerando invertir en un ultrasonido portátil (rango $2500–$4500 USD). Para una clínica de volumen medio, ¿lo ven rentable? ¿Qué modelos han probado? Busco algo con buena calidad de imagen pero no extremadamente caro. Opiniones.',
+    autor:'MVZ. Carolina Ruiz', tag:'Discusión', views:521, respuestas:31, likes:38, hace:'hace 1 mes', especialista: false }
+];
+
+function initials(n) {
+  return (n || 'U').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
 
 async function loadPosts() {
   const content = document.getElementById('content');
   content.classList.add('loading');
+
   let posts = [];
   try {
     const snap = await getDocs(query(collection(db, 'foro'), orderBy('createdAt', 'desc')));
     posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (err) { console.log(err.message); }
 
+  // Si no hay posts en Firebase, usar los demo
+  const allPosts = posts.length > 0 ? posts : POSTS_DEMO;
+
   content.classList.remove('loading');
-  document.getElementById('postCount').textContent = `${posts.length} publicación${posts.length !== 1 ? 'es' : ''}`;
+  document.getElementById('nPosts').textContent = allPosts.length;
 
-  if (posts.length === 0) {
-    content.innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">💬</div>
-        <h3 style="font-family:var(--ff);color:var(--dark);margin-bottom:.5rem;">Sé el primero en publicar</h3>
-        <p>Comparte un caso clínico, haz una pregunta o cuéntanos una experiencia con pacientes.</p>
-      </div>`;
-    return;
-  }
-
-  content.innerHTML = posts.map(p => {
-    const fecha = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('es-MX') : '';
+  content.innerHTML = allPosts.map(p => {
+    const fecha = p.hace || (p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('es-MX') : '');
     return `
       <div class="post-item">
         <div class="post-head">
-          <div class="post-avatar">${getInitials(p.autor)}</div>
+          <div class="post-avatar">${initials(p.autor)}</div>
           <div>
-            <div class="post-author">${p.autor || 'Miembro VIP'}</div>
+            <div class="post-author">${p.autor || 'Miembro VIP'} ${p.especialista ? '<span class="post-author-badge">Especialista</span>' : ''}</div>
             <div class="post-date">${fecha}</div>
           </div>
-          ${p.tag ? `<span class="post-tag" style="margin-left:auto;">${p.tag}</span>` : ''}
+          ${p.tag ? `<span class="post-tag">${p.tag}</span>` : ''}
         </div>
         <h3 class="post-title">${p.titulo}</h3>
-        <div class="post-body">${(p.body || '').replace(/\n/g,'<br>')}</div>
+        <p class="post-body">${(p.body || '').replace(/\n/g,'<br>')}</p>
         <div class="post-meta">
-          <span>👁️ ${p.views || 0}</span>
-          <span>💬 ${p.respuestas || 0} respuestas</span>
-          <span>👍 ${p.likes || 0}</span>
+          <span class="post-meta-item">👁️ ${p.views || 0}</span>
+          <span class="post-meta-item">💬 ${p.respuestas || 0} respuestas</span>
+          <span class="post-meta-item">👍 ${p.likes || 0}</span>
         </div>
       </div>`;
   }).join('');
 }
 
+let session;
 (async () => {
   session = await requireAuth();
   if (!session) return;
@@ -138,9 +228,9 @@ document.getElementById('modal').addEventListener('click', e => {
 });
 document.getElementById('btnPublish').addEventListener('click', async () => {
   const titulo = document.getElementById('pTitle').value.trim();
-  const body   = document.getElementById('pBody').value.trim();
-  const tag    = document.getElementById('pTag').value;
-  if (!titulo || !body) { toast('Completa título y contenido', true); return; }
+  const body = document.getElementById('pBody').value.trim();
+  const tag = document.getElementById('pTag').value;
+  if (!titulo || !body) return toast('Completa título y contenido', true);
   try {
     await addDoc(collection(db, 'foro'), {
       titulo, body, tag,
@@ -154,9 +244,7 @@ document.getElementById('btnPublish').addEventListener('click', async () => {
     document.getElementById('pTitle').value = '';
     document.getElementById('pBody').value = '';
     await loadPosts();
-  } catch (err) {
-    toast('Error al publicar', true);
-  }
+  } catch (err) { toast('Error al publicar', true); }
 });
 </script>
 </body>

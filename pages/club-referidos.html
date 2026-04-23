@@ -6,28 +6,125 @@
 <title>Referidos · Club GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  .ref-hero{background:linear-gradient(135deg,var(--purple) 0%,var(--purple2) 100%);color:#fff;border-radius:18px;padding:2rem;margin-bottom:1.5rem;text-align:center}
-  .ref-hero h2{font-family:var(--ff);font-size:1.5rem;margin-bottom:.5rem}
-  .ref-hero p{opacity:.9;margin-bottom:1.5rem}
-  .ref-prize{background:rgba(255,255,255,.15);border-radius:12px;padding:1rem;font-family:var(--ff);font-weight:700;margin-bottom:1.5rem}
-  .ref-link-box{background:#fff;color:var(--dark);border-radius:12px;padding:.8rem 1rem;display:flex;align-items:center;gap:.5rem;font-family:monospace;font-size:.85rem;word-break:break-all;margin-bottom:.8rem}
-  .ref-link-box input{flex:1;border:none;background:transparent;font-family:monospace;font-size:.85rem;color:var(--dark);outline:none}
-  .ref-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
-  .ref-actions .btn{min-width:120px}
-  .ref-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
-  .ref-stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.2rem;text-align:center}
-  .ref-stat-num{font-family:var(--ff);font-size:2rem;font-weight:700;color:var(--purple);line-height:1}
-  .ref-stat-lbl{font-size:.78rem;color:var(--muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.05em}
-  .steps{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.5rem}
-  .steps h3{font-family:var(--ff);margin-bottom:1rem}
-  .step{display:flex;gap:1rem;margin-bottom:1rem}
-  .step:last-child{margin-bottom:0}
-  .step-n{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-weight:700;flex-shrink:0}
-  .step-txt h4{font-family:var(--ff);font-size:.95rem;margin-bottom:.2rem}
-  .step-txt p{font-size:.85rem;color:var(--muted)}
+  .ref-hero {
+    background:
+      radial-gradient(ellipse 400px 300px at 90% 50%, rgba(245, 158, 11, 0.2), transparent 60%),
+      linear-gradient(135deg, #2d1a68 0%, #1a1040 100%);
+    border-radius: var(--gv-radius-lg);
+    padding: 2.5rem 2.2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--gv-border-gold);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .ref-hero::before {
+    content: "🎁";
+    position: absolute;
+    top: -30px; right: -20px;
+    font-size: 14rem;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .ref-hero h2 {
+    font-family: var(--gv-ff);
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .ref-hero p {
+    color: rgba(255,255,255,0.8);
+    max-width: 540px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .ref-link-box {
+    background: var(--gv-bg-surface);
+    border: 1.5px solid var(--gv-border-gold);
+    border-radius: var(--gv-radius);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  .ref-link-label {
+    font-family: var(--gv-ff);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gv-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+  }
+  .ref-link-input {
+    display: flex; gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .ref-link-input input {
+    flex: 1;
+    padding: 0.9rem 1.1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--gv-border-strong);
+    border-radius: 10px;
+    color: var(--gv-gold-hover);
+    font-family: var(--gv-ff);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .ref-share-buttons {
+    display: flex; gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .share-btn {
+    flex: 1; min-width: 150px;
+    padding: 0.9rem 1.2rem;
+    border-radius: 10px;
+    font-family: var(--gv-ff);
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+  .share-btn:hover { transform: translateY(-2px); }
+  .share-btn.wa { background: linear-gradient(135deg, #25d366, #128c7e); }
+  .share-btn.fb { background: linear-gradient(135deg, #4267B2, #1877F2); }
+  .share-btn.tw { background: linear-gradient(135deg, #000000, #14171A); }
+  .share-btn.mail { background: linear-gradient(135deg, var(--gv-purple), var(--gv-purple-deep)); }
+
+  .perks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .perk {
+    background: var(--gv-bg-surface);
+    border: 1px solid var(--gv-border);
+    border-radius: var(--gv-radius);
+    padding: 1.4rem;
+    text-align: center;
+  }
+  .perk-emoji { font-size: 2.5rem; margin-bottom: 0.6rem; display: block; }
+  .perk-title {
+    font-family: var(--gv-ff);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .perk-desc {
+    font-size: 0.86rem;
+    color: var(--gv-text-muted);
+    line-height: 1.55;
+  }
 </style>
 </head>
 <body>
@@ -35,35 +132,67 @@
 <div class="dlayout">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="dmain">
-    <div class="ph">
-      <h1>🎁 Programa de referidos</h1>
-      <p>Invita a otros veterinarios y gana 1 mes gratis por cada amigo que se una</p>
-    </div>
 
     <div class="ref-hero">
-      <h2>Tu link único</h2>
-      <p>Comparte este link con tus colegas. Cuando se registren, recibirás tu recompensa.</p>
-      <div class="ref-prize">🏆 Por cada amigo que se suscriba: <strong>1 mes gratis</strong></div>
-      <div class="ref-link-box">
+      <h2>🎁 Invita colegas, gana recompensas</h2>
+      <p>Comparte tu código de referido. Cuando un colega veterinario se inscribe con tu enlace, <strong>tú obtienes un mes VIP gratis</strong> y tu colega <strong>20% de descuento</strong> en su primera mensualidad.</p>
+    </div>
+
+    <div class="ref-link-box">
+      <div class="ref-link-label">✨ Tu enlace de referido único</div>
+      <div class="ref-link-input">
         <input type="text" id="refLink" readonly>
+        <button class="btn btn-gold" onclick="copyLink()" id="btnCopy">📋 Copiar</button>
       </div>
-      <div class="ref-actions">
-        <button class="btn btn-gold" id="btnCopy">📋 Copiar link</button>
-        <button class="btn btn-outline" style="background:rgba(255,255,255,.15);color:#fff;border-color:transparent;" id="btnWa">💬 WhatsApp</button>
+
+      <div class="ref-link-label" style="margin-top:1.4rem;">Compartir en…</div>
+      <div class="ref-share-buttons">
+        <button class="share-btn wa" onclick="shareWa()">💬 WhatsApp</button>
+        <button class="share-btn fb" onclick="shareFb()">f Facebook</button>
+        <button class="share-btn tw" onclick="shareTw()">X Twitter</button>
+        <button class="share-btn mail" onclick="shareMail()">✉️ Correo</button>
       </div>
     </div>
 
-    <div class="ref-stats">
-      <div class="ref-stat"><div class="ref-stat-num" id="nRef">0</div><div class="ref-stat-lbl">Invitados</div></div>
-      <div class="ref-stat"><div class="ref-stat-num" id="nOk">0</div><div class="ref-stat-lbl">Suscritos</div></div>
-      <div class="ref-stat"><div class="ref-stat-num" id="nPrize">0</div><div class="ref-stat-lbl">Meses ganados</div></div>
+    <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;">
+      <div class="stat-box" style="background:var(--gv-bg-surface);border:1px solid var(--gv-border);border-radius:var(--gv-radius);padding:1.3rem;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;">👥</div>
+        <div style="font-family:var(--gv-ff);font-size:1.8rem;font-weight:800;color:var(--gv-gold);line-height:1;">0</div>
+        <div style="font-size:0.76rem;color:var(--gv-text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:0.3rem;">Referidos</div>
+      </div>
+      <div class="stat-box" style="background:var(--gv-bg-surface);border:1px solid var(--gv-border);border-radius:var(--gv-radius);padding:1.3rem;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;">💰</div>
+        <div style="font-family:var(--gv-ff);font-size:1.8rem;font-weight:800;color:var(--gv-gold);line-height:1;">$0</div>
+        <div style="font-size:0.76rem;color:var(--gv-text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:0.3rem;">Ahorrado</div>
+      </div>
+      <div class="stat-box" style="background:var(--gv-bg-surface);border:1px solid var(--gv-border);border-radius:var(--gv-radius);padding:1.3rem;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;">🗓️</div>
+        <div style="font-family:var(--gv-ff);font-size:1.8rem;font-weight:800;color:var(--gv-gold);line-height:1;">0</div>
+        <div style="font-size:0.76rem;color:var(--gv-text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:0.3rem;">Meses gratis</div>
+      </div>
     </div>
 
-    <div class="steps">
-      <h3>¿Cómo funciona?</h3>
-      <div class="step"><div class="step-n">1</div><div class="step-txt"><h4>Copia tu link único</h4><p>Cada miembro tiene un código personal. El tuyo aparece arriba.</p></div></div>
-      <div class="step"><div class="step-n">2</div><div class="step-txt"><h4>Compártelo con veterinarios</h4><p>Envíalo por WhatsApp, redes o cómo prefieras. Mientras más lo compartas, más recompensas ganas.</p></div></div>
-      <div class="step"><div class="step-n">3</div><div class="step-txt"><h4>Gana cuando se suscriban</h4><p>Recibes 1 mes gratis automáticamente cuando un invitado active su membresía VIP.</p></div></div>
+    <div class="perks-grid">
+      <div class="perk">
+        <span class="perk-emoji">🎁</span>
+        <div class="perk-title">1 mes VIP gratis por referido</div>
+        <div class="perk-desc">Cada colega que se inscriba con tu enlace te da 1 mes gratis en tu próxima renovación.</div>
+      </div>
+      <div class="perk">
+        <span class="perk-emoji">💸</span>
+        <div class="perk-title">20% OFF para tu invitado</div>
+        <div class="perk-desc">Tu colega obtiene 20% de descuento en su primera mensualidad del Club.</div>
+      </div>
+      <div class="perk">
+        <span class="perk-emoji">🏅</span>
+        <div class="perk-title">Logros y reconocimientos</div>
+        <div class="perk-desc">Desbloquea insignias y accede a beneficios especiales con 3, 5 y 10 referidos.</div>
+      </div>
+      <div class="perk">
+        <span class="perk-emoji">🔄</span>
+        <div class="perk-title">Sin límite</div>
+        <div class="perk-desc">Refiere a todos los colegas que quieras. No hay tope de recompensas.</div>
+      </div>
     </div>
   </main>
 </div>
@@ -78,28 +207,54 @@ import { requireAuth, renderSidebar, renderTopNav, doLogout, toast } from '../as
   document.getElementById('sidebar').innerHTML = renderSidebar('referidos');
   document.getElementById('btnLogout')?.addEventListener('click', doLogout);
 
-  // Código único = primeros 8 caracteres del UID
-  const refCode = session.uid.slice(0, 8).toUpperCase();
-  const refLink = `https://www.globalvetmexico.com/pages/club-registro.html?ref=${refCode}`;
-  document.getElementById('refLink').value = refLink;
-
-  // Estadísticas (si están en pd)
-  const n = session.pd.referidos || 0;
-  const ok = session.pd.referidosActivos || 0;
-  document.getElementById('nRef').textContent = n;
-  document.getElementById('nOk').textContent = ok;
-  document.getElementById('nPrize').textContent = ok; // 1 mes por cada activo
-
-  // Copiar
-  document.getElementById('btnCopy').addEventListener('click', () => {
-    navigator.clipboard.writeText(refLink).then(() => toast('✅ Link copiado'));
-  });
-  // WhatsApp
-  document.getElementById('btnWa').addEventListener('click', () => {
-    const msg = `¡Hola! Te invito al Club VIP de GlobalVet México. Con este link te das de alta: ${refLink}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-  });
+  // Generar código único basado en el UID
+  const codigo = 'GV-' + session.uid.slice(0, 6).toUpperCase();
+  const link = `${location.origin}/pages/club-registro.html?ref=${codigo}`;
+  document.getElementById('refLink').value = link;
+  window.__refLink = link;
+  window.__refCode = codigo;
 })();
+
+window.copyLink = async () => {
+  try {
+    await navigator.clipboard.writeText(window.__refLink);
+    const btn = document.getElementById('btnCopy');
+    const original = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado';
+    setTimeout(() => { btn.innerHTML = original; }, 2000);
+    if (window.toast) toast('Enlace copiado');
+  } catch(e) {
+    toast('No se pudo copiar', true);
+  }
+};
+
+const MSG = `🐾 Mira este Club VIP para veterinarios que descubrí: GlobalVet México.
+
+• Biblioteca de cursos clínicos
+• Herramientas clínicas profesionales (dosis, anestesia, urgencias)
+• Sesiones en vivo con especialistas
+• Constancias oficiales verificables
+
+Si te unes con mi enlace, obtienes 20% OFF en tu primer mes:`;
+
+window.shareWa = () => {
+  const text = encodeURIComponent(MSG + '\n\n' + window.__refLink);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+};
+window.shareFb = () => {
+  const url = encodeURIComponent(window.__refLink);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+};
+window.shareTw = () => {
+  const text = encodeURIComponent('Descubrí el Club VIP GlobalVet México — herramientas clínicas, cursos y constancias para veterinarios. 20% OFF con mi enlace:');
+  const url = encodeURIComponent(window.__refLink);
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+};
+window.shareMail = () => {
+  const subject = encodeURIComponent('Te invito al Club VIP GlobalVet México');
+  const body = encodeURIComponent(MSG + '\n\n' + window.__refLink);
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+};
 </script>
 </body>
 </html>

@@ -6,274 +6,409 @@
 <title>Admin Club · GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  .tabs{display:flex;gap:.3rem;border-bottom:2px solid var(--line);margin-bottom:1.5rem;overflow-x:auto}
-  .tab{padding:.7rem 1.1rem;background:none;border:none;color:var(--muted);font-family:var(--ff);font-size:.88rem;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
-  .tab.active{color:var(--purple);border-bottom-color:var(--purple)}
-  .panel-a{display:none}
-  .panel-a.active{display:block}
-  .item-row{display:flex;align-items:center;gap:.8rem;padding:.9rem 1.1rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:.6rem}
-  .item-row-info{flex:1;min-width:0}
-  .item-row-title{font-family:var(--ff);font-weight:700;margin-bottom:.2rem}
-  .item-row-meta{font-size:.78rem;color:var(--muted)}
-  .item-row-actions{display:flex;gap:.4rem}
-  .btn-small{padding:.4rem .8rem;border-radius:8px;font-size:.78rem;font-weight:700;font-family:var(--ff)}
-  .btn-edit{background:var(--plight);color:var(--purple)}
-  .btn-del{background:#fee;color:var(--red)}
-  .no-access{text-align:center;padding:3rem;background:var(--surface);border-radius:14px}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:1rem}
-  .modal-overlay.open{display:flex}
-  .modal{background:#fff;border-radius:16px;padding:1.8rem;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
-  .modal h3{font-family:var(--ff);margin-bottom:1rem}
+  .adm-wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+  .adm-warn {
+    background: linear-gradient(135deg, rgba(244,63,94,0.15), rgba(244,63,94,0.08));
+    border: 1px solid rgba(244,63,94,0.3);
+    color: #fda4af;
+    padding: 1rem 1.3rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .item-row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--gv-border);
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+  }
+  .item-row:hover { border-color: var(--gv-border-strong); }
+  .item-row-info { flex: 1; min-width: 0; }
+  .item-row-title { font-family: var(--gv-ff); font-weight: 700; color: var(--gv-text); margin-bottom: 0.2rem; }
+  .item-row-meta { color: var(--gv-text-muted); font-size: 0.82rem; }
+  .item-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
 </style>
 </head>
 <body>
-<nav class="tnav" id="topnav"></nav>
-<div class="dlayout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="dmain">
+<nav class="tnav">
+  <div class="tnav-l">
+    <a href="admin.html" class="tnav-logo">
+      <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
+      <span>Admin · GlobalVet</span>
+    </a>
+    <span class="tnav-badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);">ADMIN</span>
+  </div>
+  <div class="tnav-r">
+    <a href="admin.html" class="tnav-back">← Panel principal</a>
+    <a href="club-dashboard.html" class="tnav-back">Ir al Club</a>
+    <button class="tnav-back" id="btnLogout" style="background:none;border:none;cursor:pointer;">Salir</button>
+  </div>
+</nav>
+
+<div style="padding-top:60px;">
+  <div class="adm-wrap">
     <div class="ph">
-      <h1>⚙️ Administración del Club</h1>
-      <p>Gestiona contenido del Club VIP: videos, PDFs, noticias y miembros</p>
+      <h1>⚙️ Administración del Club VIP</h1>
+      <p>Gestiona videos, noticias, constancias y foro desde aquí.</p>
     </div>
-    <div id="root" class="loading">Cargando…</div>
-  </main>
-</div>
 
-<div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
+    <div class="adm-warn">
+      <strong>🔒 Acceso restringido:</strong> Esta página debe tener reglas de Firestore que solo permitan operaciones a cuentas marcadas como admin. Verifica tus reglas de seguridad antes de usar en producción.
+    </div>
 
-<script type="module">
-import { requireAuth, renderSidebar, renderTopNav, doLogout, toast, db, collection, query, orderBy, getDocs, addDoc, doc, updateDoc, serverTimestamp } from '../assets/js/club-extra.js';
-import { deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const session = await requireAuth();
-if (!session) throw new Error('sin sesión');
-document.getElementById('topnav').innerHTML = renderTopNav(session);
-document.getElementById('sidebar').innerHTML = renderSidebar('');
-document.getElementById('btnLogout')?.addEventListener('click', doLogout);
-
-const root = document.getElementById('root');
-
-if (session.role !== 'admin') {
-  root.classList.remove('loading');
-  root.innerHTML = `
-    <div class="no-access">
-      <div style="font-size:3rem;margin-bottom:.8rem;">🔒</div>
-      <h3 style="font-family:var(--ff);margin-bottom:.5rem;">Acceso restringido</h3>
-      <p style="color:var(--muted);margin-bottom:.5rem;">Esta sección es solo para administradores.</p>
-      <p style="font-size:.82rem;color:var(--muted);">Para asignarte rol admin: Firebase Console → Firestore → miembros → tu documento → agregar campo <code>role: "admin"</code></p>
-      <a href="club-dashboard.html" class="btn btn-primary" style="margin-top:1rem;">← Volver</a>
-    </div>`;
-} else {
-  root.classList.remove('loading');
-  root.innerHTML = `
     <div class="tabs">
       <button class="tab active" data-p="videos">🎥 Videos</button>
-      <button class="tab" data-p="pdfs">📄 PDFs</button>
       <button class="tab" data-p="noticias">📰 Noticias</button>
       <button class="tab" data-p="certs">🏆 Constancias</button>
+      <button class="tab" data-p="miembros">👥 Miembros</button>
     </div>
-    <div id="p-videos" class="panel-a active">Cargando…</div>
-    <div id="p-pdfs" class="panel-a">Cargando…</div>
-    <div id="p-noticias" class="panel-a">Cargando…</div>
-    <div id="p-certs" class="panel-a">Cargando…</div>`;
 
-  document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.panel-a').forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-      document.getElementById('p-' + t.dataset.p).classList.add('active');
-    });
+    <div id="p-videos" class="tab-panel active"></div>
+    <div id="p-noticias" class="tab-panel"></div>
+    <div id="p-certs" class="tab-panel"></div>
+    <div id="p-miembros" class="tab-panel"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { toast } from '../assets/js/club-extra.js';
+
+const cfg = {
+  apiKey:"AIzaSyB_OgAmyW7XNiLUyKp6Ih92A5qxm3LNCqg",
+  authDomain:"globalvet-club.firebaseapp.com",
+  projectId:"globalvet-club",
+  storageBucket:"globalvet-club.firebasestorage.app",
+  messagingSenderId:"880780506385",
+  appId:"1:880780506385:web:be49dbc8886147a79048b0"
+};
+const app = initializeApp(cfg);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+document.getElementById('btnLogout').addEventListener('click', async () => {
+  await signOut(auth);
+  window.location.href = 'club-login.html';
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) { window.location.href = 'club-login.html'; return; }
+  loadAll();
+});
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('p-' + t.dataset.p).classList.add('active');
   });
+});
 
-  await Promise.all([renderList('videos'), renderList('pdfs'), renderList('noticias'), renderCerts()]);
+async function loadAll() {
+  await Promise.all([renderVideos(), renderNoticias(), renderCerts(), renderMiembros()]);
 }
 
-// Panel especial de constancias: emisión manual para cualquier miembro
-async function renderCerts() {
-  const panel = document.getElementById('p-certs');
-  let certs = [];
-  try {
-    const snap = await getDocs(query(collection(db, 'certificados'), orderBy('completadoEn', 'desc')));
-    certs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e){ console.log(e.message); }
-
-  panel.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:.5rem;flex-wrap:wrap;">
-      <strong>${certs.length} constancia${certs.length !== 1 ? 's' : ''} emitida${certs.length !== 1 ? 's' : ''}</strong>
-      <button class="btn btn-primary" onclick="window._emitirManual()">+ Emitir nueva</button>
-    </div>
-    ${certs.length === 0 ? '<div class="empty">Aún no hay constancias.</div>' :
-      certs.slice(0, 30).map(c => {
-        const fecha = c.completadoEn?.toDate ? c.completadoEn.toDate().toLocaleDateString('es-MX') : '—';
-        return `
-          <div class="item-row">
-            <div class="item-row-info">
-              <div class="item-row-title">${c.cursoTitulo || '—'}</div>
-              <div class="item-row-meta">
-                <strong>${c.nombre || '—'}</strong> · Folio: <code>${c.folio || c.id}</code> · ${fecha}
-              </div>
-            </div>
-            <div class="item-row-actions">
-              <a href="ver-certificado.html?folio=${c.folio || c.id}" target="_blank" class="btn btn-small btn-edit">Ver</a>
-              <button class="btn btn-small btn-del" onclick='window._delCert("${c.id}", ${JSON.stringify(c.folio || c.id)})'>🗑️</button>
-            </div>
-          </div>`;
-      }).join('')}
-    ${certs.length > 30 ? `<div class="hint" style="text-align:center;margin-top:1rem;color:var(--muted);font-size:.82rem;">Mostrando las 30 más recientes de ${certs.length}.</div>` : ''}
-  `;
-}
-
-window._emitirManual = () => {
-  document.getElementById('modalContent').innerHTML = `
-    <h3>🏆 Emitir constancia manual</h3>
-    <p class="hint" style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">Genera una constancia con folio único para un miembro específico.</p>
-    <div class="field"><label>UID del miembro</label><input type="text" id="cf_uid" placeholder="UID de Firebase Auth"></div>
-    <div class="field"><label>Nombre completo del miembro</label><input type="text" id="cf_nombre" placeholder="Dr. Juan Pérez"></div>
-    <div class="field"><label>Email del miembro</label><input type="text" id="cf_email" placeholder="correo@ejemplo.com"></div>
-    <div class="field"><label>Título del curso</label><input type="text" id="cf_titulo" placeholder="Hematología clínica en pequeñas especies"></div>
-    <div class="field"><label>Área</label><input type="text" id="cf_area" placeholder="Medicina interna" value="Medicina veterinaria"></div>
-    <div class="field"><label>Total de clases</label><input type="number" id="cf_clases" placeholder="5" value="5"></div>
-    <div style="display:flex;gap:.5rem;justify-content:flex-end;">
-      <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
-      <button class="btn btn-primary" onclick="window._saveCert()">Emitir constancia</button>
-    </div>`;
-  document.getElementById('modal').classList.add('open');
-};
-
-window._saveCert = async () => {
-  const uid = document.getElementById('cf_uid').value.trim();
-  const nombre = document.getElementById('cf_nombre').value.trim();
-  const email = document.getElementById('cf_email').value.trim();
-  const cursoTitulo = document.getElementById('cf_titulo').value.trim();
-  const cursoArea = document.getElementById('cf_area').value.trim();
-  const totalClases = parseInt(document.getElementById('cf_clases').value) || null;
-  if (!uid || !nombre || !cursoTitulo) { toast('Completa UID, nombre y curso', true); return; }
-
-  const año = new Date().getFullYear();
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  const folio = `GV-${año}-${rand}`;
-
-  try {
-    await addDoc(collection(db, 'certificados'), {
-      folio, uid, nombre, email,
-      cursoId: cursoTitulo.toLowerCase().replace(/\s+/g,'-').slice(0,40),
-      cursoTitulo, cursoArea, totalClases,
-      completadoEn: serverTimestamp(),
-      emisor: 'GlobalVet México',
-      activo: true
-    });
-    toast(`✅ Constancia emitida: ${folio}`);
-    document.getElementById('modal').classList.remove('open');
-    await renderCerts();
-  } catch (err) {
-    toast('Error: ' + err.message, true);
-  }
-};
-
-window._delCert = async (id, folio) => {
-  if (!confirm(`¿Eliminar la constancia ${folio}? Esta acción no se puede deshacer.`)) return;
-  try {
-    await deleteDoc(doc(db, 'certificados', id));
-    toast('🗑️ Constancia eliminada');
-    await renderCerts();
-  } catch(err) { toast('Error al eliminar', true); }
-};
-
-const FIELDS = {
-  videos:   [['title','Título'],['area','Área'],['duration','Duración (ej: 12 min)'],['driveId','ID de Google Drive']],
-  pdfs:     [['title','Título'],['area','Área'],['pages','Páginas'],['driveId','ID de Google Drive']],
-  noticias: [['titulo','Título'],['fuente','Fuente (AVMA, DVM360…)'],['resumen','Resumen','textarea'],['url','URL completa']]
-};
-
-async function renderList(coll) {
-  const panel = document.getElementById('p-' + coll);
+// ═══ VIDEOS ═══
+async function renderVideos() {
+  const panel = document.getElementById('p-videos');
   let items = [];
   try {
-    const snap = await getDocs(query(collection(db, coll), orderBy('createdAt', 'desc')));
-    items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e){ console.log(coll, e.message); }
+    const snap = await getDocs(query(collection(db,'videos'), orderBy('createdAt','desc')));
+    items = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  } catch(e) { console.log(e.message); }
 
   panel.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-      <strong>${items.length} elemento${items.length !== 1 ? 's' : ''}</strong>
-      <button class="btn btn-primary" onclick="window._new('${coll}')">+ Nuevo</button>
+      <strong style="font-family:var(--gv-ff);color:var(--gv-text);">${items.length} video${items.length !== 1 ? 's' : ''}</strong>
+      <button class="btn btn-gold btn-sm" onclick="window._addVideo()">+ Nuevo video</button>
     </div>
-    ${items.length === 0 ? '<div class="empty">Sin elementos. Crea el primero.</div>' :
-      items.map(it => `
+    ${items.length === 0 ? '<div class="empty"><div class="empty-icon">🎥</div><h3>Sin videos aún</h3><p>Agrega el primero con el botón de arriba.</p></div>' :
+      items.map(v => `
         <div class="item-row">
           <div class="item-row-info">
-            <div class="item-row-title">${it.title || it.titulo || '—'}</div>
-            <div class="item-row-meta">${it.area || it.fuente || ''} ${it.createdAt?.toDate ? '· ' + it.createdAt.toDate().toLocaleDateString('es-MX') : ''}</div>
+            <div class="item-row-title">${v.title || '—'}</div>
+            <div class="item-row-meta">${v.area || 'Sin área'} · ${v.duration || '—'} · ${v.author || '—'}</div>
           </div>
           <div class="item-row-actions">
-            <button class="btn btn-small btn-edit" onclick='window._edit("${coll}","${it.id}", ${JSON.stringify(it).replace(/'/g,"&#39;")})'>Editar</button>
-            <button class="btn btn-small btn-del" onclick='window._del("${coll}","${it.id}", ${JSON.stringify(it.title||it.titulo||"")})'>🗑️</button>
+            <button class="btn btn-sm btn-outline" onclick='window._editVideo("${v.id}", ${JSON.stringify(v).replace(/'/g,"\\'")})'>✏️</button>
+            <button class="btn btn-sm" style="background:rgba(244,63,94,0.15);color:#fda4af;border:1px solid rgba(244,63,94,0.3);" onclick='window._delVideo("${v.id}")'>🗑️</button>
           </div>
         </div>`).join('')}
   `;
 }
 
-window._new = (coll) => window._edit(coll, '', {});
-window._edit = (coll, id, data) => {
-  const fields = FIELDS[coll];
+window._addVideo = () => {
   document.getElementById('modalContent').innerHTML = `
-    <h3>${id ? 'Editar' : 'Nuevo'} ${coll.slice(0,-1)}</h3>
-    ${fields.map(([k, label, type]) => `
-      <div class="field">
-        <label>${label}</label>
-        ${type === 'textarea'
-          ? `<textarea id="f_${k}" rows="4">${data[k] || ''}</textarea>`
-          : `<input type="text" id="f_${k}" value="${(data[k] || '').toString().replace(/"/g,'&quot;')}">`}
-      </div>
-    `).join('')}
-    <div style="display:flex;gap:.5rem;justify-content:flex-end;">
+    <h3>+ Nuevo video</h3>
+    <div class="field"><label>Título</label><input type="text" id="vTitle"></div>
+    <div class="field"><label>Área clínica</label><input type="text" id="vArea" placeholder="Ej: Cardiología"></div>
+    <div class="field"><label>Duración</label><input type="text" id="vDur" placeholder="Ej: 12:34"></div>
+    <div class="field"><label>Autor</label><input type="text" id="vAuth" placeholder="Ej: Dr. Manuel Ortiz, MVZ"></div>
+    <div class="field"><label>Google Drive ID</label><input type="text" id="vDrive" placeholder="ID del archivo en Drive"></div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;">
       <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
-      <button class="btn btn-primary" onclick="window._save('${coll}','${id}')">${id ? 'Guardar' : 'Crear'}</button>
+      <button class="btn btn-gold" onclick="window._saveVideo()">Guardar</button>
     </div>`;
   document.getElementById('modal').classList.add('open');
 };
-window._save = async (coll, id) => {
-  const fields = FIELDS[coll];
-  const obj = {};
-  fields.forEach(([k]) => {
-    const el = document.getElementById('f_' + k);
-    if (el) obj[k] = el.value.trim();
-  });
-  // Extraer ID de URL de Drive si viene completo
-  if (obj.driveId) {
-    const m = obj.driveId.match(/\/d\/([^\/\?]+)/);
-    if (m) obj.driveId = m[1];
-  }
+
+window._saveVideo = async () => {
+  const data = {
+    title: document.getElementById('vTitle').value.trim(),
+    area: document.getElementById('vArea').value.trim(),
+    duration: document.getElementById('vDur').value.trim(),
+    author: document.getElementById('vAuth').value.trim(),
+    driveId: document.getElementById('vDrive').value.trim(),
+    createdAt: serverTimestamp()
+  };
+  if (!data.title) { toast('El título es obligatorio', true); return; }
   try {
-    if (id) {
-      await updateDoc(doc(db, coll, id), obj);
-      toast('✅ Actualizado');
-    } else {
-      obj.createdAt = serverTimestamp();
-      if (coll === 'noticias') obj.fecha = serverTimestamp();
-      await addDoc(collection(db, coll), obj);
-      toast('✅ Creado');
-    }
+    await addDoc(collection(db,'videos'), data);
+    toast('✅ Video agregado');
     document.getElementById('modal').classList.remove('open');
-    await renderList(coll);
-  } catch (err) { toast('Error: ' + err.message, true); }
-};
-window._del = async (coll, id, title) => {
-  if (!confirm(`¿Eliminar "${title}"?`)) return;
-  try {
-    await deleteDoc(doc(db, coll, id));
-    toast('🗑️ Eliminado');
-    await renderList(coll);
-  } catch (err) { toast('Error al eliminar', true); }
+    await renderVideos();
+  } catch(err) { toast('Error: ' + err.message, true); }
 };
 
-document.getElementById('modal').addEventListener('click', e => {
-  if (e.target.id === 'modal') e.target.classList.remove('open');
-});
+window._delVideo = async (id) => {
+  if (!confirm('¿Eliminar este video?')) return;
+  try {
+    await deleteDoc(doc(db,'videos', id));
+    toast('🗑️ Eliminado');
+    await renderVideos();
+  } catch(err) { toast('Error', true); }
+};
+
+window._editVideo = (id, v) => {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>✏️ Editar video</h3>
+    <div class="field"><label>Título</label><input type="text" id="vTitle" value="${v.title || ''}"></div>
+    <div class="field"><label>Área</label><input type="text" id="vArea" value="${v.area || ''}"></div>
+    <div class="field"><label>Duración</label><input type="text" id="vDur" value="${v.duration || ''}"></div>
+    <div class="field"><label>Autor</label><input type="text" id="vAuth" value="${v.author || ''}"></div>
+    <div class="field"><label>Drive ID</label><input type="text" id="vDrive" value="${v.driveId || ''}"></div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;">
+      <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-gold" onclick="window._updateVideo('${id}')">Actualizar</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+};
+
+window._updateVideo = async (id) => {
+  try {
+    await updateDoc(doc(db,'videos', id), {
+      title: document.getElementById('vTitle').value.trim(),
+      area: document.getElementById('vArea').value.trim(),
+      duration: document.getElementById('vDur').value.trim(),
+      author: document.getElementById('vAuth').value.trim(),
+      driveId: document.getElementById('vDrive').value.trim()
+    });
+    toast('✅ Actualizado');
+    document.getElementById('modal').classList.remove('open');
+    await renderVideos();
+  } catch(err) { toast('Error', true); }
+};
+
+// ═══ NOTICIAS ═══
+async function renderNoticias() {
+  const panel = document.getElementById('p-noticias');
+  let items = [];
+  try {
+    const snap = await getDocs(query(collection(db,'noticias'), orderBy('fecha','desc')));
+    items = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  } catch(e) {}
+
+  panel.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <strong style="font-family:var(--gv-ff);">${items.length} noticia${items.length !== 1 ? 's' : ''}</strong>
+      <button class="btn btn-gold btn-sm" onclick="window._addNoti()">+ Nueva noticia</button>
+    </div>
+    ${items.length === 0 ? '<div class="empty"><div class="empty-icon">📰</div><h3>Sin noticias aún</h3></div>' :
+      items.map(n => `
+        <div class="item-row">
+          <div class="item-row-info">
+            <div class="item-row-title">${n.titulo || '—'}</div>
+            <div class="item-row-meta">${n.fuente || '—'} · ${n.cat || '—'}</div>
+          </div>
+          <div class="item-row-actions">
+            <button class="btn btn-sm" style="background:rgba(244,63,94,0.15);color:#fda4af;border:1px solid rgba(244,63,94,0.3);" onclick='window._delNoti("${n.id}")'>🗑️</button>
+          </div>
+        </div>`).join('')}
+  `;
+}
+
+window._addNoti = () => {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>+ Nueva noticia</h3>
+    <div class="field"><label>Título</label><input type="text" id="nTitle"></div>
+    <div class="field"><label>Fuente</label><input type="text" id="nFuente" placeholder="Ej: WSAVA, COFEPRIS"></div>
+    <div class="field"><label>Categoría</label>
+      <select id="nCat">
+        <option value="clinica">Clínica</option>
+        <option value="farma">Farmacología</option>
+        <option value="regulatorio">Regulatorio</option>
+        <option value="investigacion">Investigación</option>
+        <option value="gremial">Gremial</option>
+      </select>
+    </div>
+    <div class="field"><label>Resumen</label><textarea id="nResumen" rows="4"></textarea></div>
+    <div class="field"><label>URL (opcional)</label><input type="text" id="nUrl"></div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;">
+      <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-gold" onclick="window._saveNoti()">Guardar</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+};
+
+window._saveNoti = async () => {
+  const titulo = document.getElementById('nTitle').value.trim();
+  if (!titulo) { toast('Falta el título', true); return; }
+  try {
+    await addDoc(collection(db,'noticias'), {
+      titulo,
+      fuente: document.getElementById('nFuente').value.trim() || 'GlobalVet',
+      cat: document.getElementById('nCat').value,
+      resumen: document.getElementById('nResumen').value.trim(),
+      url: document.getElementById('nUrl').value.trim() || '#',
+      fecha: serverTimestamp()
+    });
+    toast('✅ Noticia publicada');
+    document.getElementById('modal').classList.remove('open');
+    await renderNoticias();
+  } catch(err) { toast('Error: ' + err.message, true); }
+};
+
+window._delNoti = async (id) => {
+  if (!confirm('¿Eliminar noticia?')) return;
+  await deleteDoc(doc(db,'noticias', id));
+  toast('🗑️ Eliminada');
+  await renderNoticias();
+};
+
+// ═══ CONSTANCIAS ═══
+async function renderCerts() {
+  const panel = document.getElementById('p-certs');
+  let certs = [];
+  try {
+    const snap = await getDocs(query(collection(db,'certificados'), orderBy('completadoEn','desc')));
+    certs = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  } catch(e) {}
+
+  panel.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <strong style="font-family:var(--gv-ff);">${certs.length} constancia${certs.length !== 1 ? 's' : ''}</strong>
+      <button class="btn btn-gold btn-sm" onclick="window._emitCert()">+ Emitir manual</button>
+    </div>
+    ${certs.length === 0 ? '<div class="empty"><div class="empty-icon">🏆</div><h3>Sin constancias aún</h3></div>' :
+      certs.slice(0,40).map(c => {
+        const fecha = c.completadoEn?.toDate ? c.completadoEn.toDate().toLocaleDateString('es-MX') : '—';
+        return `
+          <div class="item-row">
+            <div class="item-row-info">
+              <div class="item-row-title">${c.cursoTitulo || '—'}</div>
+              <div class="item-row-meta"><strong>${c.nombre || '—'}</strong> · <code style="color:var(--gv-gold);">${c.folio || c.id}</code> · ${fecha}</div>
+            </div>
+            <div class="item-row-actions">
+              <a href="ver-certificado.html?folio=${c.folio || c.id}" target="_blank" class="btn btn-sm btn-outline">Ver</a>
+              <button class="btn btn-sm" style="background:rgba(244,63,94,0.15);color:#fda4af;border:1px solid rgba(244,63,94,0.3);" onclick='window._delCert("${c.id}")'>🗑️</button>
+            </div>
+          </div>`;
+      }).join('')}
+    ${certs.length > 40 ? `<div style="text-align:center;color:var(--gv-text-muted);font-size:0.82rem;margin-top:1rem;">Mostrando 40 de ${certs.length}</div>` : ''}
+  `;
+}
+
+window._emitCert = () => {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>🏆 Emitir constancia manual</h3>
+    <p style="color:var(--gv-text-muted);font-size:0.85rem;margin-bottom:1rem;">Genera una constancia para un miembro específico.</p>
+    <div class="field"><label>UID del miembro</label><input type="text" id="cUid" placeholder="UID de Firebase Auth"></div>
+    <div class="field"><label>Nombre completo</label><input type="text" id="cNom" placeholder="Dr. Juan Pérez, MVZ"></div>
+    <div class="field"><label>Email</label><input type="text" id="cEmail"></div>
+    <div class="field"><label>Título del curso</label><input type="text" id="cTit"></div>
+    <div class="field"><label>Área clínica</label><input type="text" id="cArea" value="Medicina veterinaria"></div>
+    <div class="field"><label>Total de clases</label><input type="number" id="cClases" value="5"></div>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;">
+      <button class="btn btn-outline" onclick="document.getElementById('modal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-gold" onclick="window._saveCert()">Emitir</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+};
+
+window._saveCert = async () => {
+  const uid = document.getElementById('cUid').value.trim();
+  const nombre = document.getElementById('cNom').value.trim();
+  const cursoTitulo = document.getElementById('cTit').value.trim();
+  if (!uid || !nombre || !cursoTitulo) { toast('Completa UID, nombre y curso', true); return; }
+  const año = new Date().getFullYear();
+  const rand = Math.random().toString(36).slice(2,8).toUpperCase();
+  const folio = `GV-${año}-${rand}`;
+  try {
+    await addDoc(collection(db,'certificados'), {
+      folio, uid, nombre,
+      email: document.getElementById('cEmail').value.trim(),
+      cursoId: cursoTitulo.toLowerCase().replace(/\s+/g,'-').slice(0,40),
+      cursoTitulo,
+      cursoArea: document.getElementById('cArea').value.trim() || 'Medicina veterinaria',
+      totalClases: parseInt(document.getElementById('cClases').value) || null,
+      completadoEn: serverTimestamp(),
+      emisor: 'GlobalVet México',
+      activo: true
+    });
+    toast(`✅ Folio: ${folio}`);
+    document.getElementById('modal').classList.remove('open');
+    await renderCerts();
+  } catch(err) { toast('Error: ' + err.message, true); }
+};
+
+window._delCert = async (id) => {
+  if (!confirm('¿Eliminar constancia? Esto NO se puede deshacer.')) return;
+  await deleteDoc(doc(db,'certificados', id));
+  toast('🗑️ Eliminada');
+  await renderCerts();
+};
+
+// ═══ MIEMBROS ═══
+async function renderMiembros() {
+  const panel = document.getElementById('p-miembros');
+  let miembros = [];
+  try {
+    const snap = await getDocs(collection(db,'miembros'));
+    miembros = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  } catch(e) {}
+
+  panel.innerHTML = `
+    <div style="margin-bottom:1rem;">
+      <strong style="font-family:var(--gv-ff);">${miembros.length} miembro${miembros.length !== 1 ? 's' : ''} registrado${miembros.length !== 1 ? 's' : ''}</strong>
+    </div>
+    ${miembros.length === 0 ? '<div class="empty"><div class="empty-icon">👥</div><h3>Sin miembros aún</h3></div>' :
+      miembros.map(m => {
+        const fecha = m.fechaRegistro?.toDate ? m.fechaRegistro.toDate().toLocaleDateString('es-MX') : '—';
+        return `
+          <div class="item-row">
+            <div class="item-row-info">
+              <div class="item-row-title">${m.nombre || m.email || '—'}</div>
+              <div class="item-row-meta">${m.email || '—'} · Registrado: ${fecha}</div>
+              <div class="item-row-meta" style="font-size:0.72rem;color:var(--gv-text-dim);">UID: <code>${m.id}</code></div>
+            </div>
+          </div>`;
+      }).join('')}
+  `;
+}
 </script>
 </body>
 </html>

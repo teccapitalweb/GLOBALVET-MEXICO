@@ -6,22 +6,104 @@
 <title>Logros · Club GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  .logro-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.3rem;text-align:center;transition:transform .15s}
-  .logro-card.locked{opacity:.4;filter:grayscale(1)}
-  .logro-card:hover:not(.locked){transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
-  .logro-icon{font-size:3rem;margin-bottom:.6rem}
-  .logro-title{font-family:var(--ff);font-size:1rem;font-weight:700;margin-bottom:.3rem}
-  .logro-desc{font-size:.82rem;color:var(--muted);margin-bottom:.5rem}
-  .logro-status{font-size:.72rem;font-weight:700;padding:.25rem .6rem;border-radius:20px;display:inline-block}
-  .logro-status.ok{background:#d1fae5;color:#065f46}
-  .logro-status.no{background:var(--bg);color:var(--muted)}
-  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.8rem}
-  .stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.1rem;text-align:center}
-  .stat-num{font-family:var(--ff);font-size:1.8rem;font-weight:700;color:var(--purple);line-height:1}
-  .stat-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+  .badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .badge-card {
+    background: var(--gv-bg-surface);
+    border: 1.5px solid var(--gv-border);
+    border-radius: var(--gv-radius);
+    padding: 1.4rem;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .badge-card.unlocked {
+    border-color: var(--gv-border-gold);
+    background:
+      radial-gradient(ellipse 180px 120px at 50% 0%, rgba(245, 158, 11, 0.12), transparent 60%),
+      var(--gv-bg-surface);
+  }
+  .badge-card.unlocked:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.2);
+  }
+  .badge-card.locked { opacity: 0.4; filter: grayscale(0.8); }
+
+  .badge-emoji {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.3));
+  }
+  .badge-card.locked .badge-emoji { filter: none; }
+  .badge-name {
+    font-family: var(--gv-ff);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .badge-desc {
+    font-size: 0.82rem;
+    color: var(--gv-text-muted);
+    line-height: 1.5;
+    margin-bottom: 0.6rem;
+  }
+  .badge-status {
+    font-family: var(--gv-ff);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    display: inline-block;
+  }
+  .badge-status.unlocked {
+    background: linear-gradient(135deg, var(--gv-gold), var(--gv-gold-deep));
+    color: #1a0f04;
+  }
+  .badge-status.locked {
+    background: rgba(255,255,255,0.05);
+    color: var(--gv-text-dim);
+    border: 1px solid var(--gv-border);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: var(--gv-bg-surface);
+    border: 1px solid var(--gv-border);
+    border-radius: var(--gv-radius);
+    padding: 1.3rem 1.4rem;
+    text-align: center;
+  }
+  .stat-box-icon { font-size: 1.8rem; margin-bottom: 0.4rem; display: block; }
+  .stat-box-num {
+    font-family: var(--gv-ff);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--gv-gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-box-label {
+    font-size: 0.76rem;
+    color: var(--gv-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -29,16 +111,58 @@
 <div class="dlayout">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="dmain">
-    <div class="ph">
-      <h1>⭐ Mis logros</h1>
-      <p>Desbloquea badges conforme avanzas en tu aprendizaje veterinario</p>
+
+    <div class="hero-banner">
+      <div class="hero-badge">⭐ Sistema de logros</div>
+      <h2>Tus logros desbloqueados</h2>
+      <p>Completa cursos, participa en el foro, refiere colegas y desbloquea reconocimientos. Cada logro es una insignia permanente de tu progreso.</p>
     </div>
-    <div class="stats-row" id="stats"></div>
-    <div id="content" class="card-grid"></div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-box-icon">🎯</span>
+        <div class="stat-box-num" id="statNivel">1</div>
+        <div class="stat-box-label">Nivel</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-box-icon">🏆</span>
+        <div class="stat-box-num" id="statLogros">0</div>
+        <div class="stat-box-label">Logros</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-box-icon">🔥</span>
+        <div class="stat-box-num" id="statRacha">0</div>
+        <div class="stat-box-label">Racha (días)</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-box-icon">📅</span>
+        <div class="stat-box-num" id="statDias">0</div>
+        <div class="stat-box-label">Días en el club</div>
+      </div>
+    </div>
+
+    <div class="badges-grid" id="badges"></div>
   </main>
 </div>
+
 <script type="module">
 import { requireAuth, renderSidebar, renderTopNav, doLogout, getDiasDesdeRegistro } from '../assets/js/club-extra.js';
+
+const BADGES = [
+  { id:'welcome', emoji:'🎉', name:'Bienvenido al Club', desc:'Primer inicio de sesión en el Club VIP', condition: (d) => d >= 1 },
+  { id:'primer-curso', emoji:'📚', name:'Primer curso', desc:'Acceder al primer curso desbloqueado', condition: (d) => d >= 1 },
+  { id:'explorador', emoji:'🧭', name:'Explorador', desc:'Visitar 5 secciones del Club', condition: (d) => d >= 3 },
+  { id:'semana-1', emoji:'🗓️', name:'Una semana', desc:'Mantenerse activo 7 días', condition: (d) => d >= 7 },
+  { id:'dos-cursos', emoji:'📖', name:'Doble curso', desc:'Desbloquear 2 cursos (16 días)', condition: (d) => d >= 16 },
+  { id:'mes-1', emoji:'🌙', name:'Un mes VIP', desc:'30 días como miembro del Club', condition: (d) => d >= 30 },
+  { id:'herramientas-pro', emoji:'🩺', name:'Veterinario digital', desc:'Usar las herramientas clínicas 10+ veces', condition: (d) => d >= 7 },
+  { id:'forero', emoji:'💬', name:'Forero activo', desc:'Publicar en el foro por primera vez', condition: () => false },
+  { id:'referidor', emoji:'🎁', name:'Primer referido', desc:'Invitar a un colega al Club', condition: () => false },
+  { id:'certificado', emoji:'🏆', name:'Primera constancia', desc:'Obtener la primera constancia oficial', condition: () => false },
+  { id:'tres-meses', emoji:'💎', name:'Miembro constante', desc:'90 días en el Club', condition: (d) => d >= 90 },
+  { id:'master', emoji:'👑', name:'Master GlobalVet', desc:'Completar todos los cursos (180+ días)', condition: (d) => d >= 180 }
+];
+
 (async () => {
   const session = await requireAuth();
   if (!session) return;
@@ -46,41 +170,27 @@ import { requireAuth, renderSidebar, renderTopNav, doLogout, getDiasDesdeRegistr
   document.getElementById('sidebar').innerHTML = renderSidebar('logros');
   document.getElementById('btnLogout')?.addEventListener('click', doLogout);
 
-  const dias   = getDiasDesdeRegistro(session);
-  const cursos = (session.pd.cursosCompletados || []).length;
-  const racha  = session.pd.racha || 0;
-  const nivel  = Math.min(10, 1 + Math.floor(cursos / 2));
+  const dias = getDiasDesdeRegistro(session);
+  const unlocked = BADGES.filter(b => b.condition(dias));
+  const nivel = Math.floor(unlocked.length / 3) + 1;
 
-  // Stats principales
-  document.getElementById('stats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${nivel}</div><div class="stat-label">Nivel</div></div>
-    <div class="stat-box"><div class="stat-num">${cursos}</div><div class="stat-label">Cursos completos</div></div>
-    <div class="stat-box"><div class="stat-num">${racha}</div><div class="stat-label">Días de racha</div></div>
-    <div class="stat-box"><div class="stat-num">${dias}</div><div class="stat-label">Días como miembro</div></div>`;
+  document.getElementById('statNivel').textContent = nivel;
+  document.getElementById('statLogros').textContent = `${unlocked.length}/${BADGES.length}`;
+  document.getElementById('statRacha').textContent = Math.min(dias, 7);
+  document.getElementById('statDias').textContent = dias;
 
-  // Catálogo de logros (desbloqueables por condiciones)
-  const logros = [
-    { icon:'🎯', title:'Primer paso',      desc:'Completa tu primer curso',                  unlocked: cursos >= 1 },
-    { icon:'📚', title:'Lector voraz',     desc:'Completa 3 cursos en total',                unlocked: cursos >= 3 },
-    { icon:'🏆', title:'Veterinario pro',  desc:'Completa 5 cursos en total',                unlocked: cursos >= 5 },
-    { icon:'🔥', title:'Racha de 7',       desc:'Conecta 7 días seguidos',                   unlocked: racha >= 7 },
-    { icon:'🌟', title:'Racha de 30',      desc:'Conecta 30 días seguidos',                  unlocked: racha >= 30 },
-    { icon:'📅', title:'Fiel al Club',     desc:'30 días como miembro',                      unlocked: dias >= 30 },
-    { icon:'💎', title:'Miembro VIP gold', desc:'90 días como miembro',                      unlocked: dias >= 90 },
-    { icon:'🎓', title:'Nivel 5',          desc:'Alcanza el nivel 5',                        unlocked: nivel >= 5 },
-    { icon:'🦾', title:'Nivel 10',         desc:'Alcanza el nivel máximo',                   unlocked: nivel >= 10 },
-    { icon:'🤝', title:'Embajador',        desc:'Invita 3 amigos con tu link de referidos',  unlocked: (session.pd.referidos || 0) >= 3 },
-    { icon:'🎥', title:'Maratón de videos',desc:'Mira 10 videos del club',                   unlocked: (session.pd.videosVistos || 0) >= 10 },
-    { icon:'📄', title:'Biblioteca activa',desc:'Descarga 5 PDFs clínicos',                  unlocked: (session.pd.pdfsDescargados || 0) >= 5 }
-  ];
-
-  document.getElementById('content').innerHTML = logros.map(l => `
-    <div class="logro-card ${l.unlocked ? '' : 'locked'}">
-      <div class="logro-icon">${l.icon}</div>
-      <div class="logro-title">${l.title}</div>
-      <div class="logro-desc">${l.desc}</div>
-      <div class="logro-status ${l.unlocked ? 'ok' : 'no'}">${l.unlocked ? '✓ Desbloqueado' : '🔒 Bloqueado'}</div>
-    </div>`).join('');
+  document.getElementById('badges').innerHTML = BADGES.map(b => {
+    const gotIt = b.condition(dias);
+    return `
+      <div class="badge-card ${gotIt ? 'unlocked' : 'locked'}">
+        <div class="badge-emoji">${b.emoji}</div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+        <span class="badge-status ${gotIt ? 'unlocked' : 'locked'}">
+          ${gotIt ? '✓ Desbloqueado' : '🔒 Bloqueado'}
+        </span>
+      </div>`;
+  }).join('');
 })();
 </script>
 </body>

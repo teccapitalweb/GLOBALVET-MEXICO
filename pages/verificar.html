@@ -3,48 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verificar constancia · GlobalVet México</title>
+<title>Verificación de constancia · GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/club-extra.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  body{background:var(--bg);padding:2rem 1rem;min-height:100vh;display:flex;align-items:center;justify-content:center}
-  .v-wrap{max-width:520px;width:100%;background:var(--surface);border-radius:18px;padding:2.2rem 2rem;box-shadow:0 20px 60px rgba(0,0,0,.08);text-align:center}
-  .v-logo{width:56px;height:56px;border-radius:14px;margin-bottom:.8rem}
-  .v-brand{font-family:var(--ff);font-size:.95rem;font-weight:700;color:var(--dark);margin-bottom:.3rem}
-  .v-head{color:var(--muted);font-size:.82rem;margin-bottom:1.8rem;text-transform:uppercase;letter-spacing:.08em}
-  .v-status{padding:1.2rem;border-radius:14px;margin-bottom:1rem}
-  .v-status.ok{background:#d1fae5;color:#065f46}
-  .v-status.err{background:#fee;color:var(--red)}
-  .v-status-icon{font-size:2.5rem;margin-bottom:.4rem}
-  .v-status h2{font-family:var(--ff);font-size:1.1rem;font-weight:700;margin-bottom:.3rem}
-  .v-detail{text-align:left;background:var(--bg);padding:1rem 1.2rem;border-radius:10px;margin-top:1rem;font-size:.88rem}
-  .v-detail div{margin-bottom:.4rem}
-  .v-detail strong{color:var(--dark);font-family:var(--ff)}
-  .field input{text-align:center;font-family:monospace;letter-spacing:.08em}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    min-height:100vh;
+    background:#0a0614;
+    background-image:
+      radial-gradient(ellipse 800px 600px at 10% 0%, rgba(139,92,246,0.15), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 100%, rgba(245,158,11,0.1), transparent 60%);
+    font-family:'DM Sans',sans-serif;
+    color:#f0ebff;
+    padding:2rem 1.5rem;
+    display:flex;flex-direction:column;align-items:center;justify-content:center
+  }
+  .wrap{max-width:620px;width:100%}
+  .brand{
+    display:flex;align-items:center;gap:0.7rem;
+    margin-bottom:2rem;justify-content:center
+  }
+  .brand img{width:40px;height:40px;border-radius:10px;border:1.5px solid rgba(245,158,11,0.4)}
+  .brand span{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;letter-spacing:0.05em}
+  .brand .mx{color:#f59e0b}
+
+  .card{
+    background:linear-gradient(135deg,#1a1040 0%,#2d1a68 100%);
+    border:1px solid rgba(245,158,11,0.25);
+    border-radius:20px;
+    padding:2.5rem 2.2rem;
+    box-shadow:0 30px 80px rgba(0,0,0,0.5);
+    text-align:center
+  }
+  .status-icon{font-size:4rem;margin-bottom:1rem;display:block}
+  .status-title{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:0.5rem}
+  .status-sub{color:rgba(240,235,255,0.7);font-size:0.95rem;margin-bottom:2rem}
+
+  .details{
+    text-align:left;
+    background:rgba(0,0,0,0.2);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px;
+    padding:1.5rem;
+    margin-bottom:1.5rem
+  }
+  .det-row{display:flex;justify-content:space-between;gap:1rem;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .det-row:last-child{border-bottom:none}
+  .det-key{color:rgba(240,235,255,0.55);font-size:0.82rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+  .det-val{color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;text-align:right}
+  .det-val.folio{color:#f59e0b;font-family:monospace}
+  .det-val.course{font-family:'Cinzel',serif}
+
+  .ok{color:#34d399}
+  .fail{color:#fda4af}
+
+  .btn-back{
+    display:inline-block;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+    color:#f0ebff;
+    padding:0.8rem 1.5rem;
+    border-radius:10px;
+    text-decoration:none;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+    margin-top:1.2rem;
+    transition:background 0.15s
+  }
+  .btn-back:hover{background:rgba(255,255,255,0.14)}
+
+  .search-form{
+    display:flex;gap:0.5rem;
+    margin-bottom:1.5rem
+  }
+  .search-form input{
+    flex:1;
+    padding:0.8rem 1.1rem;
+    background:rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:10px;
+    color:#fff;
+    font-size:0.95rem;
+    font-family:inherit
+  }
+  .search-form input::placeholder{color:rgba(240,235,255,0.3)}
+  .search-form button{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+    color:#1a0f04;
+    border:none;
+    padding:0.8rem 1.3rem;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Space Grotesk',sans-serif
+  }
+
+  .spin{
+    width:36px;height:36px;
+    border:3px solid rgba(255,255,255,0.15);
+    border-top-color:#f59e0b;
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+    margin:0 auto
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="v-wrap">
-  <img src="../assets/logo/globalvet-logo.jpg" alt="" class="v-logo">
-  <div class="v-brand">GLOBALVET MÉXICO</div>
-  <div class="v-head">Verificador oficial de constancias</div>
-  <div id="content">
-    <div class="field">
-      <label>Ingresa el folio de la constancia</label>
-      <input type="text" id="folioInput" placeholder="Ej: GV-2026-ABC123" autocomplete="off">
-    </div>
-    <button class="btn btn-primary btn-block" id="btnVerify">Verificar</button>
-    <div id="result" style="margin-top:1.5rem;"></div>
+
+<div class="wrap">
+  <div class="brand">
+    <img src="../assets/logo/globalvet-logo.jpg" alt="">
+    <span>GLOBALVET <span class="mx">MÉXICO</span></span>
   </div>
-  <div style="margin-top:1.5rem;font-size:.78rem;color:var(--muted)">
-    <a href="../index.html" style="color:var(--purple);">← Volver al sitio principal</a>
+
+  <div class="card" id="card">
+    <div class="spin"></div>
+    <p style="margin-top:1rem;color:rgba(240,235,255,0.7);">Verificando constancia…</p>
   </div>
 </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg = {
   apiKey:"AIzaSyB_OgAmyW7XNiLUyKp6Ih92A5qxm3LNCqg",
@@ -55,55 +139,74 @@ const cfg = {
   appId:"1:880780506385:web:be49dbc8886147a79048b0"
 };
 const app = initializeApp(cfg);
-const db  = getFirestore(app);
+const db = getFirestore(app);
 
-async function verificar(folio) {
-  const result = document.getElementById('result');
-  result.innerHTML = '<div style="color:var(--muted);">Buscando…</div>';
+const card = document.getElementById('card');
+const folio = new URLSearchParams(location.search).get('folio');
+
+function renderSearch(message = '') {
+  card.innerHTML = `
+    <div class="status-icon">🔍</div>
+    <div class="status-title">Verificar constancia</div>
+    <div class="status-sub">Ingresa el folio oficial que aparece en la constancia física o digital.</div>
+    ${message ? `<div style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3);color:#fda4af;padding:0.8rem 1rem;border-radius:10px;margin-bottom:1rem;font-size:0.88rem;">${message}</div>` : ''}
+    <form class="search-form" id="f">
+      <input type="text" id="fld" placeholder="Ej: GV-2026-AB3X9Z" value="${folio || ''}" autofocus>
+      <button type="submit">Verificar</button>
+    </form>
+    <p style="color:rgba(240,235,255,0.5);font-size:0.82rem;">Todos los folios emitidos por GlobalVet México son únicos, irrepetibles y verificables por cualquier persona.</p>`;
+  document.getElementById('f').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = document.getElementById('fld').value.trim();
+    if (val) location.href = `verificar.html?folio=${encodeURIComponent(val)}`;
+  });
+}
+
+function renderValid(c) {
+  const fecha = c.completadoEn?.toDate
+    ? c.completadoEn.toDate().toLocaleDateString('es-MX', { year:'numeric', month:'long', day:'numeric' })
+    : '—';
+  card.innerHTML = `
+    <div class="status-icon ok">✅</div>
+    <div class="status-title ok">Constancia verificada</div>
+    <div class="status-sub">Esta constancia es auténtica y está registrada en la base de datos oficial de GlobalVet México.</div>
+    <div class="details">
+      <div class="det-row"><span class="det-key">Folio</span><span class="det-val folio">${c.folio || folio}</span></div>
+      <div class="det-row"><span class="det-key">Otorgado a</span><span class="det-val">${c.nombre || '—'}</span></div>
+      <div class="det-row"><span class="det-key">Curso</span><span class="det-val course">${c.cursoTitulo || '—'}</span></div>
+      ${c.cursoArea ? `<div class="det-row"><span class="det-key">Área</span><span class="det-val">${c.cursoArea}</span></div>` : ''}
+      ${c.totalClases ? `<div class="det-row"><span class="det-key">Clases</span><span class="det-val">${c.totalClases}</span></div>` : ''}
+      <div class="det-row"><span class="det-key">Fecha emisión</span><span class="det-val">${fecha}</span></div>
+      <div class="det-row"><span class="det-key">Estado</span><span class="det-val ok">${c.activo !== false ? 'VIGENTE' : 'REVOCADA'}</span></div>
+    </div>
+    <a class="btn-back" href="verificar.html">← Verificar otra</a>`;
+}
+
+function renderInvalid() {
+  card.innerHTML = `
+    <div class="status-icon fail">❌</div>
+    <div class="status-title fail">Folio no encontrado</div>
+    <div class="status-sub">El folio <code style="color:#f59e0b;">${folio}</code> no existe en la base de datos oficial. Puede tratarse de un error de tipeo o un folio apócrifo.</div>
+    <a class="btn-back" href="verificar.html">← Verificar otro</a>`;
+}
+
+(async () => {
+  if (!folio) { renderSearch(); return; }
   try {
-    const snap = await getDocs(query(collection(db, 'certificados'), where('folio', '==', folio)));
-    if (snap.empty) {
-      result.innerHTML = `
-        <div class="v-status err">
-          <div class="v-status-icon">❌</div>
-          <h2>Constancia no encontrada</h2>
-          <p>El folio <strong>${folio}</strong> no existe en nuestros registros.</p>
-        </div>`;
-      return;
+    let c = null;
+    const qs = await getDocs(query(collection(db, 'certificados'), where('folio', '==', folio)));
+    if (!qs.empty) c = qs.docs[0].data();
+    else {
+      const snap = await getDoc(doc(db, 'certificados', folio));
+      if (snap.exists()) c = snap.data();
     }
-    const c = snap.docs[0].data();
-    const fecha = c.completadoEn?.toDate ? c.completadoEn.toDate().toLocaleDateString('es-MX', {year:'numeric',month:'long',day:'numeric'}) : '—';
-    result.innerHTML = `
-      <div class="v-status ok">
-        <div class="v-status-icon">✅</div>
-        <h2>Constancia verificada</h2>
-        <p>Este documento es auténtico y fue emitido por GlobalVet México.</p>
-      </div>
-      <div class="v-detail">
-        <div><strong>Curso:</strong> ${c.cursoTitulo || '—'}</div>
-        <div><strong>A nombre de:</strong> ${c.nombre || 'Miembro VIP'}</div>
-        <div><strong>Fecha:</strong> ${fecha}</div>
-        <div><strong>Folio:</strong> <code>${folio}</code></div>
-      </div>`;
+    if (c) renderValid(c);
+    else renderInvalid();
   } catch (err) {
-    result.innerHTML = `<div class="v-status err"><div class="v-status-icon">⚠️</div><h2>Error de verificación</h2><p>No se pudo conectar al servidor.</p></div>`;
+    console.error(err);
+    renderSearch('Hubo un problema al verificar. Intenta de nuevo.');
   }
-}
-
-document.getElementById('btnVerify').addEventListener('click', () => {
-  const folio = document.getElementById('folioInput').value.trim();
-  if (folio) verificar(folio);
-});
-document.getElementById('folioInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('btnVerify').click();
-});
-
-// Auto-verificar si viene folio en URL
-const auto = new URLSearchParams(location.search).get('folio');
-if (auto) {
-  document.getElementById('folioInput').value = auto;
-  verificar(auto);
-}
+})();
 </script>
 </body>
 </html>

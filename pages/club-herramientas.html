@@ -3,62 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramientas clínicas · Club GlobalVet México</title>
-<meta name="description" content="Calculadoras veterinarias profesionales: dosis por peso, fluidoterapia, RER/MER, edad humana equivalente, transfusión sanguínea, BCS.">
+<title>🧬 Herramientas Clínicas Pro · Club GlobalVet México</title>
+<meta name="description" content="Calculadoras veterinarias profesionales: dosis, anestesia, fluidoterapia, urgencias, BCS, constantes y hematología.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  .tools-hero{background:linear-gradient(135deg,var(--purple) 0%,var(--purple2) 100%);color:#fff;border-radius:18px;padding:1.8rem 2rem;margin-bottom:1.5rem}
-  .tools-hero h2{font-family:var(--ff);font-size:1.4rem;margin-bottom:.5rem}
-  .tools-hero p{opacity:.92;font-size:.92rem}
-
-  .tool-tabs{display:flex;gap:.3rem;border-bottom:2px solid var(--line);margin-bottom:1.5rem;overflow-x:auto;padding-bottom:0}
-  .tool-tab{padding:.7rem 1.1rem;background:none;border:none;color:var(--muted);font-family:var(--ff);font-size:.86rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;display:flex;align-items:center;gap:.4rem;transition:color .15s}
-  .tool-tab:hover{color:var(--dark)}
-  .tool-tab.active{color:var(--purple);border-bottom-color:var(--purple)}
-
-  .tool-panel{display:none;animation:fadeIn .25s}
-  .tool-panel.active{display:block}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-  @media(max-width:900px){.tool-grid{grid-template-columns:1fr}}
-
-  .tool-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.5rem}
-  .tool-card h3{font-family:var(--ff);font-size:1.05rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
-  .tool-card .hint{font-size:.82rem;color:var(--muted);margin-bottom:1.2rem}
-
-  .res-card{background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%);border:2px solid var(--green);border-radius:16px;padding:1.5rem;margin-top:1rem}
-  .res-card h4{font-family:var(--ff);color:#065f46;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
-  .res-card .res-num{font-family:var(--ff);font-size:2rem;font-weight:700;color:#065f46;line-height:1.1;margin-bottom:.2rem}
-  .res-card .res-unit{font-size:.9rem;color:#047857;font-weight:600;margin-bottom:.8rem}
-  .res-card .res-detail{font-size:.88rem;color:#064e3b;line-height:1.5}
-  .res-card .res-detail strong{color:#065f46}
-
-  .res-warning{background:#fef3c7;border:2px solid var(--gold);border-radius:12px;padding:1rem 1.2rem;margin-top:.8rem;font-size:.85rem;color:#78350f;display:flex;gap:.6rem}
-  .res-warning::before{content:"⚠️";font-size:1.2rem;flex-shrink:0}
-
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem}
-  @media(max-width:500px){.field-row{grid-template-columns:1fr}}
-
-  .table{width:100%;border-collapse:collapse;font-size:.88rem}
-  .table th,.table td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid var(--line)}
-  .table th{font-family:var(--ff);font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)}
-  .table tr:hover td{background:var(--bg)}
-
-  .bcs-scale{display:grid;grid-template-columns:repeat(9,1fr);gap:.3rem;margin:1rem 0}
-  .bcs-btn{padding:.8rem .3rem;border:2px solid var(--line);background:var(--surface);border-radius:10px;cursor:pointer;font-family:var(--ff);font-weight:700;transition:all .15s;text-align:center}
-  .bcs-btn:hover{border-color:var(--purple)}
-  .bcs-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-  .bcs-btn .bcs-num{font-size:1.1rem;display:block}
-  .bcs-btn .bcs-emoji{font-size:.9rem;display:block}
-  @media(max-width:600px){
-    .bcs-scale{grid-template-columns:repeat(5,1fr)}
+  .hero-tools {
+    background:
+      radial-gradient(ellipse 400px 300px at 85% 20%, rgba(16, 185, 129, 0.2), transparent 60%),
+      radial-gradient(ellipse 400px 300px at 15% 80%, rgba(245, 158, 11, 0.15), transparent 60%),
+      linear-gradient(135deg, #2d1a68 0%, #1a1040 100%);
+    border-radius: var(--gv-radius-lg);
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.8rem;
+    border: 1px solid var(--gv-border-gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-tools h1 {
+    font-family: var(--gv-ff);
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
   }
 
-  .disclaimer{background:#fef3c7;border:1px dashed var(--gold);border-radius:10px;padding:.8rem 1rem;margin-top:2rem;font-size:.8rem;color:#78350f;line-height:1.5}
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 1100px) { .tool-grid { grid-template-columns: 1fr; } }
+
+  .tool-card {
+    background: var(--gv-bg-surface);
+    border: 1px solid var(--gv-border);
+    border-radius: var(--gv-radius);
+    padding: 1.6rem;
+  }
+  .tool-card h3 {
+    font-family: var(--gv-ff);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .tool-card .hint {
+    font-size: 0.85rem;
+    color: var(--gv-text-muted);
+    margin-bottom: 1.3rem;
+    line-height: 1.55;
+  }
+
+  /* BCS (body condition score) */
+  .bcs-scale {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0.35rem;
+    margin: 1rem 0;
+  }
+  .bcs-btn {
+    padding: 0.8rem 0.3rem;
+    border: 1.5px solid var(--gv-border);
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--gv-ff);
+    font-weight: 700;
+    transition: all 0.15s;
+    text-align: center;
+    color: var(--gv-text);
+  }
+  .bcs-btn:hover { border-color: var(--gv-purple); background: rgba(139, 92, 246, 0.08); }
+  .bcs-btn.active {
+    background: linear-gradient(135deg, var(--gv-gold), var(--gv-gold-deep));
+    color: #1a0f04;
+    border-color: var(--gv-gold);
+    transform: scale(1.05);
+  }
+  .bcs-btn .bcs-num { font-size: 1.2rem; display: block; }
+  .bcs-btn .bcs-emoji { font-size: 1rem; display: block; margin-top: 2px; }
+  @media (max-width: 600px) {
+    .bcs-scale { grid-template-columns: repeat(5, 1fr); }
+  }
+
+  /* Drug badges */
+  .drug-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+
+  /* Info cards (grid de datos) */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+  .info-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--gv-border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+  }
+  .info-card-label {
+    color: var(--gv-gold);
+    font-family: var(--gv-ff);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+  .info-card-value {
+    font-family: var(--gv-ff);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--gv-text);
+  }
+
+  /* Search input en tabla fármacos */
+  .gv-search {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--gv-border);
+    border-radius: 10px;
+    color: var(--gv-text);
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+  }
+  .gv-search::placeholder { color: var(--gv-text-dim); }
+  .gv-search:focus { outline: none; border-color: var(--gv-purple); }
 </style>
 </head>
 <body>
@@ -66,64 +141,149 @@
 <div class="dlayout">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="dmain">
-    <div class="ph">
-      <h1>🩺 Herramientas clínicas</h1>
-      <p>Calculadoras profesionales para consulta veterinaria diaria</p>
+
+    <div class="hero-tools">
+      <div class="hero-badge">🧬 Herramientas Pro</div>
+      <h1>Tu asistente clínico de bolsillo</h1>
+      <p style="color: rgba(255,255,255,0.88); max-width: 640px;">
+        Calculadoras validadas con literatura veterinaria actual (WSAVA, AAHA, Ettinger & Feldman).
+        Úsalas en consulta para dosificar con precisión, calcular fluidoterapia, protocolos anestésicos,
+        manejo de urgencias y más.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-n">7</div><div class="hero-stat-l">Calculadoras</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">50+</div><div class="hero-stat-l">Fármacos</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">∞</div><div class="hero-stat-l">Usos/mes</div></div>
+      </div>
     </div>
 
-    <div class="tools-hero">
-      <h2>Tu asistente clínico de bolsillo</h2>
-      <p>Calculadoras validadas con literatura veterinaria actual. Úsalas en consulta para dosificar con precisión, calcular fluidoterapia, energía, transfusiones y más.</p>
+    <div class="tabs">
+      <button class="tab active" data-tab="dosis">💊 Dosis</button>
+      <button class="tab" data-tab="anestesia">💉 Anestesia</button>
+      <button class="tab" data-tab="fluidos">💧 Fluidoterapia</button>
+      <button class="tab" data-tab="urgencias">🚨 Urgencias</button>
+      <button class="tab" data-tab="energia">🔥 RER / MER</button>
+      <button class="tab" data-tab="bcs">⚖️ BCS</button>
+      <button class="tab" data-tab="constantes">📊 Constantes</button>
     </div>
 
-    <div class="tool-tabs">
-      <button class="tool-tab active" data-tool="dosis">💊 Dosis por peso</button>
-      <button class="tool-tab" data-tool="fluidos">💧 Fluidoterapia</button>
-      <button class="tool-tab" data-tool="energia">🔥 RER / MER</button>
-      <button class="tool-tab" data-tool="edad">🎂 Edad humana</button>
-      <button class="tool-tab" data-tool="transfusion">🩸 Transfusión</button>
-      <button class="tool-tab" data-tool="bcs">⚖️ BCS / peso ideal</button>
-      <button class="tool-tab" data-tool="constantes">📊 Constantes normales</button>
-    </div>
-
-    <!-- ═══════════════ DOSIS POR PESO ═══════════════ -->
-    <section class="tool-panel active" data-tool="dosis">
+    <!-- ═══════════════ DOSIS ═══════════════ -->
+    <section class="tab-panel active" data-tab="dosis">
       <div class="tool-grid">
         <div class="tool-card">
           <h3>💊 Calculadora de dosis</h3>
-          <p class="hint">Calcula la dosis total de un fármaco según el peso del paciente y el volumen a administrar.</p>
+          <p class="hint">Calcula dosis total, volumen y dosis diaria según peso y concentración del fármaco.</p>
           <div class="field-row">
-            <div class="field"><label>Peso del paciente (kg)</label><input type="number" id="d_peso" step="0.1" placeholder="Ej: 12.5"></div>
+            <div class="field"><label>Peso paciente (kg)</label><input type="number" id="d_peso" step="0.1" placeholder="Ej: 12.5"></div>
             <div class="field"><label>Dosis (mg/kg)</label><input type="number" id="d_mg" step="0.01" placeholder="Ej: 2.2"></div>
           </div>
           <div class="field-row">
-            <div class="field"><label>Concentración del fármaco (mg/mL)</label><input type="number" id="d_conc" step="0.01" placeholder="Ej: 50"></div>
+            <div class="field"><label>Concentración (mg/mL)</label><input type="number" id="d_conc" step="0.01" placeholder="Ej: 50"></div>
             <div class="field"><label>Frecuencia (horas)</label><input type="number" id="d_freq" step="1" placeholder="Ej: 12"></div>
           </div>
-          <button class="btn btn-primary btn-block" onclick="calcDosis()">Calcular</button>
+          <button class="btn btn-primary btn-block" onclick="calcDosis()">Calcular dosis</button>
           <div id="d_result"></div>
         </div>
 
         <div class="tool-card">
-          <h3>📋 Dosis de referencia frecuentes</h3>
-          <p class="hint">Tabla rápida. Selecciona para autollenar.</p>
-          <table class="table">
-            <thead><tr><th>Fármaco</th><th>Dosis típica</th><th></th></tr></thead>
-            <tbody id="drugTable"></tbody>
-          </table>
+          <h3>📋 Vademécum veterinario</h3>
+          <p class="hint">50+ fármacos de uso clínico frecuente. Busca y clic en "Usar" para autollenar.</p>
+          <input type="text" class="gv-search" id="drugSearch" placeholder="🔍 Buscar fármaco (ej: amoxi, meloxi, tramadol…)">
+          <div class="gv-table-wrap">
+            <table class="gv-table">
+              <thead><tr><th>Fármaco</th><th>Dosis</th><th>Vía</th><th></th></tr></thead>
+              <tbody id="drugTable"></tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="disclaimer">
-        <strong>⚠️ Importante:</strong> Las dosis de referencia son orientativas. Siempre verifica contraindicaciones, interacciones, ajustes por función renal/hepática y características individuales del paciente (edad, preñez, especie). Esta herramienta es un apoyo para veterinarios titulados, no reemplaza el juicio clínico.
+        <strong>⚠️ Importante:</strong> Las dosis son orientativas. Verifica contraindicaciones, interacciones, ajustes por función renal/hepática y características individuales del paciente (edad, preñez, raza, especie). Esta herramienta es un apoyo para veterinarios titulados; no reemplaza el juicio clínico ni la consulta del prospecto actualizado.
+      </div>
+    </section>
+
+    <!-- ═══════════════ ANESTESIA ═══════════════ -->
+    <section class="tab-panel" data-tab="anestesia">
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h3>💉 Protocolos anestésicos por especie</h3>
+          <p class="hint">Premedicación + inducción + mantenimiento según peso y nivel ASA.</p>
+          <div class="field-row">
+            <div class="field">
+              <label>Especie</label>
+              <select id="an_esp">
+                <option value="perro">Perro</option>
+                <option value="gato">Gato</option>
+              </select>
+            </div>
+            <div class="field"><label>Peso (kg)</label><input type="number" id="an_peso" step="0.1" placeholder="Ej: 15"></div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Estado ASA</label>
+              <select id="an_asa">
+                <option value="1">ASA I – Sano</option>
+                <option value="2">ASA II – Enfermedad leve</option>
+                <option value="3">ASA III – Enfermedad sistémica grave</option>
+                <option value="4">ASA IV – Amenaza para la vida</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Tipo de procedimiento</label>
+              <select id="an_tipo">
+                <option value="corta">Corto &lt;30 min (castración, herida)</option>
+                <option value="media">Media 30–90 min (laparotomía)</option>
+                <option value="larga">Larga &gt;90 min (ortopedia)</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="calcAnestesia()">Generar protocolo</button>
+          <div id="an_result"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>🧪 Tabla rápida de anestésicos</h3>
+          <p class="hint">Dosis de referencia en perros y gatos sanos.</p>
+          <div class="gv-table-wrap">
+            <table class="gv-table">
+              <thead><tr><th>Fármaco</th><th>Perro</th><th>Gato</th><th>Vía</th></tr></thead>
+              <tbody>
+                <tr class="group-row"><td colspan="4">PREMEDICACIÓN</td></tr>
+                <tr><td><strong>Acepromazina</strong></td><td>0.01–0.05 mg/kg</td><td>0.02–0.05 mg/kg</td><td>IM/IV</td></tr>
+                <tr><td><strong>Dexmedetomidina</strong></td><td>5–10 µg/kg</td><td>5–20 µg/kg</td><td>IM/IV</td></tr>
+                <tr><td><strong>Medetomidina</strong></td><td>10–20 µg/kg</td><td>20–40 µg/kg</td><td>IM/IV</td></tr>
+                <tr><td><strong>Midazolam</strong></td><td>0.1–0.3 mg/kg</td><td>0.1–0.3 mg/kg</td><td>IM/IV</td></tr>
+                <tr><td><strong>Butorfanol</strong></td><td>0.1–0.4 mg/kg</td><td>0.1–0.4 mg/kg</td><td>IM/IV</td></tr>
+                <tr><td><strong>Metadona</strong></td><td>0.1–0.5 mg/kg</td><td>0.1–0.3 mg/kg</td><td>IM/IV</td></tr>
+                <tr class="group-row"><td colspan="4">INDUCCIÓN</td></tr>
+                <tr><td><strong>Propofol</strong></td><td>4–6 mg/kg</td><td>4–8 mg/kg</td><td>IV</td></tr>
+                <tr><td><strong>Alfaxalona</strong></td><td>1–2 mg/kg</td><td>2–5 mg/kg</td><td>IV</td></tr>
+                <tr><td><strong>Ketamina + diazepam</strong></td><td>5 + 0.25 mg/kg</td><td>5 + 0.25 mg/kg</td><td>IV</td></tr>
+                <tr><td><strong>Tiopental</strong></td><td>8–15 mg/kg</td><td>8–15 mg/kg</td><td>IV</td></tr>
+                <tr class="group-row"><td colspan="4">MANTENIMIENTO</td></tr>
+                <tr><td><strong>Isoflurano</strong></td><td>1.3–1.5 % CAM</td><td>1.6 % CAM</td><td>Inhalatorio</td></tr>
+                <tr><td><strong>Sevoflurano</strong></td><td>2.1 % CAM</td><td>2.6 % CAM</td><td>Inhalatorio</td></tr>
+                <tr><td><strong>Propofol CRI</strong></td><td>0.2–0.4 mg/kg/min</td><td>0.2–0.3 mg/kg/min</td><td>IV</td></tr>
+                <tr class="group-row"><td colspan="4">REVERSIÓN</td></tr>
+                <tr><td><strong>Atipamezol</strong></td><td>50–100 µg/kg</td><td>100–200 µg/kg</td><td>IM</td></tr>
+                <tr><td><strong>Naloxona</strong></td><td>0.04 mg/kg</td><td>0.04 mg/kg</td><td>IV</td></tr>
+                <tr><td><strong>Flumazenilo</strong></td><td>0.01 mg/kg</td><td>0.01 mg/kg</td><td>IV</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <strong>Referencias:</strong> BSAVA Manual of Canine and Feline Anaesthesia and Analgesia 3ª ed.; WSAVA Global Pain Council Guidelines. Ajustar por estado ASA, edad geriátrica y comorbilidades. Monitoreo ECG + SpO₂ + capnografía + temperatura obligatorio.
       </div>
     </section>
 
     <!-- ═══════════════ FLUIDOTERAPIA ═══════════════ -->
-    <section class="tool-panel" data-tool="fluidos">
+    <section class="tab-panel" data-tab="fluidos">
       <div class="tool-grid">
         <div class="tool-card">
-          <h3>💧 Fluidoterapia — mantenimiento + déficit</h3>
-          <p class="hint">Calcula el volumen total de fluidos para 24 h incluyendo pérdidas y deshidratación estimada.</p>
+          <h3>💧 Plan de fluidos 24 h</h3>
+          <p class="hint">Mantenimiento + déficit por deshidratación + pérdidas continuas.</p>
           <div class="field-row">
             <div class="field">
               <label>Especie</label>
@@ -131,29 +291,24 @@
             </div>
             <div class="field"><label>Peso (kg)</label><input type="number" id="f_peso" step="0.1" placeholder="Ej: 10"></div>
           </div>
-          <div class="field-row">
-            <div class="field">
-              <label>% Deshidratación estimada</label>
-              <select id="f_deshid">
-                <option value="0">0% – Normohidratado</option>
-                <option value="5">5% – Leve (piel discretamente menos elástica)</option>
-                <option value="7">7% – Moderada (TRC 2–3 s)</option>
-                <option value="10">10% – Severa (mucosas secas, TRC >3 s)</option>
-                <option value="12">12% – Shock hipovolémico (pulso débil)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Pérdidas continuas (mL/kg/día)</label>
-              <input type="number" id="f_perd" step="1" value="0" placeholder="Vómito, diarrea, poliuria">
-            </div>
+          <div class="field">
+            <label>% Deshidratación estimada</label>
+            <select id="f_deshid">
+              <option value="0">0% – Normohidratado</option>
+              <option value="5">5% – Leve (piel menos elástica)</option>
+              <option value="7">7% – Moderada (TRC 2–3 s, mucosas pegajosas)</option>
+              <option value="10">10% – Severa (mucosas secas, TRC &gt;3 s, ojos hundidos)</option>
+              <option value="12">12% – Shock hipovolémico (pulso débil, colapso)</option>
+            </select>
           </div>
-          <button class="btn btn-primary btn-block" onclick="calcFluidos()">Calcular plan de 24 h</button>
+          <div class="field"><label>Pérdidas continuas (mL/kg/día)</label><input type="number" id="f_perd" step="1" value="0" placeholder="Vómito / diarrea / poliuria"></div>
+          <button class="btn btn-primary btn-block" onclick="calcFluidos()">Calcular plan 24 h</button>
           <div id="f_result"></div>
         </div>
 
         <div class="tool-card">
-          <h3>⚡ Bolo de reanimación (shock)</h3>
-          <p class="hint">Volumen en bolo rápido para paciente en shock hipovolémico. Se administra en 15–20 min y se reevalúa.</p>
+          <h3>⚡ Bolo de reanimación</h3>
+          <p class="hint">Volumen en bolo para paciente en shock. Administrar en 15–20 min y reevaluar.</p>
           <div class="field-row">
             <div class="field">
               <label>Especie</label>
@@ -162,9 +317,9 @@
             <div class="field"><label>Peso (kg)</label><input type="number" id="b_peso" step="0.1" placeholder="Ej: 20"></div>
           </div>
           <div class="field">
-            <label>% del bolo inicial</label>
+            <label>Porcentaje del bolo inicial</label>
             <select id="b_pct">
-              <option value="0.25">25% (conservador)</option>
+              <option value="0.25">25% (conservador / cardiópata)</option>
               <option value="0.5" selected>50% (estándar)</option>
               <option value="1">100% (shock descompensado)</option>
             </select>
@@ -172,18 +327,106 @@
           <button class="btn btn-primary btn-block" onclick="calcBolo()">Calcular bolo</button>
           <div id="b_result"></div>
         </div>
+
+        <div class="tool-card" style="grid-column: 1 / -1;">
+          <h3>🧪 Calculadora de velocidad / goteo</h3>
+          <p class="hint">Convierte volumen y tiempo en mL/h y gotas/min según el equipo de infusión.</p>
+          <div class="field-row">
+            <div class="field"><label>Volumen total (mL)</label><input type="number" id="v_vol" step="1" placeholder="Ej: 200"></div>
+            <div class="field"><label>Tiempo (horas)</label><input type="number" id="v_horas" step="0.5" placeholder="Ej: 4" value="4"></div>
+          </div>
+          <div class="field">
+            <label>Equipo</label>
+            <select id="v_equipo">
+              <option value="20">Macrogotero (20 gotas/mL)</option>
+              <option value="60">Microgotero (60 gotas/mL)</option>
+              <option value="15">Transfusión (15 gotas/mL)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="calcGoteo()">Calcular</button>
+          <div id="v_result"></div>
+        </div>
       </div>
       <div class="disclaimer">
-        <strong>⚠️ Fórmulas usadas:</strong> Mantenimiento perro = 132 × kg<sup>0.75</sup>; mantenimiento gato = 80 × kg<sup>0.75</sup>. Déficit = peso × % deshidratación × 10. Bolo shock perro = 90 mL/kg; gato = 60 mL/kg.
+        <strong>Fórmulas:</strong> Mantenimiento perro = 132 × kg<sup>0.75</sup> · gato = 80 × kg<sup>0.75</sup>. Déficit (mL) = peso × % deshidratación × 10. Bolo shock perro = 90 mL/kg · gato = 60 mL/kg. Monitoreo horario: diuresis, TRC, mucosas, PAS.
+      </div>
+    </section>
+
+    <!-- ═══════════════ URGENCIAS ═══════════════ -->
+    <section class="tab-panel" data-tab="urgencias">
+      <div class="tool-grid">
+        <div class="tool-card" style="grid-column: 1 / -1;">
+          <h3>🚨 Protocolo RCP veterinario (RECOVER)</h3>
+          <p class="hint">Secuencia validada de reanimación cardiopulmonar para perros y gatos.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1rem;">
+            <div style="background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.3);border-radius:12px;padding:1.1rem;">
+              <div style="color:#fda4af;font-family:var(--gv-ff);font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">1. RCP Básico (CAB)</div>
+              <ul style="margin-left:1rem;font-size:0.88rem;line-height:1.7;">
+                <li><strong>Compresiones:</strong> 100–120/min, profundidad 1/3–1/2 del tórax</li>
+                <li><strong>Ciclos de 2 min</strong> sin interrumpir</li>
+                <li><strong>Ventilación:</strong> 10 rpm, 1 seg por inspiración</li>
+                <li>Relación compresión:ventilación = 30:2 si no hay vía aérea</li>
+              </ul>
+            </div>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:1.1rem;">
+              <div style="color:var(--gv-gold-hover);font-family:var(--gv-ff);font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">2. RCP Avanzado</div>
+              <ul style="margin-left:1rem;font-size:0.88rem;line-height:1.7;">
+                <li><strong>Vía aérea avanzada:</strong> intubación endotraqueal</li>
+                <li><strong>Monitoreo:</strong> ECG + ETCO₂ (objetivo &gt;15 mmHg)</li>
+                <li><strong>Acceso IV/IO</strong> inmediato</li>
+                <li>Desfibrilación si FV: 2–4 J/kg monofásico</li>
+              </ul>
+            </div>
+            <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:1.1rem;">
+              <div style="color:var(--gv-emerald-hover);font-family:var(--gv-ff);font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">3. Fármacos</div>
+              <ul style="margin-left:1rem;font-size:0.88rem;line-height:1.7;">
+                <li><strong>Adrenalina:</strong> 0.01 mg/kg IV cada 3–5 min (baja dosis)</li>
+                <li><strong>Atropina:</strong> 0.04 mg/kg IV (asistolia con vagotonía)</li>
+                <li><strong>Vasopresina:</strong> 0.8 U/kg IV (alternativa a adrenalina)</li>
+                <li><strong>Lidocaína:</strong> 2 mg/kg IV (FV refractaria)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3>🩸 Glucosa para hipoglicemia</h3>
+          <p class="hint">Dosis de dextrosa 50% IV para paciente hipoglicémico.</p>
+          <div class="field"><label>Peso (kg)</label><input type="number" id="h_peso" step="0.1" placeholder="Ej: 8"></div>
+          <button class="btn btn-primary btn-block" onclick="calcHipo()">Calcular</button>
+          <div id="h_result"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>💊 Antídotos comunes</h3>
+          <p class="hint">Dosis clave para intoxicaciones frecuentes.</p>
+          <div class="gv-table-wrap" style="max-height:320px;">
+            <table class="gv-table">
+              <thead><tr><th>Tóxico</th><th>Antídoto</th><th>Dosis</th></tr></thead>
+              <tbody>
+                <tr><td>Paracetamol (gato)</td><td><strong>N-acetilcisteína</strong></td><td>140 mg/kg IV inicial, luego 70 mg/kg c/6 h × 7 dosis</td></tr>
+                <tr><td>Warfarina / raticidas</td><td><strong>Vitamina K1</strong></td><td>2.5–5 mg/kg SID × 3–4 semanas</td></tr>
+                <tr><td>Etilenglicol</td><td><strong>Fomepizol</strong></td><td>20 mg/kg IV inicial; luego 15, 15, 5 mg/kg c/12 h</td></tr>
+                <tr><td>Organofosforados</td><td><strong>Atropina + Pralidoxima</strong></td><td>0.1–0.2 mg/kg IV + 20 mg/kg IM/SC</td></tr>
+                <tr><td>Opioides</td><td><strong>Naloxona</strong></td><td>0.04 mg/kg IV/IM/SC</td></tr>
+                <tr><td>Benzodiacepinas</td><td><strong>Flumazenilo</strong></td><td>0.01 mg/kg IV</td></tr>
+                <tr><td>α-2 agonistas</td><td><strong>Atipamezol</strong></td><td>50–200 µg/kg IM</td></tr>
+                <tr><td>Metales pesados</td><td><strong>EDTA cálcico</strong></td><td>25 mg/kg SC c/6 h × 5 días</td></tr>
+                <tr><td>Xilitol (perro)</td><td><strong>Dextrosa</strong></td><td>0.5–1 g/kg IV + hepatoprotectores</td></tr>
+                <tr><td>Chocolate</td><td><strong>Carbón activado</strong></td><td>1–3 g/kg PO + fluidos IV</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- ═══════════════ RER / MER ═══════════════ -->
-    <section class="tool-panel" data-tool="energia">
+    <section class="tab-panel" data-tab="energia">
       <div class="tool-grid">
         <div class="tool-card">
-          <h3>🔥 RER / MER — requerimientos energéticos</h3>
-          <p class="hint">Calcula el Requerimiento Energético en Reposo (RER) y el de Mantenimiento (MER) según estado fisiológico.</p>
+          <h3>🔥 RER / MER — Energía</h3>
+          <p class="hint">RER (reposo) = 70 × kg<sup>0.75</sup>. MER = RER × factor fisiológico.</p>
           <div class="field-row">
             <div class="field"><label>Peso (kg)</label><input type="number" id="e_peso" step="0.1" placeholder="Ej: 8"></div>
             <div class="field">
@@ -194,13 +437,13 @@
           <div class="field">
             <label>Estado fisiológico</label>
             <select id="e_factor">
-              <option value="1">Hospitalizado / postoperatorio (RER × 1.0)</option>
+              <option value="1">Hospitalizado / postoperatorio (× 1.0)</option>
               <option value="1.2">Anciano inactivo (× 1.2)</option>
               <option value="1.4">Adulto esterilizado (× 1.4)</option>
               <option value="1.6" selected>Adulto activo (× 1.6)</option>
               <option value="1.8">Adulto muy activo (× 1.8)</option>
-              <option value="2.0">Cachorro/gatito en crecimiento (× 2.0)</option>
-              <option value="3.0">Lactancia (× 3.0)</option>
+              <option value="2.0">Cachorro / gatito en crecimiento (× 2.0)</option>
+              <option value="3.0">Lactancia pico (× 3.0)</option>
               <option value="0.8">Obeso en dieta (× 0.8)</option>
             </select>
           </div>
@@ -209,11 +452,11 @@
         </div>
 
         <div class="tool-card">
-          <h3>🥣 Calculadora de porción diaria</h3>
-          <p class="hint">Convierte el MER en gramos de alimento según la densidad calórica del producto.</p>
-          <div class="field"><label>MER (kcal/día)</label><input type="number" id="p_mer" step="1" placeholder="Pega aquí el MER calculado"></div>
+          <h3>🥣 Porción diaria</h3>
+          <p class="hint">Convierte el MER en gramos de alimento según densidad calórica.</p>
+          <div class="field"><label>MER (kcal/día)</label><input type="number" id="p_mer" step="1" placeholder="Pega el valor calculado"></div>
           <div class="field-row">
-            <div class="field"><label>kcal/100 g del alimento</label><input type="number" id="p_kcal" step="1" placeholder="Ej: 380"></div>
+            <div class="field"><label>kcal/100 g</label><input type="number" id="p_kcal" step="1" placeholder="Ej: 380"></div>
             <div class="field">
               <label>Tomas por día</label>
               <select id="p_tomas"><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
@@ -223,165 +466,101 @@
           <div id="p_result"></div>
         </div>
       </div>
-      <div class="disclaimer">
-        <strong>Fórmula:</strong> RER = 70 × (peso<sub>kg</sub>)<sup>0.75</sup> kcal/día. MER = RER × factor fisiológico. Basado en WSAVA Global Nutrition Guidelines.
-      </div>
-    </section>
-
-    <!-- ═══════════════ EDAD HUMANA ═══════════════ -->
-    <section class="tool-panel" data-tool="edad">
-      <div class="tool-grid">
-        <div class="tool-card">
-          <h3>🎂 Edad equivalente humana (perro)</h3>
-          <p class="hint">Usa la fórmula actualizada del estudio de epigenética de UCSD (2019): edad humana ≈ 16 × ln(edad perro) + 31.</p>
-          <div class="field-row">
-            <div class="field"><label>Edad del perro (años)</label><input type="number" id="edP_anos" step="0.1" placeholder="Ej: 7"></div>
-            <div class="field">
-              <label>Tamaño</label>
-              <select id="edP_tam">
-                <option value="chico">Pequeño (&lt;10 kg)</option>
-                <option value="mediano" selected>Mediano (10–25 kg)</option>
-                <option value="grande">Grande (25–45 kg)</option>
-                <option value="gigante">Gigante (&gt;45 kg)</option>
-              </select>
-            </div>
-          </div>
-          <button class="btn btn-primary btn-block" onclick="calcEdadPerro()">Calcular</button>
-          <div id="edP_result"></div>
-        </div>
-
-        <div class="tool-card">
-          <h3>🐱 Edad equivalente humana (gato)</h3>
-          <p class="hint">Convención AAHA/AAFP para felinos.</p>
-          <div class="field"><label>Edad del gato (años)</label><input type="number" id="edG_anos" step="0.1" placeholder="Ej: 5"></div>
-          <button class="btn btn-primary btn-block" onclick="calcEdadGato()">Calcular</button>
-          <div id="edG_result"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════ TRANSFUSIÓN ═══════════════ -->
-    <section class="tool-panel" data-tool="transfusion">
-      <div class="tool-grid">
-        <div class="tool-card">
-          <h3>🩸 Transfusión de sangre entera</h3>
-          <p class="hint">Calcula volumen a transfundir para alcanzar un PCV objetivo.</p>
-          <div class="field-row">
-            <div class="field">
-              <label>Especie</label>
-              <select id="t_esp"><option value="perro">Perro</option><option value="gato">Gato</option></select>
-            </div>
-            <div class="field"><label>Peso receptor (kg)</label><input type="number" id="t_peso" step="0.1" placeholder="Ej: 15"></div>
-          </div>
-          <div class="field-row">
-            <div class="field"><label>PCV actual (%)</label><input type="number" id="t_pcvA" step="1" placeholder="Ej: 15"></div>
-            <div class="field"><label>PCV objetivo (%)</label><input type="number" id="t_pcvO" step="1" placeholder="Ej: 25"></div>
-          </div>
-          <div class="field"><label>PCV del donante (%)</label><input type="number" id="t_pcvD" step="1" placeholder="Ej: 45" value="45"></div>
-          <button class="btn btn-primary btn-block" onclick="calcTransfusion()">Calcular</button>
-          <div id="t_result"></div>
-        </div>
-
-        <div class="tool-card">
-          <h3>🧪 Velocidad de administración</h3>
-          <p class="hint">Calculadora de goteo y velocidad segura de infusión.</p>
-          <div class="field-row">
-            <div class="field"><label>Volumen a pasar (mL)</label><input type="number" id="v_vol" step="1" placeholder="Ej: 200"></div>
-            <div class="field"><label>Tiempo total (horas)</label><input type="number" id="v_horas" step="0.5" placeholder="Ej: 4" value="4"></div>
-          </div>
-          <div class="field">
-            <label>Equipo</label>
-            <select id="v_equipo">
-              <option value="20">Macrogotero (20 gotas/mL)</option>
-              <option value="60">Microgotero (60 gotas/mL)</option>
-            </select>
-          </div>
-          <button class="btn btn-primary btn-block" onclick="calcGoteo()">Calcular goteo</button>
-          <div id="v_result"></div>
-        </div>
-      </div>
-      <div class="disclaimer">
-        <strong>Fórmula:</strong> Vol (mL) = [(PCV objetivo − PCV actual) / PCV donante] × 90 × peso (perro) o × 60 (gato). Velocidad inicial: 0.25 mL/kg en los primeros 15–30 min para vigilar reacciones.
-      </div>
+      <div class="disclaimer">Referencia: <strong>WSAVA Global Nutrition Guidelines 2021</strong>. El MER debe ajustarse semanalmente según BCS, BCS muscular y curva de peso.</div>
     </section>
 
     <!-- ═══════════════ BCS ═══════════════ -->
-    <section class="tool-panel" data-tool="bcs">
+    <section class="tab-panel" data-tab="bcs">
       <div class="tool-grid">
         <div class="tool-card">
           <h3>⚖️ Body Condition Score (1–9)</h3>
-          <p class="hint">Selecciona la condición corporal observada. Cada punto equivale a ±10% del peso ideal.</p>
+          <p class="hint">Cada punto = ±10% del peso ideal. BCS 4–5 = ideal.</p>
           <div class="bcs-scale" id="bcsScale"></div>
-          <div id="bcsDesc" style="min-height:60px;padding:.8rem 1rem;background:var(--bg);border-radius:10px;font-size:.88rem;color:var(--dark);margin-bottom:1rem;"></div>
-          <div class="field">
-            <label>Peso actual del paciente (kg)</label>
-            <input type="number" id="bcs_peso" step="0.1" placeholder="Ej: 14.5">
-          </div>
+          <div id="bcsDesc" style="min-height:72px;padding:1rem 1.2rem;background:rgba(255,255,255,0.03);border:1px solid var(--gv-border);border-radius:10px;font-size:0.88rem;color:var(--gv-text);margin-bottom:1rem;line-height:1.55;"></div>
+          <div class="field"><label>Peso actual (kg)</label><input type="number" id="bcs_peso" step="0.1" placeholder="Ej: 14.5"></div>
           <button class="btn btn-primary btn-block" onclick="calcBCS()">Calcular peso ideal</button>
           <div id="bcs_result"></div>
         </div>
 
         <div class="tool-card">
-          <h3>📏 Referencia visual rápida</h3>
-          <p class="hint">Cómo evaluar correctamente el BCS en consulta.</p>
-          <table class="table">
-            <thead><tr><th>Puntos</th><th>Condición</th><th>Evaluación</th></tr></thead>
-            <tbody>
-              <tr><td><strong>1–2</strong></td><td style="color:var(--red);">Caquéctico</td><td>Costillas, columna y pelvis muy visibles, sin grasa palpable</td></tr>
-              <tr><td><strong>3</strong></td><td>Bajo peso</td><td>Costillas visibles, cintura muy marcada</td></tr>
-              <tr><td><strong>4–5</strong></td><td style="color:var(--green);font-weight:700;">Ideal</td><td>Costillas palpables con leve cobertura grasa, cintura visible desde arriba</td></tr>
-              <tr><td><strong>6</strong></td><td>Sobrepeso</td><td>Costillas palpables con dificultad, cintura apenas visible</td></tr>
-              <tr><td><strong>7</strong></td><td style="color:var(--red);">Obesidad leve</td><td>Costillas no palpables fácilmente, depósitos grasos en base de cola</td></tr>
-              <tr><td><strong>8–9</strong></td><td style="color:var(--red);font-weight:700;">Obesidad severa</td><td>Grasa marcada en abdomen, lomos y pecho, cintura ausente</td></tr>
-            </tbody>
-          </table>
+          <h3>📏 Cómo evaluar en consulta</h3>
+          <p class="hint">Evaluación visual + palpación sistemática.</p>
+          <div class="gv-table-wrap">
+            <table class="gv-table">
+              <thead><tr><th>Score</th><th>Condición</th><th>Evaluación</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1–2</strong></td><td style="color:#fda4af;">Caquéctico</td><td>Costillas, columna, pelvis muy visibles. Sin grasa palpable.</td></tr>
+                <tr><td><strong>3</strong></td><td style="color:var(--gv-gold-hover);">Bajo peso</td><td>Costillas visibles, cintura muy marcada.</td></tr>
+                <tr><td><strong>4–5</strong></td><td style="color:var(--gv-emerald-hover);font-weight:700;">Ideal</td><td>Costillas palpables con cobertura leve, cintura definida.</td></tr>
+                <tr><td><strong>6</strong></td><td style="color:var(--gv-gold-hover);">Sobrepeso</td><td>Costillas palpables con dificultad, cintura apenas visible.</td></tr>
+                <tr><td><strong>7</strong></td><td style="color:#fda4af;">Obesidad leve</td><td>No se palpan costillas, grasa lumbar y base de cola.</td></tr>
+                <tr><td><strong>8–9</strong></td><td style="color:#fda4af;font-weight:700;">Obesidad severa</td><td>Grasa abdominal, torácica y lumbar masiva. Alto riesgo.</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════ CONSTANTES FISIOLÓGICAS ═══════════════ -->
-    <section class="tool-panel" data-tool="constantes">
+    <!-- ═══════════════ CONSTANTES ═══════════════ -->
+    <section class="tab-panel" data-tab="constantes">
       <div class="tool-grid">
         <div class="tool-card">
-          <h3>📊 Constantes fisiológicas normales</h3>
-          <p class="hint">Valores de referencia para perros y gatos adultos sanos.</p>
-          <table class="table">
-            <thead><tr><th>Parámetro</th><th>Perro</th><th>Gato</th></tr></thead>
-            <tbody>
-              <tr><td>Temperatura (°C)</td><td>38.3 – 39.2</td><td>38.0 – 39.2</td></tr>
-              <tr><td>Frecuencia cardíaca (lpm)</td><td>60 – 140</td><td>140 – 220</td></tr>
-              <tr><td>Frecuencia respiratoria (rpm)</td><td>10 – 30</td><td>20 – 40</td></tr>
-              <tr><td>TRC (segundos)</td><td>&lt; 2</td><td>&lt; 2</td></tr>
-              <tr><td>Presión arterial sistólica (mmHg)</td><td>110 – 160</td><td>120 – 170</td></tr>
-              <tr><td>Diuresis (mL/kg/h)</td><td>1 – 2</td><td>1 – 2</td></tr>
-              <tr><td>Volemia total (mL/kg)</td><td>~ 90</td><td>~ 60</td></tr>
-            </tbody>
-          </table>
+          <h3>📊 Constantes fisiológicas</h3>
+          <p class="hint">Valores normales para perros y gatos adultos sanos.</p>
+          <div class="gv-table-wrap">
+            <table class="gv-table">
+              <thead><tr><th>Parámetro</th><th>Perro</th><th>Gato</th></tr></thead>
+              <tbody>
+                <tr><td>Temperatura (°C)</td><td>38.3 – 39.2</td><td>38.0 – 39.2</td></tr>
+                <tr><td>Frecuencia cardíaca (lpm)</td><td>60 – 140</td><td>140 – 220</td></tr>
+                <tr><td>Frecuencia respiratoria (rpm)</td><td>10 – 30</td><td>20 – 40</td></tr>
+                <tr><td>TRC (segundos)</td><td>&lt; 2</td><td>&lt; 2</td></tr>
+                <tr><td>Presión arterial sistólica (mmHg)</td><td>110 – 160</td><td>120 – 170</td></tr>
+                <tr><td>Presión arterial media (mmHg)</td><td>80 – 120</td><td>100 – 130</td></tr>
+                <tr><td>Diuresis (mL/kg/h)</td><td>1 – 2</td><td>1 – 2</td></tr>
+                <tr><td>Volemia total (mL/kg)</td><td>~ 90</td><td>~ 60</td></tr>
+                <tr><td>CAM isoflurano (%)</td><td>1.3 – 1.5</td><td>1.6</td></tr>
+                <tr><td>pH venoso</td><td>7.35 – 7.45</td><td>7.30 – 7.40</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div class="tool-card">
-          <h3>🧪 Valores hematológicos clave</h3>
-          <p class="hint">Rangos normales en perros y gatos adultos.</p>
-          <table class="table">
-            <thead><tr><th>Parámetro</th><th>Perro</th><th>Gato</th></tr></thead>
-            <tbody>
-              <tr><td>Hematocrito (%)</td><td>37 – 55</td><td>30 – 45</td></tr>
-              <tr><td>Hemoglobina (g/dL)</td><td>12 – 18</td><td>9 – 15</td></tr>
-              <tr><td>Eritrocitos (×10⁶/µL)</td><td>5.5 – 8.5</td><td>5.0 – 10.0</td></tr>
-              <tr><td>Leucocitos totales (×10³/µL)</td><td>6 – 17</td><td>5.5 – 19</td></tr>
-              <tr><td>Neutrófilos (%)</td><td>60 – 77</td><td>35 – 75</td></tr>
-              <tr><td>Linfocitos (%)</td><td>12 – 30</td><td>20 – 55</td></tr>
-              <tr><td>Plaquetas (×10³/µL)</td><td>200 – 500</td><td>300 – 800</td></tr>
-              <tr><td>BUN (mg/dL)</td><td>7 – 27</td><td>14 – 36</td></tr>
-              <tr><td>Creatinina (mg/dL)</td><td>0.5 – 1.8</td><td>0.8 – 2.4</td></tr>
-              <tr><td>ALT (U/L)</td><td>10 – 100</td><td>10 – 80</td></tr>
-              <tr><td>Glucosa (mg/dL)</td><td>70 – 120</td><td>65 – 130</td></tr>
-            </tbody>
-          </table>
+          <h3>🧪 Hematología y bioquímica</h3>
+          <p class="hint">Rangos de referencia de uso clínico frecuente.</p>
+          <div class="gv-table-wrap">
+            <table class="gv-table">
+              <thead><tr><th>Parámetro</th><th>Perro</th><th>Gato</th></tr></thead>
+              <tbody>
+                <tr class="group-row"><td colspan="3">HEMATOLOGÍA</td></tr>
+                <tr><td>Hematocrito (%)</td><td>37 – 55</td><td>30 – 45</td></tr>
+                <tr><td>Hemoglobina (g/dL)</td><td>12 – 18</td><td>9 – 15</td></tr>
+                <tr><td>Eritrocitos (×10⁶/µL)</td><td>5.5 – 8.5</td><td>5.0 – 10.0</td></tr>
+                <tr><td>VCM (fL)</td><td>60 – 77</td><td>39 – 55</td></tr>
+                <tr><td>Leucocitos (×10³/µL)</td><td>6 – 17</td><td>5.5 – 19</td></tr>
+                <tr><td>Neutrófilos (×10³/µL)</td><td>3 – 12</td><td>2.5 – 12.5</td></tr>
+                <tr><td>Linfocitos (×10³/µL)</td><td>1 – 4.8</td><td>1.5 – 7</td></tr>
+                <tr><td>Plaquetas (×10³/µL)</td><td>200 – 500</td><td>300 – 800</td></tr>
+                <tr class="group-row"><td colspan="3">BIOQUÍMICA</td></tr>
+                <tr><td>BUN (mg/dL)</td><td>7 – 27</td><td>14 – 36</td></tr>
+                <tr><td>Creatinina (mg/dL)</td><td>0.5 – 1.8</td><td>0.8 – 2.4</td></tr>
+                <tr><td>SDMA (µg/dL)</td><td>&lt; 14</td><td>&lt; 14</td></tr>
+                <tr><td>ALT (U/L)</td><td>10 – 100</td><td>10 – 80</td></tr>
+                <tr><td>ALP / FA (U/L)</td><td>20 – 150</td><td>10 – 90</td></tr>
+                <tr><td>Glucosa (mg/dL)</td><td>70 – 120</td><td>65 – 130</td></tr>
+                <tr><td>Albúmina (g/dL)</td><td>2.7 – 3.9</td><td>2.3 – 3.8</td></tr>
+                <tr><td>Proteínas totales (g/dL)</td><td>5.5 – 7.5</td><td>5.9 – 8.5</td></tr>
+                <tr><td>Calcio total (mg/dL)</td><td>9 – 11.5</td><td>8 – 11</td></tr>
+                <tr><td>Fósforo (mg/dL)</td><td>2.6 – 6.2</td><td>3 – 6.5</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="disclaimer">
-        <strong>Fuente:</strong> Referencias de Ettinger & Feldman, <em>Textbook of Veterinary Internal Medicine</em> 8ª ed., y guías WSAVA/AAHA. Los rangos pueden variar ligeramente entre laboratorios; consulta siempre los valores de referencia de tu analizador.
+        <strong>Fuente:</strong> Ettinger &amp; Feldman <em>Textbook of Veterinary Internal Medicine</em> 8ª ed.; ACVIM consensus statements. Los rangos pueden variar ligeramente entre laboratorios; consulta los valores de referencia de tu analizador.
       </div>
     </section>
   </main>
@@ -399,20 +578,19 @@ import { requireAuth, renderSidebar, renderTopNav, doLogout } from '../assets/js
 })();
 
 // Tabs
-document.querySelectorAll('.tool-tab').forEach(t => {
+document.querySelectorAll('.tab').forEach(t => {
   t.addEventListener('click', () => {
-    document.querySelectorAll('.tool-tab').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.tool-panel').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
-    document.querySelector(`.tool-panel[data-tool="${t.dataset.tool}"]`).classList.add('active');
+    document.querySelector(`.tab-panel[data-tab="${t.dataset.tab}"]`).classList.add('active');
   });
 });
 
-// ═══ Helper para mostrar resultados ═══
-function showRes(id, html) {
-  document.getElementById(id).innerHTML = html;
-}
-function resultCard(label, num, unit, detail = '', warning = '') {
+// Helpers
+function showRes(id, html) { document.getElementById(id).innerHTML = html; }
+function errBox(msg) { return `<div class="res-error">⚠️ ${msg}</div>`; }
+function resCard(label, num, unit, detail = '', warning = '') {
   return `
     <div class="res-card">
       <h4>${label}</h4>
@@ -420,8 +598,111 @@ function resultCard(label, num, unit, detail = '', warning = '') {
       <div class="res-unit">${unit}</div>
       ${detail ? `<div class="res-detail">${detail}</div>` : ''}
     </div>
-    ${warning ? `<div class="res-warning"><div>${warning}</div></div>` : ''}`;
+    ${warning ? `<div class="res-warning">${warning}</div>` : ''}`;
 }
+
+// ═══ VADEMÉCUM: 50+ fármacos ═══
+const DRUGS = [
+  // ANTIBIÓTICOS
+  { g:'ANTIBIÓTICOS', nom:'Amoxicilina–ác. clavulánico', dosis:'12.5–25 mg/kg', freq:'c/12 h', via:'PO', mg:20, hrs:12 },
+  { g:'ANTIBIÓTICOS', nom:'Cefalexina', dosis:'22 mg/kg', freq:'c/12 h', via:'PO', mg:22, hrs:12 },
+  { g:'ANTIBIÓTICOS', nom:'Cefovecina (Convenia)', dosis:'8 mg/kg', freq:'c/14 días', via:'SC', mg:8, hrs:336 },
+  { g:'ANTIBIÓTICOS', nom:'Enrofloxacino', dosis:'5–10 mg/kg', freq:'SID', via:'PO/SC', mg:7.5, hrs:24 },
+  { g:'ANTIBIÓTICOS', nom:'Marbofloxacino', dosis:'2 mg/kg', freq:'SID', via:'PO/SC', mg:2, hrs:24 },
+  { g:'ANTIBIÓTICOS', nom:'Metronidazol', dosis:'10–25 mg/kg', freq:'c/12 h', via:'PO', mg:15, hrs:12 },
+  { g:'ANTIBIÓTICOS', nom:'Doxiciclina', dosis:'5–10 mg/kg', freq:'SID–BID', via:'PO', mg:7, hrs:24 },
+  { g:'ANTIBIÓTICOS', nom:'Clindamicina', dosis:'5.5–11 mg/kg', freq:'c/12 h', via:'PO/IV', mg:7, hrs:12 },
+  { g:'ANTIBIÓTICOS', nom:'Ampicilina', dosis:'10–20 mg/kg', freq:'c/6–8 h', via:'IV/IM', mg:15, hrs:8 },
+  { g:'ANTIBIÓTICOS', nom:'Ceftriaxona', dosis:'15–50 mg/kg', freq:'SID', via:'IV/IM', mg:25, hrs:24 },
+  // ANALGÉSICOS / AINES
+  { g:'AINES / ANALGÉSICOS', nom:'Meloxicam (perro)', dosis:'0.2 mg/kg día 1, luego 0.1 mg/kg', freq:'SID', via:'PO/SC', mg:0.1, hrs:24 },
+  { g:'AINES / ANALGÉSICOS', nom:'Meloxicam (gato, agudo)', dosis:'0.05 mg/kg × 4 días máx', freq:'SID', via:'SC', mg:0.05, hrs:24 },
+  { g:'AINES / ANALGÉSICOS', nom:'Carprofeno', dosis:'4.4 mg/kg SID ó 2.2 mg/kg BID', freq:'SID/BID', via:'PO/SC', mg:2.2, hrs:12 },
+  { g:'AINES / ANALGÉSICOS', nom:'Firocoxib (Previcox)', dosis:'5 mg/kg', freq:'SID', via:'PO', mg:5, hrs:24 },
+  { g:'AINES / ANALGÉSICOS', nom:'Robenacoxib', dosis:'1–2 mg/kg', freq:'SID × 3–6 días', via:'PO/SC', mg:1.5, hrs:24 },
+  { g:'AINES / ANALGÉSICOS', nom:'Tramadol', dosis:'2–5 mg/kg', freq:'c/8–12 h', via:'PO', mg:3, hrs:8 },
+  { g:'AINES / ANALGÉSICOS', nom:'Buprenorfina', dosis:'0.01–0.02 mg/kg', freq:'c/6–8 h', via:'IV/IM/OTM', mg:0.015, hrs:8 },
+  { g:'AINES / ANALGÉSICOS', nom:'Metadona', dosis:'0.1–0.5 mg/kg', freq:'c/4–6 h', via:'IV/IM', mg:0.3, hrs:6 },
+  { g:'AINES / ANALGÉSICOS', nom:'Gabapentina', dosis:'5–20 mg/kg', freq:'c/8–12 h', via:'PO', mg:10, hrs:12 },
+  // CORTICOIDES
+  { g:'CORTICOIDES', nom:'Prednisolona (antiinflamatorio)', dosis:'0.5–1 mg/kg', freq:'SID', via:'PO', mg:0.75, hrs:24 },
+  { g:'CORTICOIDES', nom:'Prednisolona (inmunosupresor)', dosis:'2–4 mg/kg', freq:'SID → BID', via:'PO', mg:2, hrs:12 },
+  { g:'CORTICOIDES', nom:'Dexametasona', dosis:'0.1–0.2 mg/kg', freq:'c/12–24 h', via:'IV/IM', mg:0.15, hrs:24 },
+  { g:'CORTICOIDES', nom:'Metilprednisolona', dosis:'1–2 mg/kg', freq:'c/12 h', via:'IV', mg:1, hrs:12 },
+  // DIURÉTICOS / CARDIO
+  { g:'DIURÉTICOS / CARDIO', nom:'Furosemida', dosis:'1–4 mg/kg', freq:'c/8–12 h', via:'PO/IV/IM', mg:2, hrs:12 },
+  { g:'DIURÉTICOS / CARDIO', nom:'Pimobendán', dosis:'0.25 mg/kg', freq:'c/12 h', via:'PO', mg:0.25, hrs:12 },
+  { g:'DIURÉTICOS / CARDIO', nom:'Enalapril', dosis:'0.25–0.5 mg/kg', freq:'c/12–24 h', via:'PO', mg:0.4, hrs:12 },
+  { g:'DIURÉTICOS / CARDIO', nom:'Espironolactona', dosis:'1–2 mg/kg', freq:'SID', via:'PO', mg:1.5, hrs:24 },
+  // GASTROENTEROLOGÍA
+  { g:'GASTROENTEROLOGÍA', nom:'Omeprazol', dosis:'1 mg/kg', freq:'SID', via:'PO/IV', mg:1, hrs:24 },
+  { g:'GASTROENTEROLOGÍA', nom:'Famotidina', dosis:'0.5–1 mg/kg', freq:'c/12–24 h', via:'PO/SC', mg:0.8, hrs:12 },
+  { g:'GASTROENTEROLOGÍA', nom:'Sucralfato', dosis:'0.5–1 g/perro', freq:'c/8 h', via:'PO', mg:null, hrs:8 },
+  { g:'GASTROENTEROLOGÍA', nom:'Ondansetrón', dosis:'0.5 mg/kg', freq:'c/8–12 h', via:'IV/SC', mg:0.5, hrs:12 },
+  { g:'GASTROENTEROLOGÍA', nom:'Maropitant (Cerenia)', dosis:'1 mg/kg SC · 2 mg/kg PO', freq:'SID', via:'SC/PO', mg:1, hrs:24 },
+  { g:'GASTROENTEROLOGÍA', nom:'Metoclopramida', dosis:'0.2–0.5 mg/kg', freq:'c/6–8 h', via:'IV/SC/PO', mg:0.3, hrs:8 },
+  // ANTIPARASITARIOS
+  { g:'ANTIPARASITARIOS', nom:'Ivermectina (perro, sarna)', dosis:'0.006 mg/kg SID × 3–6 sem', freq:'SID', via:'PO/SC', mg:0.006, hrs:24 },
+  { g:'ANTIPARASITARIOS', nom:'Selamectina', dosis:'6 mg/kg', freq:'c/30 días', via:'Spot-on', mg:6, hrs:720 },
+  { g:'ANTIPARASITARIOS', nom:'Milbemicina', dosis:'0.5 mg/kg', freq:'c/30 días', via:'PO', mg:0.5, hrs:720 },
+  { g:'ANTIPARASITARIOS', nom:'Praziquantel', dosis:'5–10 mg/kg', freq:'dosis única', via:'PO/SC', mg:7.5, hrs:24 },
+  { g:'ANTIPARASITARIOS', nom:'Fenbendazol', dosis:'50 mg/kg', freq:'SID × 3 días', via:'PO', mg:50, hrs:24 },
+  { g:'ANTIPARASITARIOS', nom:'Fipronil (pulgas)', dosis:'6.7 mg/kg', freq:'c/30 días', via:'Spot-on', mg:6.7, hrs:720 },
+  // ANESTÉSICOS / SEDANTES
+  { g:'ANESTÉSICOS / SEDANTES', nom:'Propofol (inducción)', dosis:'4–6 mg/kg', freq:'bolo único', via:'IV', mg:5, hrs:24 },
+  { g:'ANESTÉSICOS / SEDANTES', nom:'Ketamina', dosis:'5–10 mg/kg', freq:'bolo', via:'IV/IM', mg:5, hrs:24 },
+  { g:'ANESTÉSICOS / SEDANTES', nom:'Midazolam', dosis:'0.1–0.3 mg/kg', freq:'bolo', via:'IM/IV', mg:0.2, hrs:24 },
+  { g:'ANESTÉSICOS / SEDANTES', nom:'Dexmedetomidina', dosis:'5–10 µg/kg', freq:'bolo', via:'IM/IV', mg:0.007, hrs:24 },
+  { g:'ANESTÉSICOS / SEDANTES', nom:'Acepromazina', dosis:'0.01–0.05 mg/kg', freq:'bolo', via:'IM/IV', mg:0.03, hrs:24 },
+  // ENDOCRINO / OTROS
+  { g:'ENDOCRINO / OTROS', nom:'Insulina NPH (perro)', dosis:'0.5 U/kg inicial', freq:'c/12 h', via:'SC', mg:null, hrs:12 },
+  { g:'ENDOCRINO / OTROS', nom:'Levotiroxina (hipotiroidismo)', dosis:'0.02 mg/kg', freq:'c/12 h', via:'PO', mg:0.02, hrs:12 },
+  { g:'ENDOCRINO / OTROS', nom:'Trilostane (Cushing)', dosis:'1–2 mg/kg', freq:'SID–BID', via:'PO', mg:1.5, hrs:24 },
+  { g:'ENDOCRINO / OTROS', nom:'Vitamina K1 (raticidas)', dosis:'2.5–5 mg/kg', freq:'SID × 3–4 sem', via:'PO/SC', mg:3.5, hrs:24 },
+  { g:'ENDOCRINO / OTROS', nom:'Dimenhidrinato', dosis:'2–4 mg/kg', freq:'c/8 h', via:'PO/IM', mg:3, hrs:8 },
+  { g:'ENDOCRINO / OTROS', nom:'Difenhidramina', dosis:'2–4 mg/kg', freq:'c/8–12 h', via:'PO/IM', mg:2, hrs:12 }
+];
+
+function renderDrugs(filter = '') {
+  const f = filter.toLowerCase().trim();
+  const filtered = f ? DRUGS.filter(d =>
+    d.nom.toLowerCase().includes(f) || d.g.toLowerCase().includes(f)
+  ) : DRUGS;
+
+  // Agrupar por grupo
+  const grouped = {};
+  filtered.forEach(d => { (grouped[d.g] = grouped[d.g] || []).push(d); });
+
+  const rows = [];
+  Object.keys(grouped).forEach(g => {
+    if (!f || !g.toLowerCase().includes(f) || grouped[g].length > 0) {
+      rows.push(`<tr class="group-row"><td colspan="4">${g}</td></tr>`);
+    }
+    grouped[g].forEach((d, idx) => {
+      const realIdx = DRUGS.indexOf(d);
+      rows.push(`
+        <tr>
+          <td><strong>${d.nom}</strong></td>
+          <td>${d.dosis}<br><span style="color:var(--gv-text-muted);font-size:0.78rem;">${d.freq}</span></td>
+          <td><span class="badge badge-purple">${d.via}</span></td>
+          <td>${d.mg ? `<button class="btn btn-sm btn-outline" onclick="fillDrug(${realIdx})">Usar</button>` : ''}</td>
+        </tr>`);
+    });
+  });
+
+  document.getElementById('drugTable').innerHTML = rows.join('') || `<tr><td colspan="4" style="text-align:center;color:var(--gv-text-muted);padding:2rem;">Sin resultados para "${filter}"</td></tr>`;
+}
+renderDrugs();
+document.getElementById('drugSearch').addEventListener('input', e => renderDrugs(e.target.value));
+
+window.fillDrug = (i) => {
+  const d = DRUGS[i];
+  document.getElementById('d_mg').value = d.mg || '';
+  document.getElementById('d_freq').value = d.hrs || 24;
+  document.getElementById('d_peso').focus();
+  // Scroll suave al formulario
+  document.getElementById('d_peso').scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
 
 // ═══ DOSIS ═══
 window.calcDosis = () => {
@@ -429,47 +710,75 @@ window.calcDosis = () => {
   const mg = parseFloat(document.getElementById('d_mg').value);
   const conc = parseFloat(document.getElementById('d_conc').value);
   const freq = parseFloat(document.getElementById('d_freq').value) || 24;
-  if (!peso || !mg) { showRes('d_result', '<div class="res-warning"><div>Completa peso y dosis</div></div>'); return; }
+  if (!peso || !mg) return showRes('d_result', errBox('Completa peso y dosis'));
   const dosisTotal = peso * mg;
   const vol = conc ? (dosisTotal / conc) : null;
   const vecesDia = 24 / freq;
   const dosisDiaria = dosisTotal * vecesDia;
-  let html = resultCard('Dosis por toma', dosisTotal.toFixed(2), 'mg por administración',
+  let html = resCard('Dosis por toma', dosisTotal.toFixed(2), 'mg por administración',
     `<strong>Dosis diaria total:</strong> ${dosisDiaria.toFixed(2)} mg (${vecesDia.toFixed(1)} tomas/día)`);
-  if (vol) {
-    html += resultCard('Volumen a administrar', vol.toFixed(2), 'mL por toma',
-      `<strong>Volumen diario:</strong> ${(vol * vecesDia).toFixed(2)} mL`);
-  }
+  if (vol) html += resCard('Volumen por toma', vol.toFixed(2), 'mL',
+    `<strong>Volumen diario:</strong> ${(vol * vecesDia).toFixed(2)} mL · Concentración: ${conc} mg/mL`);
   showRes('d_result', html);
 };
 
-// Tabla de fármacos de referencia (ampliable)
-const DRUGS = [
-  { nom:'Amoxicilina–ác. clavulánico', dosis:'12.5–25 mg/kg PO c/12 h', mg:20, freq:12 },
-  { nom:'Cefalexina', dosis:'22 mg/kg PO c/12 h', mg:22, freq:12 },
-  { nom:'Enrofloxacino', dosis:'5–10 mg/kg SID', mg:7.5, freq:24 },
-  { nom:'Metronidazol', dosis:'10–25 mg/kg PO c/12 h', mg:15, freq:12 },
-  { nom:'Meloxicam (perro)', dosis:'0.2 mg/kg día 1, luego 0.1 mg/kg SID', mg:0.1, freq:24 },
-  { nom:'Carprofeno', dosis:'4.4 mg/kg SID o 2.2 mg/kg BID', mg:2.2, freq:12 },
-  { nom:'Tramadol', dosis:'2–5 mg/kg PO c/8–12 h', mg:3, freq:8 },
-  { nom:'Prednisolona (antiinflamatorio)', dosis:'0.5–1 mg/kg SID', mg:0.75, freq:24 },
-  { nom:'Furosemida', dosis:'1–4 mg/kg c/8–12 h', mg:2, freq:12 },
-  { nom:'Omeprazol', dosis:'1 mg/kg SID', mg:1, freq:24 },
-  { nom:'Ondansetrón', dosis:'0.5 mg/kg c/8–12 h IV/SC', mg:0.5, freq:12 },
-  { nom:'Maropitant (Cerenia)', dosis:'1 mg/kg SC SID', mg:1, freq:24 },
-  { nom:'Ivermectina (perro)', dosis:'0.006 mg/kg SID (sarna)', mg:0.006, freq:24 },
-  { nom:'Dexametasona', dosis:'0.1–0.2 mg/kg IV', mg:0.15, freq:24 }
-];
-document.getElementById('drugTable').innerHTML = DRUGS.map((d, i) => `
-  <tr>
-    <td><strong>${d.nom}</strong></td>
-    <td>${d.dosis}</td>
-    <td><button class="btn btn-small btn-outline" style="padding:.3rem .7rem;font-size:.75rem;" onclick="fillDrug(${i})">Usar</button></td>
-  </tr>`).join('');
-window.fillDrug = (i) => {
-  document.getElementById('d_mg').value = DRUGS[i].mg;
-  document.getElementById('d_freq').value = DRUGS[i].freq;
-  document.getElementById('d_peso').focus();
+// ═══ ANESTESIA ═══
+window.calcAnestesia = () => {
+  const esp = document.getElementById('an_esp').value;
+  const peso = parseFloat(document.getElementById('an_peso').value);
+  const asa = parseInt(document.getElementById('an_asa').value);
+  const tipo = document.getElementById('an_tipo').value;
+  if (!peso) return showRes('an_result', errBox('Ingresa el peso'));
+
+  const ajuste = asa >= 3 ? 0.7 : asa === 2 ? 0.85 : 1;
+  const isPerro = esp === 'perro';
+
+  // Dosis sugeridas (base × ajuste)
+  const premed = {
+    nom: isPerro ? 'Dexmedetomidina + Metadona' : 'Dexmedetomidina + Butorfanol',
+    dex: (isPerro ? 0.005 : 0.010) * ajuste, // mg/kg
+    op: isPerro ? 0.3 : 0.2 // metadona/butorfanol mg/kg
+  };
+  const induccion = { nom: 'Propofol', mg: (isPerro ? 5 : 6) * ajuste };
+  const mant = { nom: 'Isoflurano', cam: isPerro ? 1.3 : 1.6 };
+
+  const asaText = { 1:'ASA I', 2:'ASA II (-15%)', 3:'ASA III (-30%)', 4:'ASA IV (-30% + monitoreo estrecho)' }[asa];
+
+  let html = `
+    <div class="res-card">
+      <h4>Protocolo sugerido · ${esp} ${peso} kg · ${asaText}</h4>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Premedicación</div>
+          <div class="info-card-value">${premed.nom}</div>
+          <div style="font-size:0.82rem;color:var(--gv-text-muted);margin-top:0.3rem;">
+            Dex: <strong>${(premed.dex * peso * 1000).toFixed(1)} µg</strong> IM<br>
+            ${isPerro ? 'Metadona' : 'Butorfanol'}: <strong>${(premed.op * peso).toFixed(2)} mg</strong> IM<br>
+            Esperar 15–20 min antes de inducir
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Inducción</div>
+          <div class="info-card-value">${induccion.nom}</div>
+          <div style="font-size:0.82rem;color:var(--gv-text-muted);margin-top:0.3rem;">
+            <strong>${(induccion.mg * peso).toFixed(1)} mg</strong> IV<br>
+            Titular a efecto (usar 25% al 50% primero)
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Mantenimiento</div>
+          <div class="info-card-value">${mant.nom}</div>
+          <div style="font-size:0.82rem;color:var(--gv-text-muted);margin-top:0.3rem;">
+            <strong>${mant.cam}% CAM</strong> inhalatorio<br>
+            Ajustar a plano quirúrgico estable
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="res-warning">Monitoreo obligatorio: ECG, SpO₂, capnografía ETCO₂, presión arterial no invasiva, temperatura corporal. Fluidoterapia intraoperatoria: ${isPerro ? '3–5' : '2–3'} mL/kg/h. Mantener temperatura &gt;36°C.</div>
+  `;
+  if (tipo === 'larga') html += `<div class="res-warning">Procedimiento largo: considerar analgesia multimodal con lidocaína CRI (1–3 mg/kg/h) y ketamina CRI (0.1–0.4 mg/kg/h).</div>`;
+  showRes('an_result', html);
 };
 
 // ═══ FLUIDOS ═══
@@ -478,32 +787,61 @@ window.calcFluidos = () => {
   const peso = parseFloat(document.getElementById('f_peso').value);
   const deshid = parseFloat(document.getElementById('f_deshid').value);
   const perd = parseFloat(document.getElementById('f_perd').value) || 0;
-  if (!peso) { showRes('f_result', '<div class="res-warning"><div>Ingresa el peso</div></div>'); return; }
+  if (!peso) return showRes('f_result', errBox('Ingresa el peso'));
   const k = esp === 'perro' ? 132 : 80;
   const mant = k * Math.pow(peso, 0.75);
   const deficit = peso * (deshid / 100) * 1000;
   const perdidas = perd * peso;
   const total = mant + deficit + perdidas;
   const mlh = total / 24;
-  const gotas = Math.round(mlh / 3); // macrogotero 20 gotas/mL ≈ mL/h ÷ 3
+  const gotasMacro = Math.round((mlh * 20) / 60);
+  const gotasMicro = Math.round((mlh * 60) / 60);
   showRes('f_result',
-    resultCard('Volumen total 24 h', total.toFixed(0), `mL (${esp})`,
+    resCard('Volumen total 24 h', total.toFixed(0), `mL (${esp})`,
       `<strong>Mantenimiento:</strong> ${mant.toFixed(0)} mL · <strong>Déficit:</strong> ${deficit.toFixed(0)} mL · <strong>Pérdidas:</strong> ${perdidas.toFixed(0)} mL`) +
-    resultCard('Velocidad', mlh.toFixed(1), 'mL/hora',
-      `≈ <strong>${gotas} gotas/min</strong> con macrogotero · ≈ <strong>${Math.round(mlh)} gotas/min</strong> con microgotero`)
+    resCard('Velocidad continua', mlh.toFixed(1), 'mL/hora',
+      `≈ <strong>${gotasMacro} gotas/min</strong> con macrogotero · <strong>${gotasMicro} gotas/min</strong> con microgotero`,
+      'Si hay cardiopatía, reducir velocidad 30–50% y monitorear PVC o auscultación pulmonar cada 2 h.')
   );
 };
 window.calcBolo = () => {
   const esp = document.getElementById('b_esp').value;
   const peso = parseFloat(document.getElementById('b_peso').value);
   const pct = parseFloat(document.getElementById('b_pct').value);
-  if (!peso) { showRes('b_result', '<div class="res-warning"><div>Ingresa el peso</div></div>'); return; }
+  if (!peso) return showRes('b_result', errBox('Ingresa el peso'));
   const volShock = esp === 'perro' ? 90 : 60;
   const bolo = peso * volShock * pct;
   showRes('b_result',
-    resultCard('Bolo inicial', bolo.toFixed(0), 'mL en 15–20 min',
+    resCard('Bolo inicial', bolo.toFixed(0), 'mL en 15–20 min',
       `Volemia estimada: ${(peso * volShock).toFixed(0)} mL · Se administra el ${(pct*100)}% y se reevalúa.`,
-      'Monitorea TRC, pulso, mucosas y diuresis cada 15 min. Si no mejora, repetir bolo y considerar coloides/vasopresores.')
+      'Reevalúa TRC, frecuencia cardiaca, pulso, mucosas y presión arterial cada 15 min. Si no mejora, repetir bolo hasta total 90 mL/kg (perro) o 60 mL/kg (gato). Considerar coloides (Hetastarch 5 mL/kg) o vasopresores (noradrenalina 0.05–1 µg/kg/min).')
+  );
+};
+window.calcGoteo = () => {
+  const vol = parseFloat(document.getElementById('v_vol').value);
+  const horas = parseFloat(document.getElementById('v_horas').value);
+  const eq = parseFloat(document.getElementById('v_equipo').value);
+  if (!vol || !horas) return showRes('v_result', errBox('Completa volumen y horas'));
+  const mlh = vol / horas;
+  const gotMin = (mlh * eq) / 60;
+  const eqLabel = eq === 20 ? 'macrogotero' : eq === 60 ? 'microgotero' : 'equipo transfusión';
+  showRes('v_result',
+    resCard('Velocidad', mlh.toFixed(1), 'mL/hora',
+      `<strong>${gotMin.toFixed(0)} gotas/minuto</strong> con ${eqLabel} (${eq} gotas/mL)`)
+  );
+};
+
+// ═══ URGENCIAS ═══
+window.calcHipo = () => {
+  const peso = parseFloat(document.getElementById('h_peso').value);
+  if (!peso) return showRes('h_result', errBox('Ingresa el peso'));
+  const boloGr = 0.5 * peso; // 0.5 g/kg dextrosa
+  const dex50 = boloGr * 2; // 50% = 0.5 g/mL → mL = g × 2
+  const diluida = dex50 * 4; // diluir 1:4 para reducir osmolaridad
+  showRes('h_result',
+    resCard('Dextrosa 50%', dex50.toFixed(1), 'mL IV en bolo lento',
+      `Equivale a <strong>${boloGr.toFixed(1)} g</strong> de glucosa (0.5 g/kg). <strong>Diluir al menos 1:2 o 1:4</strong> con solución salina (${diluida.toFixed(0)} mL totales) para evitar flebitis. Administrar en 5–10 min.`,
+      'Después del bolo: iniciar infusión continua dextrosa 2.5–5% hasta resolver causa. Medir glicemia c/15 min primera hora.')
   );
 };
 
@@ -511,109 +849,42 @@ window.calcBolo = () => {
 window.calcEnergia = () => {
   const peso = parseFloat(document.getElementById('e_peso').value);
   const factor = parseFloat(document.getElementById('e_factor').value);
-  if (!peso) { showRes('e_result', '<div class="res-warning"><div>Ingresa el peso</div></div>'); return; }
+  if (!peso) return showRes('e_result', errBox('Ingresa el peso'));
   const rer = 70 * Math.pow(peso, 0.75);
   const mer = rer * factor;
   showRes('e_result',
-    resultCard('RER (reposo)', rer.toFixed(0), 'kcal/día',
-      'Usa este valor para pacientes hospitalizados o en dieta muy controlada.') +
-    resultCard('MER (mantenimiento)', mer.toFixed(0), 'kcal/día',
-      `Factor aplicado: ×${factor}. <strong>Úsalo para calcular la porción diaria de alimento.</strong>`)
+    resCard('RER (reposo)', rer.toFixed(0), 'kcal/día',
+      'Usa este valor en pacientes hospitalizados o en restricción calórica estricta.') +
+    resCard('MER (mantenimiento)', mer.toFixed(0), 'kcal/día',
+      `Factor aplicado: ×${factor}. <strong>Úsalo para calcular la porción diaria.</strong>`)
   );
 };
 window.calcPorcion = () => {
   const mer = parseFloat(document.getElementById('p_mer').value);
   const kcal = parseFloat(document.getElementById('p_kcal').value);
   const tomas = parseInt(document.getElementById('p_tomas').value);
-  if (!mer || !kcal) { showRes('p_result', '<div class="res-warning"><div>Completa MER y kcal/100g</div></div>'); return; }
+  if (!mer || !kcal) return showRes('p_result', errBox('Completa MER y kcal/100g'));
   const gramosDia = (mer / kcal) * 100;
   const porToma = gramosDia / tomas;
   showRes('p_result',
-    resultCard('Gramos por día', gramosDia.toFixed(0), 'g/día',
+    resCard('Gramos por día', gramosDia.toFixed(0), 'g/día',
       `<strong>${porToma.toFixed(0)} g por toma</strong> (${tomas} tomas/día)`)
-  );
-};
-
-// ═══ EDAD ═══
-window.calcEdadPerro = () => {
-  const anos = parseFloat(document.getElementById('edP_anos').value);
-  const tam = document.getElementById('edP_tam').value;
-  if (!anos) { showRes('edP_result', '<div class="res-warning"><div>Ingresa la edad</div></div>'); return; }
-  let edadH;
-  if (anos < 1) edadH = anos * 15;
-  else if (anos < 2) edadH = 15 + (anos - 1) * 9;
-  else {
-    // Perros pequeños envejecen más lento, gigantes más rápido
-    const multi = tam === 'chico' ? 4 : tam === 'mediano' ? 5 : tam === 'grande' ? 6 : 8;
-    edadH = 24 + (anos - 2) * multi;
-  }
-  // Fórmula alternativa epigenética (Wang et al. 2019)
-  const epig = anos > 0 ? 16 * Math.log(anos) + 31 : 0;
-  showRes('edP_result',
-    resultCard('Edad humana equivalente', edadH.toFixed(0), 'años (AAHA)',
-      `<strong>Fórmula epigenética (2019):</strong> ${epig.toFixed(0)} años humanos<br>Promedio según tamaño "${tam}".`)
-  );
-};
-window.calcEdadGato = () => {
-  const anos = parseFloat(document.getElementById('edG_anos').value);
-  if (!anos) { showRes('edG_result', '<div class="res-warning"><div>Ingresa la edad</div></div>'); return; }
-  let edadH;
-  if (anos < 1) edadH = anos * 15;
-  else if (anos < 2) edadH = 15 + (anos - 1) * 9;
-  else edadH = 24 + (anos - 2) * 4;
-  showRes('edG_result',
-    resultCard('Edad humana equivalente', edadH.toFixed(0), 'años (AAFP)',
-      'Los gatos tienen 24 años humanos al cumplir 2; luego suman ~4 años humanos por cada año gato.')
-  );
-};
-
-// ═══ TRANSFUSIÓN ═══
-window.calcTransfusion = () => {
-  const esp = document.getElementById('t_esp').value;
-  const peso = parseFloat(document.getElementById('t_peso').value);
-  const pcvA = parseFloat(document.getElementById('t_pcvA').value);
-  const pcvO = parseFloat(document.getElementById('t_pcvO').value);
-  const pcvD = parseFloat(document.getElementById('t_pcvD').value) || 45;
-  if (!peso || !pcvA || !pcvO) { showRes('t_result', '<div class="res-warning"><div>Completa peso y PCV</div></div>'); return; }
-  if (pcvO <= pcvA) { showRes('t_result', '<div class="res-warning"><div>El PCV objetivo debe ser mayor al actual</div></div>'); return; }
-  const k = esp === 'perro' ? 90 : 60;
-  const vol = ((pcvO - pcvA) / pcvD) * k * peso;
-  const primerosMin = 0.25 * peso; // mL en 15-30 min
-  showRes('t_result',
-    resultCard('Volumen a transfundir', vol.toFixed(0), 'mL de sangre entera',
-      `Subir PCV de ${pcvA}% → ${pcvO}% · Volemia: ${(peso * k).toFixed(0)} mL`) +
-    resultCard('Velocidad inicial', primerosMin.toFixed(1), 'mL en los primeros 15–30 min',
-      'Vigila fiebre, taquicardia, vómito o urticaria. Si todo bien, completar en 2–4 h.',
-      'Nunca superes 22 mL/kg/día salvo urgencia vital.')
-  );
-};
-window.calcGoteo = () => {
-  const vol = parseFloat(document.getElementById('v_vol').value);
-  const horas = parseFloat(document.getElementById('v_horas').value);
-  const eq = parseFloat(document.getElementById('v_equipo').value);
-  if (!vol || !horas) { showRes('v_result', '<div class="res-warning"><div>Completa volumen y horas</div></div>'); return; }
-  const mlh = vol / horas;
-  const gotMin = (mlh * eq) / 60;
-  showRes('v_result',
-    resultCard('Velocidad', mlh.toFixed(1), 'mL/hora',
-      `<strong>${gotMin.toFixed(0)} gotas/minuto</strong> con ${eq === 20 ? 'macrogotero' : 'microgotero'}`)
   );
 };
 
 // ═══ BCS ═══
 const BCS_INFO = {
-  1: ['💀','1 – Caquéctico','Costillas, columna, huesos pélvicos muy visibles. Sin masa muscular. Pérdida obvia de grasa.'],
-  2: ['🦴','2 – Muy delgado','Costillas y columna visibles, pelvis prominente, grasa mínima.'],
+  1: ['💀','1 – Caquéctico','Costillas, columna, huesos pélvicos muy visibles. Sin masa muscular ni grasa palpable.'],
+  2: ['🦴','2 – Muy delgado','Costillas, columna y pelvis prominentes, grasa mínima, pérdida muscular evidente.'],
   3: ['😟','3 – Delgado','Costillas fácilmente palpables, cintura muy marcada vista desde arriba.'],
-  4: ['🙂','4 – Ligeramente bajo','Costillas palpables con leve cobertura. Cintura visible.'],
+  4: ['🙂','4 – Ligeramente bajo','Costillas palpables con leve cobertura grasa. Cintura visible.'],
   5: ['✅','5 – Ideal','Costillas palpables con cobertura grasa leve. Cintura y perfil abdominal normales.'],
   6: ['🙃','6 – Sobrepeso leve','Costillas palpables con dificultad. Cintura poco marcada.'],
   7: ['😬','7 – Sobrepeso','Costillas no palpables fácilmente. Depósitos grasos lumbares y base de cola. Sin cintura.'],
   8: ['😰','8 – Obeso','Costillas no palpables. Cintura ausente. Distensión abdominal.'],
-  9: ['🚨','9 – Obesidad severa','Depósitos grasos masivos en tórax, columna y abdomen. Alto riesgo de patologías asociadas.']
+  9: ['🚨','9 – Obesidad severa','Depósitos grasos masivos en tórax, columna y abdomen. Alto riesgo de comorbilidades.']
 };
-const scaleDiv = document.getElementById('bcsScale');
-scaleDiv.innerHTML = Object.entries(BCS_INFO).map(([n, [emoji]]) => `
+document.getElementById('bcsScale').innerHTML = Object.entries(BCS_INFO).map(([n,[emoji]]) => `
   <button class="bcs-btn" onclick="pickBCS(${n})" data-bcs="${n}">
     <span class="bcs-num">${n}</span>
     <span class="bcs-emoji">${emoji}</span>
@@ -623,19 +894,19 @@ window.pickBCS = (n) => {
   bcsActual = n;
   document.querySelectorAll('.bcs-btn').forEach(b => b.classList.toggle('active', b.dataset.bcs == n));
   const [emoji, label, desc] = BCS_INFO[n];
-  document.getElementById('bcsDesc').innerHTML = `<strong>${emoji} ${label}</strong><br>${desc}`;
+  document.getElementById('bcsDesc').innerHTML = `<strong style="color:var(--gv-gold-hover);">${emoji} ${label}</strong><br>${desc}`;
 };
 window.calcBCS = () => {
   const peso = parseFloat(document.getElementById('bcs_peso').value);
-  if (!bcsActual) { showRes('bcs_result', '<div class="res-warning"><div>Selecciona un BCS</div></div>'); return; }
-  if (!peso) { showRes('bcs_result', '<div class="res-warning"><div>Ingresa el peso</div></div>'); return; }
-  const deltaPct = (5 - bcsActual) * 10; // cuánto % del peso actual debe cambiar
+  if (!bcsActual) return showRes('bcs_result', errBox('Selecciona un BCS'));
+  if (!peso) return showRes('bcs_result', errBox('Ingresa el peso'));
+  const deltaPct = (5 - bcsActual) * 10;
   const ideal = peso * (1 + deltaPct / 100);
   const diff = ideal - peso;
   const acc = diff > 0 ? 'ganar' : diff < 0 ? 'perder' : 'mantener';
   showRes('bcs_result',
-    resultCard('Peso ideal estimado', ideal.toFixed(1), 'kg',
-      `<strong>Debe ${acc} ${Math.abs(diff).toFixed(1)} kg</strong> (${Math.abs(deltaPct)}% del peso actual). ${bcsActual > 5 ? 'Plan de pérdida progresiva: 1–2% del peso/semana.' : bcsActual < 5 ? 'Plan de ganancia: aumenta MER en 20–30% con dieta de recuperación.' : 'Peso ideal.'}`)
+    resCard('Peso ideal estimado', ideal.toFixed(1), 'kg',
+      `<strong>Debe ${acc} ${Math.abs(diff).toFixed(1)} kg</strong> (${Math.abs(deltaPct)}% del peso actual). ${bcsActual > 5 ? 'Plan de pérdida: 1–2% del peso/semana. Restricción calórica al 80% del MER ideal.' : bcsActual < 5 ? 'Plan de ganancia: aumentar MER 20–30% con dieta de recuperación.' : 'Mantener peso actual con MER estándar.'}`)
   );
 };
 </script>

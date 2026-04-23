@@ -6,45 +6,174 @@
 <title>Iniciar sesión · Club GlobalVet México</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/club-extra.css">
 <style>
-  body{background:linear-gradient(135deg,var(--dark) 0%,var(--purple) 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
-  .login-wrap{max-width:420px;width:100%;background:var(--surface);border-radius:18px;padding:2.2rem 2rem;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-  .login-head{text-align:center;margin-bottom:1.8rem}
-  .login-head img{width:56px;height:56px;border-radius:14px;margin-bottom:.8rem}
-  .login-head h1{font-family:var(--ff);font-size:1.4rem;font-weight:700;color:var(--dark);margin-bottom:.3rem}
-  .login-head p{color:var(--muted);font-size:.9rem}
-  .login-footer{text-align:center;margin-top:1.2rem;font-size:.85rem;color:var(--muted)}
-  .login-footer a{color:var(--purple);font-weight:700}
-  .err-box{background:#fee;color:var(--red);padding:.7rem .9rem;border-radius:10px;font-size:.85rem;margin-bottom:1rem;display:none}
-  .err-box.show{display:block}
+  body {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+  }
+  .login-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px; width: 100%;
+    background: var(--gv-bg-surface);
+    border: 1px solid var(--gv-border-strong);
+    border-radius: var(--gv-radius-lg);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+  .login-hero {
+    background:
+      radial-gradient(ellipse 400px 300px at 30% 20%, rgba(245, 158, 11, 0.3), transparent 60%),
+      linear-gradient(135deg, #2d1a68 0%, #1a1040 100%);
+    padding: 3rem;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-hero::before {
+    content: '';
+    position: absolute;
+    bottom: -50%; right: -20%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 60%);
+    pointer-events: none;
+  }
+  .login-hero-logo {
+    width: 60px; height: 60px; border-radius: 16px; object-fit: cover;
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--gv-border-gold);
+    box-shadow: var(--gv-shadow-gold);
+  }
+  .login-hero h1 {
+    font-family: var(--gv-ff);
+    font-size: 1.9rem; font-weight: 800;
+    color: var(--gv-text);
+    margin-bottom: 0.8rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .login-hero .accent { color: var(--gv-gold); }
+  .login-hero p {
+    color: rgba(240, 235, 255, 0.75);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .login-perks { list-style: none; position: relative; }
+  .login-perks li {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 0;
+    color: var(--gv-text); font-size: 0.9rem; font-weight: 500;
+  }
+  .login-perks li::before {
+    content: '✓';
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--gv-gold), var(--gv-gold-deep));
+    color: #1a0f04;
+    border-radius: 50%;
+    font-weight: 800; font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  .login-form {
+    padding: 3rem;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .login-form h2 {
+    font-family: var(--gv-ff);
+    font-size: 1.5rem; font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .login-form .sub {
+    color: var(--gv-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.8rem;
+  }
+  .divider-or {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 1.2rem 0;
+    color: var(--gv-text-dim);
+    font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .divider-or::before, .divider-or::after {
+    content: ''; flex: 1; height: 1px; background: var(--gv-border);
+  }
+  .login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.86rem;
+    color: var(--gv-text-muted);
+  }
+  .login-footer a { color: var(--gv-purple-hover); font-weight: 700; }
+  .login-footer a:hover { color: var(--gv-gold); }
+  .err-box {
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #fda4af;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .err-box.show { display: block; }
+  .err-box.ok { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--gv-emerald-hover); }
+
+  @media (max-width: 780px) {
+    .login-split { grid-template-columns: 1fr; max-width: 440px; }
+    .login-hero { display: none; }
+    .login-form { padding: 2rem; }
+  }
 </style>
 </head>
 <body>
-<div class="login-wrap">
-  <div class="login-head">
-    <img src="../assets/logo/globalvet-logo.jpg" alt="GlobalVet">
-    <h1>Iniciar sesión</h1>
-    <p>Entra a tu área VIP de GlobalVet México</p>
+
+<div class="login-split">
+  <div class="login-hero">
+    <img src="../assets/logo/globalvet-logo.jpg" alt="" class="login-hero-logo">
+    <h1>Bienvenido de nuevo al <span class="accent">Club VIP</span></h1>
+    <p>Continúa donde lo dejaste. Nuevos cursos, herramientas clínicas y sesiones en vivo te esperan.</p>
+    <ul class="login-perks">
+      <li>Biblioteca exclusiva de cursos</li>
+      <li>Herramientas clínicas profesionales</li>
+      <li>Sesiones en vivo con especialistas</li>
+      <li>20% OFF en todos los cursos</li>
+      <li>Canal exclusivo WhatsApp</li>
+    </ul>
   </div>
-  <div id="errBox" class="err-box"></div>
-  <div class="field">
-    <label>Correo electrónico</label>
-    <input type="email" id="email" placeholder="tunombre@correo.com" autocomplete="email">
-  </div>
-  <div class="field">
-    <label>Contraseña</label>
-    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-  </div>
-  <button class="btn btn-primary btn-block" id="btnLogin" style="margin-top:.5rem;">Entrar</button>
-  <div style="text-align:center;margin:1rem 0;color:var(--muted);font-size:.78rem;">— o —</div>
-  <button class="btn btn-outline btn-block" id="btnGoogle">Continuar con Google</button>
-  <div class="login-footer">
-    ¿Aún no eres miembro? <a href="club-registro.html">Únete al Club VIP</a><br>
-    <a href="#" id="btnReset" style="font-size:.78rem;color:var(--muted);">¿Olvidaste tu contraseña?</a>
+
+  <div class="login-form">
+    <h2>Iniciar sesión</h2>
+    <p class="sub">Ingresa con tu correo para entrar al área VIP</p>
+    <div id="errBox" class="err-box"></div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" placeholder="tunombre@correo.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-gold btn-block" id="btnLogin">Entrar →</button>
+    <div class="divider-or">o continúa con</div>
+    <button class="btn btn-outline btn-block" id="btnGoogle">
+      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google
+    </button>
+    <div class="login-footer">
+      ¿Aún no eres miembro? <a href="club-registro.html">Únete al Club VIP →</a><br>
+      <a href="#" id="btnReset" style="font-size:0.8rem;color:var(--gv-text-muted);">¿Olvidaste tu contraseña?</a>
+    </div>
   </div>
 </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -61,12 +190,15 @@ const app = initializeApp(cfg);
 const auth = getAuth(app);
 
 const errBox = document.getElementById('errBox');
-function showErr(msg) { errBox.textContent = msg; errBox.classList.add('show'); }
+function showErr(msg, isOk = false) {
+  errBox.textContent = msg;
+  errBox.className = 'err-box show' + (isOk ? ' ok' : '');
+}
 
 document.getElementById('btnLogin').addEventListener('click', async () => {
   const email = document.getElementById('email').value.trim();
   const pass  = document.getElementById('password').value;
-  if (!email || !pass) { showErr('Completa correo y contraseña'); return; }
+  if (!email || !pass) return showErr('Completa correo y contraseña');
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     window.location.href = 'club-dashboard.html';
@@ -75,7 +207,8 @@ document.getElementById('btnLogin').addEventListener('click', async () => {
       'auth/invalid-credential':'Correo o contraseña incorrectos',
       'auth/user-not-found':'No existe una cuenta con ese correo',
       'auth/wrong-password':'Contraseña incorrecta',
-      'auth/too-many-requests':'Demasiados intentos. Intenta más tarde.'
+      'auth/too-many-requests':'Demasiados intentos. Intenta más tarde.',
+      'auth/invalid-email':'Formato de correo inválido'
     };
     showErr(map[err.code] || 'No se pudo iniciar sesión');
   }
@@ -93,18 +226,13 @@ document.getElementById('btnGoogle').addEventListener('click', async () => {
 document.getElementById('btnReset').addEventListener('click', async (e) => {
   e.preventDefault();
   const email = document.getElementById('email').value.trim();
-  if (!email) { showErr('Escribe tu correo arriba y vuelve a hacer clic'); return; }
+  if (!email) return showErr('Escribe tu correo y vuelve a hacer clic');
   try {
     await sendPasswordResetEmail(auth, email);
-    errBox.style.background = '#d1fae5';
-    errBox.style.color = '#065f46';
-    showErr('Te enviamos un correo para restablecer tu contraseña');
-  } catch (err) {
-    showErr('No pudimos enviar el correo');
-  }
+    showErr('Te enviamos un correo para restablecer tu contraseña', true);
+  } catch (err) { showErr('No pudimos enviar el correo'); }
 });
 
-// Enter submits
 document.getElementById('password').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btnLogin').click();
 });
