@@ -58,7 +58,7 @@
       const isActive = session.planStatus === 'active';
       const list = document.getElementById('pdfsList');
       if (pdfs.length === 0) {
-        list.innerHTML = `<div style="text-align:center;padding:50px 20px;color:var(--zoo-text-dim);background:var(--zoo-bg-card);border-radius:var(--zoo-radius);">📄 Aún no hay PDFs disponibles. Pronto tendrás guías y manuales científicos.</div>`;
+        list.innerHTML = `<div style="text-align:center;padding:50px 20px;color:var(--zoo-text-dim);background:var(--zoo-bg-card);border-radius:var(--zoo-radius);">📄 Aún no hay PDFs disponibles. Pronto tendrás guías y manuales clínicos.</div>`;
         return;
       }
       list.innerHTML = pdfs.map((p, idx) => {

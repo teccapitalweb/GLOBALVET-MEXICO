@@ -126,7 +126,7 @@ const GLOBALVET_CLUB = {
 
   sourceColorClass(source) {
     const s = (source || '').toLowerCase();
-    if (s.includes('mongabay'))      return 'amber';
+    if (s.includes('avma') || s.includes('dvm360'))      return 'amber';
     if (s.includes('dw'))            return 'blue';
     if (s.includes('bbc'))           return 'orange';
     if (s.includes('scidev'))        return 'blue';
@@ -381,7 +381,7 @@ const GLOBALVET_CLUB = {
     );
 
     if (!popup || popup.closed) {
-      alert('⚠️ Tu navegador bloqueó la ventana de pago. Por favor permite pop-ups para zoorigen.com y vuelve a intentarlo.');
+      alert('⚠️ Tu navegador bloqueó la ventana de pago. Por favor permite pop-ups para globalvetmexico.com y vuelve a intentarlo.');
       return;
     }
 
@@ -444,7 +444,7 @@ const GLOBALVET_CLUB = {
       `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,location=no,status=no,resizable=yes,scrollbars=yes`
     );
     if (!window.__zooPopup) {
-      alert('⚠️ Tu navegador bloqueó la ventana. Permite pop-ups para zoorigen.com.');
+      alert('⚠️ Tu navegador bloqueó la ventana. Permite pop-ups para globalvetmexico.com.');
     }
   },
 
@@ -504,8 +504,8 @@ const GLOBALVET_CLUB = {
   LEVELS: [
     { level: 1, name: 'Aprendiz',        icon: '🌱', minXP: 0,    color: '#6FBF73' },
     { level: 2, name: 'Observador',      icon: '🔍', minXP: 100,  color: '#6FBF73' },
-    { level: 3, name: 'Biólogo Jr',      icon: '🦎', minXP: 250,  color: '#F5C62E' },
-    { level: 4, name: 'Biólogo',         icon: '🦒', minXP: 500,  color: '#F5C62E' },
+    { level: 3, name: 'Veterinario Jr',      icon: '🦎', minXP: 250,  color: '#F5C62E' },
+    { level: 4, name: 'Veterinario',         icon: '🐾', minXP: 500,  color: '#F5C62E' },
     { level: 5, name: 'Explorador',      icon: '🧭', minXP: 900,  color: '#E8A317' },
     { level: 6, name: 'Investigador',    icon: '🔬', minXP: 1400, color: '#E8A317' },
     { level: 7, name: 'Experto Fauna',   icon: '🏆', minXP: 2000, color: '#D55A28' },
@@ -545,7 +545,7 @@ const GLOBALVET_CLUB = {
   REWARDS: [
     { level: 2, icon: '🎁', title: 'Descuento 10%',    code: 'BIOLOGO10',   desc: 'En cualquier curso GlobalVet México' },
     { level: 3, icon: '📘', title: 'PDF Premium',       code: 'PDF-FAUNA',   desc: 'Guía exclusiva de 80 páginas' },
-    { level: 4, icon: '🦒', title: 'Sticker digital',   code: 'STICKER-BIO', desc: 'Pack de 5 stickers para WhatsApp' },
+    { level: 4, icon: '🐾', title: 'Sticker digital',   code: 'STICKER-BIO', desc: 'Pack de 5 stickers para WhatsApp' },
     { level: 5, icon: '💰', title: 'Descuento 30%',     code: 'EXPLORA30',   desc: 'En cualquier curso premium' },
     { level: 6, icon: '🎟️', title: 'Acceso anticipado', code: 'PRIORIDAD',   desc: 'A sesiones con cupo limitado' },
     { level: 7, icon: '🏆', title: 'Sesión privada',    code: 'EXPERTO1A1',  desc: '30 min gratis con un especialista' },
@@ -883,7 +883,7 @@ const GLOBALVET_CLUB = {
           }).join('')}
         </div>
         <div class="zoo-rewards-footer">
-          💬 Canjea tus códigos con nosotros por <a href="https://wa.me/5212361113237?text=Hola%2C%20quiero%20canjear%20mi%20c%C3%B3digo%20de%20recompensa%20VIP" target="_blank">WhatsApp</a>
+          💬 Canjea tus códigos con nosotros por <a href="https://wa.me/5212381500864?text=Hola%2C%20quiero%20canjear%20mi%20c%C3%B3digo%20de%20recompensa%20VIP" target="_blank">WhatsApp</a>
         </div>
       </div>
     `;
@@ -966,14 +966,14 @@ const GLOBALVET_CLUB = {
       <div class="zoo-welcome-box">
         <button class="zoo-welcome-close" aria-label="Cerrar">×</button>
         <div class="zoo-welcome-emoji-wrap">
-          <div class="zoo-welcome-emoji">🦒</div>
+          <div class="zoo-welcome-emoji">🐾</div>
           <div class="zoo-welcome-sparkle zoo-welcome-sparkle-1">✨</div>
           <div class="zoo-welcome-sparkle zoo-welcome-sparkle-2">⭐</div>
           <div class="zoo-welcome-sparkle zoo-welcome-sparkle-3">✨</div>
         </div>
         <div class="zoo-welcome-badge">🎉 ¡BIENVENIDO AL CLUB VIP!</div>
         <h1 class="zoo-welcome-title">¡Felicidades <span>${firstName}</span>!</h1>
-        <p class="zoo-welcome-desc">Eres parte oficial de <strong>GlobalVet México</strong>, la comunidad científica de fauna más completa de México.</p>
+        <p class="zoo-welcome-desc">Eres parte oficial de <strong>GlobalVet México</strong>, la comunidad de capacitación veterinaria más completa de México.</p>
         <div class="zoo-welcome-plan">
           <div class="zoo-welcome-plan-icon">🏆</div>
           <div>
@@ -987,7 +987,7 @@ const GLOBALVET_CLUB = {
           <div class="zoo-welcome-benefit"><span>💰</span><div><strong>20% OFF permanente</strong><small>En todas las capacitaciones GlobalVet México</small></div></div>
         </div>
         <button class="zoo-welcome-cta" id="zoo-welcome-cta-btn">🚀 Empezar a explorar</button>
-        <div class="zoo-welcome-footer">¿Necesitas ayuda? Contáctanos por <a href="https://wa.me/5212361113237" target="_blank">WhatsApp</a></div>
+        <div class="zoo-welcome-footer">¿Necesitas ayuda? Contáctanos por <a href="https://wa.me/5212381500864" target="_blank">WhatsApp</a></div>
       </div>
     `;
     document.body.appendChild(modal);
@@ -1144,7 +1144,7 @@ const GLOBALVET_CLUB = {
     } catch (err) {
       console.error('Google login error:', err);
       let msg = 'No se pudo iniciar sesión con Google';
-      if (err.code === 'auth/popup-blocked') msg = 'Tu navegador bloqueó el popup de Google. Permite popups para zoorigen.com.';
+      if (err.code === 'auth/popup-blocked') msg = 'Tu navegador bloqueó el popup de Google. Permite popups para globalvetmexico.com.';
       if (err.code === 'auth/popup-closed-by-user') msg = 'Cerraste la ventana de Google antes de iniciar sesión.';
       if (err.code === 'auth/cancelled-popup-request') msg = 'Solo puede haber un popup de Google a la vez.';
       return { ok: false, msg };
@@ -1344,14 +1344,14 @@ const GLOBALVET_CLUB = {
 
     const steps = [
       {
-        icon: '🦒',
+        icon: '🐾',
         title: '¡Bienvenido al Club VIP GlobalVet!',
-        desc: 'Aquí tienes acceso ilimitado a la comunidad científica de fauna más completa de México. Te mostramos en 5 pasos cómo aprovechar al máximo tu membresía.',
+        desc: 'Aquí tienes acceso ilimitado a la comunidad de capacitación veterinaria más completa de México. Te mostramos en 5 pasos cómo aprovechar al máximo tu membresía.',
         tipsTitle: 'Qué encontrarás aquí',
         tips: [
-          'Biblioteca de cursos en fauna silvestre',
+          'Biblioteca de cursos en medicina veterinaria',
           'Webinars en vivo con especialistas',
-          'Biblioteca de PDFs y material científico',
+          'Biblioteca de PDFs y material clínico',
           'Foro privado de la comunidad',
           '20% OFF permanente en cursos GlobalVet México'
         ]
@@ -1359,7 +1359,7 @@ const GLOBALVET_CLUB = {
       {
         icon: '📚',
         title: 'Biblioteca de cursos',
-        desc: 'Explora cursos completos sobre fauna mexicana, manejo, rehabilitación y más. Tu progreso se guarda automáticamente entre dispositivos.',
+        desc: 'Explora cursos completos sobre medicina veterinaria, manejo, rehabilitación y más. Tu progreso se guarda automáticamente entre dispositivos.',
         tipsTitle: 'Cómo usar la biblioteca',
         tips: [
           'Entra a "Biblioteca" desde el menú',

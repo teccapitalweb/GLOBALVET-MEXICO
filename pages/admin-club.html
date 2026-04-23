@@ -134,7 +134,7 @@
   <!-- ═══════════ LOGIN SCREEN ═══════════ -->
   <div class="login-wrap" id="loginScreen">
     <div class="login-card">
-      <div class="login-card__logo">🦒</div>
+      <div class="login-card__logo">🐾</div>
       <h1>Panel Admin GlobalVet México</h1>
       <p class="subtitle">Acceso exclusivo para administradores</p>
       <div class="login-err" id="loginErr"></div>
@@ -152,7 +152,7 @@
 
     <aside class="asb">
       <div class="asb-brand">
-        <div class="icon">🦒</div>
+        <div class="icon">🐾</div>
         <div><h3>GlobalVet México</h3><small>Admin</small></div>
       </div>
 
@@ -194,7 +194,7 @@
     // Igual que OdonTeck (OdonTeck2026!) e ICADEM.
     // ═══════════════════════════════════════════════════════════
     const ADMIN_PWD = 'GlobalVet México2026!';
-    const PWD_KEY = 'zoorigen_admin_pwd_ok';
+    const PWD_KEY = 'globalvet_admin_pwd_ok';
 
     const AREAS = ['Fauna silvestre', 'Fauna ponzoñosa', 'Apicultura', 'Etología', 'Investigación', 'Manejo en cautiverio', 'Conservación'];
 
@@ -753,7 +753,7 @@
     window.formSesion = (data = {}) => {
       openModal(`
         <h3>${data.id ? '✏️ Editar' : '➕ Nuevo'} webinar</h3>
-        <div class="field"><label>Título del webinar *</label><input type="text" id="f_title" value="${data.title || ''}" placeholder="Ej. Manejo de fauna silvestre en UMAs"></div>
+        <div class="field"><label>Título del webinar *</label><input type="text" id="f_title" value="${data.title || ''}" placeholder="Ej. Manejo de medicina veterinaria en UMAs"></div>
         <div class="field"><label>Ponente / Especialista</label><input type="text" id="f_speaker" value="${data.speaker || ''}" placeholder="Ej. Dr. Iván Coronel"></div>
         <div class="field"><label>Fecha *</label><input type="date" id="f_date" value="${data.date || ''}"></div>
         <div class="field"><label>Hora</label><input type="time" id="f_time" value="${data.time || '19:00'}"></div>
@@ -786,7 +786,7 @@
     // ═══════════ NOTICIAS ═══════════
     async function loadNoticias() {
       const v = document.getElementById('secView');
-      v.innerHTML = '<h1>📰 Noticias</h1><p class="sub">Auto-sincronizadas desde Mongabay, SciDev, DW y BBC Mundo cada 6 horas</p>';
+      v.innerHTML = '<h1>📰 Noticias</h1><p class="sub">Auto-sincronizadas desde AVMA, DVM360 y Veterinary Practice cada 6 horas</p>';
       try {
         const snap = await db.collection('noticias').orderBy('createdAt', 'desc').limit(30).get();
         const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));

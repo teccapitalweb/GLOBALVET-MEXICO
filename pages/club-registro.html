@@ -18,7 +18,7 @@
         <img src="../assets/img/logo/logo.jpg" alt="GlobalVet México">
         <div><h3>GlobalVet México</h3><small>Club VIP</small></div>
       </div>
-      <h1>Únete a la comunidad científica de fauna más completa de México</h1>
+      <h1>Únete a la comunidad de capacitación veterinaria más completa de México</h1>
       <p>Más de 2,000 personas ya se capacitaron con GlobalVet México. Tu turno por solo $199 MXN/mes.</p>
       <ul>
         <li>Biblioteca completa de cursos</li>
@@ -119,14 +119,14 @@
       );
 
       if (!popup || popup.closed) {
-        showError('⚠️ Tu navegador bloqueó la ventana de pago. Por favor permite pop-ups para zoorigen.com y vuelve a intentarlo.');
+        showError('⚠️ Tu navegador bloqueó la ventana de pago. Por favor permite pop-ups para globalvetmexico.com y vuelve a intentarlo.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Crear cuenta y continuar al pago →';
         return;
       }
 
       // Mostrar pantalla de "creando cuenta" en el popup
-      popup.document.write('<!DOCTYPE html><html><head><title>Creando cuenta...</title><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#131816;color:#e5e9e7;text-align:center}.sp{width:48px;height:48px;border:4px solid rgba(232,163,23,0.2);border-top-color:#E8A317;border-radius:50%;animation:s 0.8s linear infinite;margin:0 auto 20px}@keyframes s{to{transform:rotate(360deg)}}h2{margin:0;font-weight:600}</style></head><body><div><div class="sp"></div><h2>🦒 Creando tu cuenta...</h2></div></body></html>');
+      popup.document.write('<!DOCTYPE html><html><head><title>Creando cuenta...</title><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#131816;color:#e5e9e7;text-align:center}.sp{width:48px;height:48px;border:4px solid rgba(232,163,23,0.2);border-top-color:#E8A317;border-radius:50%;animation:s 0.8s linear infinite;margin:0 auto 20px}@keyframes s{to{transform:rotate(360deg)}}h2{margin:0;font-weight:600}</style></head><body><div><div class="sp"></div><h2>🐾 Creando tu cuenta...</h2></div></body></html>');
 
       const result = await GLOBALVET_CLUB.register(data);
       if (result.ok) {
@@ -203,7 +203,7 @@
         return;
       }
 
-      popup.document.write('<!DOCTYPE html><html><head><title>Abriendo pago...</title></head><body style="font-family:system-ui;background:#131816;color:#fff;text-align:center;padding:40px;"><p>🦒 Preparando tu pago...</p></body></html>');
+      popup.document.write('<!DOCTYPE html><html><head><title>Abriendo pago...</title></head><body style="font-family:system-ui;background:#131816;color:#fff;text-align:center;padding:40px;"><p>🐾 Preparando tu pago...</p></body></html>');
       popup.location.href = checkoutURL;
 
       window.__zooCheckoutURL = checkoutURL;

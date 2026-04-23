@@ -350,7 +350,7 @@
               <div class="card-promo__title">¿Quieres los nuevos cursos de GlobalVet México?</div>
               <div class="card-promo__subtitle">Como Miembro VIP recibes 20% de descuento en todas las capacitaciones</div>
             </div>
-            <a href="https://wa.me/5212361113237?text=Hola%2C%20soy%20miembro%20VIP%20GlobalVet México%20y%20quiero%20info%20de%20cursos" target="_blank" class="card-promo__badge">20% OFF</a>
+            <a href="https://wa.me/5212381500864?text=Hola%2C%20soy%20miembro%20VIP%20GlobalVet México%20y%20quiero%20info%20de%20cursos" target="_blank" class="card-promo__badge">20% OFF</a>
           </div>
 
           <div>
@@ -373,7 +373,7 @@
             <div class="aside-card__title">Cargando sesión...</div>
           </div>
 
-          <a href="https://wa.me/5212361113237?text=Hola%20quiero%20entrar%20al%20canal%20VIP%20de%20GlobalVet México" target="_blank" class="card aside-channel">
+          <a href="https://wa.me/5212381500864?text=Hola%20quiero%20entrar%20al%20canal%20VIP%20de%20GlobalVet México" target="_blank" class="card aside-channel">
             <div class="aside-channel__icon">💬</div>
             <div>
               <div style="color:#fff;font-weight:600;font-size:.92rem;">Canal GlobalVet México</div>
@@ -385,7 +385,7 @@
             <div class="aside-discount__eyebrow">Tu descuento VIP</div>
             <span class="percent">20%</span>
             <div class="aside-discount__desc">En todos los cursos GlobalVet México</div>
-            <a href="https://wa.me/5212361113237?text=Hola%2C%20quiero%20aplicar%20mi%2020%25%20VIP" target="_blank" class="btn-gold">Canjear</a>
+            <a href="https://wa.me/5212381500864?text=Hola%2C%20quiero%20aplicar%20mi%2020%25%20VIP" target="_blank" class="btn-gold">Canjear</a>
           </div>
         </aside>
       </div>
@@ -419,7 +419,7 @@
       await GLOBALVET_CLUB.initNotifications(session);
 
       const firstName = session.name.split(' ')[0];
-      document.getElementById('greeting').innerHTML = `${GLOBALVET_CLUB.getGreeting()}, <span class="accent">${firstName}</span> 🦒`;
+      document.getElementById('greeting').innerHTML = `${GLOBALVET_CLUB.getGreeting()}, <span class="accent">${firstName}</span> 🐾`;
       document.getElementById('date').textContent = GLOBALVET_CLUB.formatDate();
 
       // Solo mostrar banner si hay problema con el plan
@@ -757,9 +757,9 @@
       if (noticias.length === 0) {
         nl.innerHTML = `<div class="news-card" style="grid-template-columns:1fr;">
           <div class="news-card__body" style="padding:22px;">
-            <span class="news-card__source">🦒 GlobalVet México</span>
+            <span class="news-card__source">🐾 GlobalVet México</span>
             <h4 class="news-card__title">Bienvenido al Club GlobalVet</h4>
-            <p class="news-card__summary">Las noticias de fauna y biodiversidad se sincronizan automáticamente desde Mongabay, SciDev y DW cada 6 horas.</p>
+            <p class="news-card__summary">Las noticias de medicina veterinaria clínica se sincronizan automáticamente desde fuentes veterinarias especializadas cada 6 horas.</p>
           </div>
         </div>`;
       } else {

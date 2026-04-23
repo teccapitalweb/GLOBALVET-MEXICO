@@ -296,7 +296,7 @@
       <div class="ref-link-card">
         <h3>🔗 Tu link único de invitación</h3>
         <div class="ref-link-box">
-          <div class="ref-link-input" id="refLink">https://www.zoorigen.com/pages/club-registro.html?ref=...</div>
+          <div class="ref-link-input" id="refLink">https://www.globalvetmexico.com/pages/club-registro.html?ref=...</div>
           <button class="ref-copy-btn" id="copyBtn">Copiar</button>
         </div>
         <div class="ref-share-row">
@@ -362,7 +362,7 @@
       // Generar código único basado en UID (corto, fácil de compartir)
       // Ej: "ZOO-MXY2" — primeras 4 letras del UID en mayúsculas
       const refCode = 'ZOO-' + session.uid.substring(0, 6).toUpperCase();
-      const refLink = `https://www.zoorigen.com/pages/club-registro.html?ref=${refCode}`;
+      const refLink = `https://www.globalvetmexico.com/pages/club-registro.html?ref=${refCode}`;
       document.getElementById('refLink').textContent = refLink;
 
       // Guardar el código en el doc del usuario si no existe
@@ -373,13 +373,13 @@
       } catch (e) { console.warn(e); }
 
       // Botones de compartir
-      const mensaje = `¡Únete al Club VIP GlobalVet! Acceso a cursos de fauna silvestre, sesiones en vivo y certificados profesionales. Con mi código tienes acceso inmediato: ${refLink}`;
+      const mensaje = `¡Únete al Club VIP GlobalVet! Acceso a cursos de medicina veterinaria, sesiones en vivo y certificados profesionales. Con mi código tienes acceso inmediato: ${refLink}`;
 
       document.getElementById('shareWA').href = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
       document.getElementById('shareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(refLink)}`;
       document.getElementById('shareTW').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(mensaje)}`;
       document.getElementById('shareEmail').addEventListener('click', () => {
-        const asunto = 'Te invito al Club VIP GlobalVet 🦒';
+        const asunto = 'Te invito al Club VIP GlobalVet 🐾';
         const cuerpo = mensaje;
         window.location.href = `mailto:?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
       });

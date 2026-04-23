@@ -319,7 +319,7 @@
       const grid = document.getElementById('coursesGrid');
 
       if (cursos.length === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--zoo-text-dim);background:var(--zoo-bg-card);border-radius:var(--zoo-radius);"><div style="font-size:3rem;margin-bottom:10px;">🦒</div><h3 style="color:#fff;margin-bottom:8px;">Biblioteca en construcción</h3><p>El equipo GlobalVet México está preparando los cursos. Muy pronto tendrás acceso ilimitado.</p></div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--zoo-text-dim);background:var(--zoo-bg-card);border-radius:var(--zoo-radius);"><div style="font-size:3rem;margin-bottom:10px;">🐾</div><h3 style="color:#fff;margin-bottom:8px;">Biblioteca en construcción</h3><p>El equipo GlobalVet México está preparando los cursos. Muy pronto tendrás acceso ilimitado.</p></div>`;
         document.getElementById('filterBar').innerHTML = '';
         return;
       }
@@ -429,7 +429,7 @@
               <div class="course-card-club__img">
                 ${imageUrl ? `<img src="${imageUrl}" alt="${(c.title || '').replace(/"/g, '&quot;')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('no-image');">` : ''}
                 <div class="course-card-club__img-placeholder">
-                  <span style="font-size:3.5rem;opacity:.3;">🦒</span>
+                  <span style="font-size:3.5rem;opacity:.3;">🐾</span>
                 </div>
                 ${c.tag ? `<span class="course-card-club__tag">${c.tag}</span>` : ''}
                 ${totalClases > 1 ? `<span class="course-card-club__classes">📹 ${totalClases} clases</span>` : ''}
@@ -466,7 +466,7 @@
                   : isActive && hasContent && !isUnlockedByTime
                   ? `<button class="course-card-club__action course-card-club__action--locked" disabled>🔒 Se desbloquea el ${unlockDateLabel}</button>`
                   : !isActive ? `<a href="club-suscripcion.html" class="course-card-club__action" style="background:var(--zoo-orange);">🔒 Activar membresía</a>`
-                  : `<a href="https://wa.me/5212361113237?text=Hola%2C%20soy%20VIP%20y%20quiero%20el%20curso%3A%20${encodeURIComponent(c.title)}" target="_blank" class="course-card-club__action">▶ Solicitar acceso</a>`}
+                  : `<a href="https://wa.me/5212381500864?text=Hola%2C%20soy%20VIP%20y%20quiero%20el%20curso%3A%20${encodeURIComponent(c.title)}" target="_blank" class="course-card-club__action">▶ Solicitar acceso</a>`}
 
                 ${isCertified ? `
                   <button class="course-certificate-btn" onclick='descargarCertificado("${c.id}", ${JSON.stringify(c.title).replace(/'/g, "&#39;")})'>
@@ -588,8 +588,8 @@
       if (/alimenta|nutric|diet/.test(t)) return 'Requerimientos nutricionales y planes de alimentación.';
       if (/enfermedad|patolog|zoono|sanitar/.test(t)) return 'Principales patologías, diagnóstico y tratamiento.';
       if (/legisla|norm|cites|uma|permiso/.test(t)) return 'Marco legal mexicano vigente y documentación requerida.';
-      if (/monitoreo|fototrampeo|telemetr|seguimien/.test(t)) return 'Métodos científicos de monitoreo y análisis de datos.';
-      if (/conserva|protecci|amenaz/.test(t)) return 'Estado actual, amenazas y estrategias de conservación.';
+      if (/monitoreo|diagnóstico por imagen|telemetr|seguimien/.test(t)) return 'Métodos científicos de monitoreo y análisis de datos.';
+      if (/conserva|protecci|amenaz/.test(t)) return 'Diagnóstico clínico, manejo y tratamiento en práctica veterinaria.';
       if (/reproducci|cría|crianza/.test(t)) return 'Técnicas de reproducción en cautiverio y manejo de crías.';
       if (/habitat|ecosistem|distribuci/.test(t)) return 'Hábitat natural, distribución geográfica y requerimientos ecológicos.';
       if (/caso|clínico|ejemplo/.test(t)) return 'Caso real paso a paso con diagnóstico y resolución.';

@@ -24,10 +24,10 @@ if (!WEBHOOK_SECRET) {
   process.exit(1);
 }
 
-const CRON_SECRET = process.env.CRON_SECRET || 'zoorigen-2026-reset';
+const CRON_SECRET = process.env.CRON_SECRET || 'globalvet-2026-reset';
 
 // ══════════════════════════════════════════════════════════════
-// 3. DETECCIÓN ROBUSTA DE PLANES ZOORIGEN
+// 3. DETECCIÓN ROBUSTA DE PLANES GLOBALVET
 // ══════════════════════════════════════════════════════════════
 const VARIANT_MENSUAL = '45386138714166';
 const VARIANT_ANUAL   = '45386327916598';
@@ -48,10 +48,10 @@ function detectarPlan(lineItem) {
   if (variantId === VARIANT_MENSUAL) return PLANES.mensual;
   if (variantId === VARIANT_ANUAL)   return PLANES.anual;
 
-  if (sku.includes('mensual') && sku.includes('zoorigen')) return PLANES.mensual;
-  if (sku.includes('anual')   && sku.includes('zoorigen')) return PLANES.anual;
+  if (sku.includes('mensual') && sku.includes('globalvet')) return PLANES.mensual;
+  if (sku.includes('anual')   && sku.includes('globalvet')) return PLANES.anual;
 
-  if (hay.includes('zoorigen')) {
+  if (hay.includes('globalvet')) {
     if (hay.includes('mensual'))  return PLANES.mensual;
     if (hay.includes('anual'))    return PLANES.anual;
   }
@@ -147,28 +147,32 @@ async function cancelarPlan(email) {
 // 5. NOTICIAS RSS (igual que antes)
 // ══════════════════════════════════════════════════════════════
 const RSS_FEEDS = [
-  { name: 'Mongabay Latam',         url: 'https://es.mongabay.com/feed/',                          icon: '🌎' },
-  { name: 'Ambientum',              url: 'https://www.ambientum.com/feed/',                        icon: '🌱' },
-  { name: 'National Geographic ES', url: 'https://www.nationalgeographic.com.es/rss/animales',      icon: '🦒' },
-  { name: 'DW Ambiente',            url: 'https://rss.dw.com/rdf/rss-sp-eco',                      icon: '🌿' },
+  { name: 'AVMA News',              url: 'https://www.avma.org/news/rss',                          icon: '🐾' },
+  { name: 'Veterinary Practice',    url: 'https://veterinary-practice.com/feed',                   icon: '🩺' },
+  { name: 'DVM360',                 url: 'https://www.dvm360.com/rss',                             icon: '💉' },
+  { name: 'National Geographic ES', url: 'https://www.nationalgeographic.com.es/rss/animales',      icon: '🐶' },
   { name: 'SciDev Latam',           url: 'https://www.scidev.net/america-latina/feed/',            icon: '🔬' }
 ];
 
 const KEYWORDS_POSITIVAS = [
-  'fauna', 'silvestre', 'biodiversidad', 'conservaci', 'especie',
-  'animal', 'bosque', 'selva', 'ecosistema', 'tortug', 'abej', 'apicul',
-  'veterinar', 'zoo', 'jaguar', 'lobo', 'ave ', 'aves', 'reptil', 'anfib',
-  'mamífero', 'mamifero', 'extinci', 'hábitat', 'habitat', 'reserva natural',
-  'manglar', 'arrecife', 'serpiente', 'araña', 'insect', 'polinizad',
-  'ballena', 'tiburón', 'tiburon', 'monarca', 'rescate de fauna', 'vida silvestre',
-  'mariposa', 'abeja', 'coral', 'ecología', 'ecologia', 'parque nacional',
-  'área natural', 'zoológico', 'refugio', 'endémic', 'endemic', 'pangolín',
-  'felino', 'primate', 'anfibio', 'reptiles', 'murciélago', 'murcielago',
-  'lince', 'oso', 'cóndor', 'condor', 'águila', 'aguila', 'lechuza',
-  'tortuga', 'cocodrilo', 'iguana', 'rana', 'salamandra', 'delfín', 'delfin',
-  'foca', 'lobo marino', 'polinización', 'polinizacion', 'flora y fauna',
-  'reintroducción', 'reintroduccion', 'protección animal', 'maltrato animal',
-  'semarnat', 'conanp', 'uma ', 'cites', 'iucn', 'wwf', 'greenpeace'
+  'veterinar', 'medicina veterinaria', 'clínic', 'clinic', 'práctica clínica',
+  'perro', 'perra', 'gato', 'gata', 'felino', 'canino', 'canina', 'mascota',
+  'cirugía veterinaria', 'cirugia veterinaria', 'anestesia', 'analgesia',
+  'diagnóstico', 'diagnostico', 'tratamiento', 'patolog', 'oncolog',
+  'endocrinolog', 'cardiolog', 'neurolog', 'dermatolog', 'oftalmolog',
+  'radiolog', 'ecograf', 'ultrasonid', 'rayos x', 'hematolog',
+  'nutrición animal', 'nutricion animal', 'vacunación', 'vacunacion',
+  'desparasit', 'esterilización', 'esterilizacion', 'castración', 'castracion',
+  'urgencia veterinaria', 'medicina crítica', 'cuidados intensivos',
+  'geriatr', 'neonatolog', 'pediatría veterinaria',
+  'etología', 'etologia', 'conducta animal', 'adiestramiento',
+  'fisioterapia veterinaria', 'rehabilitación animal', 'rehabilitacion animal',
+  'zoonosis', 'enfermedad animal', 'parásit', 'parasit', 'infección',
+  'equino', 'bovino', 'porcino', 'rumiante', 'ganader',
+  'exóticos', 'exoticos', 'aves de compañía', 'reptiles',
+  'farmacología veterinaria', 'biosegur', 'epidemiolog',
+  'salud animal', 'bienestar animal', 'protección animal', 'maltrato animal',
+  'MVZ', 'fmvz', 'amevea', 'ansmex', 'colegio de veterinarios'
 ];
 
 const KEYWORDS_NEGATIVAS = [
@@ -340,7 +344,7 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   res.json({
-    service: 'Zoorigen Webhook Server v3',
+    service: 'GlobalVet México Webhook Server v3',
     status: 'online',
     features: ['shopify-webhook', 'subscription-webhooks', 'news-cron', 'cancel-api', 'verify-payment'],
     timestamp: new Date().toISOString()
@@ -427,8 +431,8 @@ app.post('/webhook/shopify', async (req, res) => {
     }
 
     if (!planConfig) {
-      console.log('   ℹ️ No es producto Zoorigen, ignorando');
-      return res.status(200).send('OK (not Zoorigen)');
+      console.log('   ℹ️ No es producto GlobalVet, ignorando');
+      return res.status(200).send('OK (not GlobalVet)');
     }
 
     console.log(`   🎯 Plan detectado: ${planConfig.tipo} (${planConfig.dias} días)`);
@@ -558,7 +562,7 @@ setInterval(() => { syncNews().catch(e => console.error('Scheduled sync error:',
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('═══════════════════════════════════════════════');
-  console.log(`🦒 Zoorigen Webhook Server v3 en puerto ${PORT}`);
+  console.log(`🐾 GlobalVet México Webhook Server v3 en puerto ${PORT}`);
   console.log(`📦 Firebase: ${serviceAccount.project_id || 'NO CONFIG'}`);
   console.log(`🔑 Webhook secret: ${WEBHOOK_SECRET ? 'OK ✓' : '❌ FALTA'}`);
   console.log(`📬 Endpoints activos:`);

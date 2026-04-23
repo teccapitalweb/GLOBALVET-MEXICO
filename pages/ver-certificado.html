@@ -546,15 +546,15 @@
         </g>
       </svg>
 
-      <div class="cert-watermark">🦒</div>
+      <div class="cert-watermark">🐾</div>
 
       <div class="cert-inner">
         <!-- HEADER -->
         <div class="cert-header">
           <div class="cert-logo-wrap">
-            <div class="cert-logo">🦒</div>
+            <div class="cert-logo">🐾</div>
             <div class="cert-logo-text">
-              <strong>ZOORIGEN</strong>
+              <strong>GlobalVet México</strong>
               <span>México · Capacitación Profesional</span>
             </div>
           </div>
@@ -590,7 +590,7 @@
 
           <p class="cert-gratitude">
             Reconociendo su dedicación, compromiso y empeño por continuar su formación profesional
-            en beneficio de la fauna y la biodiversidad mexicana.
+            en beneficio de la medicina veterinaria mexicana.
           </p>
         </div>
 
@@ -710,7 +710,7 @@
         const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
         document.getElementById('certDate').textContent = `${fecha.getDate()} de ${meses[fecha.getMonth()]} de ${fecha.getFullYear()}`;
 
-        const verifyUrl = `https://www.zoorigen.com/pages/verificar.html?folio=${c.folio || folio}`;
+        const verifyUrl = `https://www.globalvetmexico.com/pages/verificar.html?folio=${c.folio || folio}`;
         document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}&color=1F5F3A&bgcolor=ffffff&margin=2`;
 
         window.__cert = c;
@@ -724,13 +724,13 @@
 
     function compartirWhatsApp() {
       const c = window.__cert;
-      const text = `🎓 ¡Completé el curso "${c.courseTitle}" certificado por GlobalVet México México!\n\nFolio oficial: ${c.folio}\nVerifica en: https://www.zoorigen.com/pages/verificar.html?folio=${c.folio}`;
+      const text = `🎓 ¡Completé el curso "${c.courseTitle}" certificado por GlobalVet México México!\n\nFolio oficial: ${c.folio}\nVerifica en: https://www.globalvetmexico.com/pages/verificar.html?folio=${c.folio}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function compartirLinkedIn() {
       const c = window.__cert;
-      const url = `https://www.zoorigen.com/pages/verificar.html?folio=${c.folio}`;
+      const url = `https://www.globalvetmexico.com/pages/verificar.html?folio=${c.folio}`;
       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
     }
   </script>

@@ -1,5 +1,5 @@
 /* ============================================================ */
-/* CLUB VIP ZOORIGEN - PANEL ADMIN                              */
+/* CLUB VIP GLOBALVET MÉXICO - PANEL ADMIN                              */
 /* CRUD completo para: cursos, videos, pdfs, sesiones, noticias */
 /* Gestión de miembros                                           */
 /* ============================================================ */
@@ -517,7 +517,7 @@
         <div class="content-toolbar">
           <div>
             <strong style="color:#fff;font-size:1rem;">${items.length} noticia${items.length !== 1 ? 's' : ''}</strong>
-            <p style="color:var(--zoo-text-dim);font-size:.84rem;margin-top:2px;">Las auto-sincronizadas aparecen cada 6 horas desde RSS de Mongabay, SciDev, DW y BBC Mundo</p>
+            <p style="color:var(--zoo-text-dim);font-size:.84rem;margin-top:2px;">Las auto-sincronizadas aparecen cada 6 horas desde RSS de fuentes veterinarias AVMA, DVM360 y Veterinary Practice</p>
           </div>
           <div style="display:flex;gap:8px;">
             <button class="btn-small edit" onclick="syncNow()">🔄 Sync ahora</button>
