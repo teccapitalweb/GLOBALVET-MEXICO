@@ -1,116 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mis certificados · Club VIP GlobalVet</title>
-  <meta name="theme-color" content="#1F5F3A">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/club.css">
-  <link rel="stylesheet" href="../assets/css/club-mobile.css">
-  <link rel="stylesheet" href="../assets/css/club-theme.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificados · Club GlobalVet México</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/club-extra.css">
+<style>
+  .cert-card{background:linear-gradient(135deg,#fef3c7 0%,#fff 100%);border:2px solid var(--gold);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden}
+  .cert-card::before{content:"🏆";position:absolute;top:-20px;right:-20px;font-size:6rem;opacity:.08}
+  .cert-title{font-family:var(--ff);font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.4rem}
+  .cert-folio{font-family:monospace;font-size:.8rem;color:var(--muted);background:#fff;display:inline-block;padding:.3rem .6rem;border-radius:6px;margin-bottom:.8rem}
+  .cert-meta{font-size:.82rem;color:var(--muted);margin-bottom:1rem}
+  .cert-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+</style>
 </head>
 <body>
-  <div class="club-layout">
-    <aside class="club-sidebar" id="sidebar"></aside>
-    <main class="club-main">
-      <div class="club-main__header">
-        <div class="club-main__greeting">
-          <h1>🎓 Mis certificados</h1>
-          <p class="date">Completa cursos para ganar certificados descargables</p>
+<nav class="tnav" id="topnav"></nav>
+<div class="dlayout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="dmain">
+    <div class="ph">
+      <h1>🏆 Mis certificados</h1>
+      <p>Constancias con folio único y QR verificable por cada curso completado</p>
+    </div>
+    <div id="content" class="loading">Cargando certificados…</div>
+  </main>
+</div>
+<script type="module">
+import { requireAuth, renderSidebar, renderTopNav, doLogout, db, collection, query, where, getDocs } from '../assets/js/club-extra.js';
+(async () => {
+  const session = await requireAuth();
+  if (!session) return;
+  document.getElementById('topnav').innerHTML = renderTopNav(session);
+  document.getElementById('sidebar').innerHTML = renderSidebar('certificados');
+  document.getElementById('btnLogout')?.addEventListener('click', doLogout);
+
+  let certs = [];
+  try {
+    const snap = await getDocs(query(collection(db, 'certificados'), where('uid', '==', session.uid)));
+    certs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (err) { console.log('Sin certificados aún:', err.message); }
+
+  const content = document.getElementById('content');
+  content.classList.remove('loading');
+
+  if (certs.length === 0) {
+    content.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🎓</div>
+        <h3 style="font-family:var(--ff);color:var(--dark);margin-bottom:.5rem;">Aún no tienes certificados</h3>
+        <p>Completa los cursos de la Biblioteca para generar tu primera constancia con folio único y código QR.</p>
+        <a href="club-dashboard.html" class="btn btn-primary" style="margin-top:1rem;">Ir a mis cursos</a>
+      </div>`;
+    return;
+  }
+
+  content.innerHTML = `<div class="card-grid">
+    ${certs.map(c => `
+      <div class="cert-card">
+        <div class="cert-title">${c.cursoTitulo || 'Curso veterinario'}</div>
+        <div class="cert-folio">Folio: ${c.folio || c.id.slice(0,10).toUpperCase()}</div>
+        <div class="cert-meta">
+          Completado: ${c.completadoEn?.toDate ? c.completadoEn.toDate().toLocaleDateString('es-MX') : '—'}<br>
+          A nombre de: <strong>${session.name}</strong>
         </div>
-      </div>
-
-      <div id="certsContent">Cargando...</div>
-    </main>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="../assets/js/firebase-config.js"></script>
-  <script src="../assets/js/club.js"></script>
-  <script>
-    (async () => {
-      const session = await GLOBALVET_CLUB.requireAuth();
-      if (!session) return;
-      document.getElementById('sidebar').innerHTML = GLOBALVET_CLUB.renderSidebar('certificados', session);
-      if (GLOBALVET_CLUB.initTheme) GLOBALVET_CLUB.initTheme();
-      if (GLOBALVET_CLUB.initMobileMenu) GLOBALVET_CLUB.initMobileMenu();
-      if (GLOBALVET_CLUB.initNotifications) GLOBALVET_CLUB.initNotifications(session);
-
-
-      const content = document.getElementById('certsContent');
-
-      try {
-        // Buscar todos los certificados del miembro
-        const snap = await db.collection('certificados').where('memberUid', '==', session.uid).get();
-        const allCerts = snap.docs.map(d => d.data()).sort((a, b) => new Date(b.issuedAt) - new Date(a.issuedAt));
-
-        // ═══ DEDUPLICAR por courseId (conservar el más reciente) ═══
-        const seen = new Set();
-        const certs = [];
-        for (const c of allCerts) {
-          const key = c.courseId || c.folio;
-          if (!seen.has(key)) {
-            seen.add(key);
-            certs.push(c);
-          }
-        }
-
-        if (certs.length === 0) {
-          content.innerHTML = `
-            <div class="certs-empty">
-              <div style="font-size:4rem;margin-bottom:16px;">🎓</div>
-              <h2>Aún no tienes certificados</h2>
-              <p style="color:var(--zoo-text-muted);margin:10px 0 24px;max-width:460px;margin-left:auto;margin-right:auto;">
-                Completa cursos en la biblioteca y obtén certificados descargables con folio único y verificación QR.
-                Perfectos para tu CV o LinkedIn.
-              </p>
-              <a href="club-biblioteca.html" class="btn-club" style="display:inline-block;width:auto;padding:14px 32px;text-decoration:none;">Ir a la biblioteca</a>
-            </div>`;
-          return;
-        }
-
-        content.innerHTML = `
-          <div class="certs-stats">
-            <div class="certs-stat">
-              <div class="certs-stat__val">${certs.length}</div>
-              <div class="certs-stat__lbl">Certificados obtenidos</div>
-            </div>
-          </div>
-          <div class="certs-grid">
-            ${certs.map(c => {
-              const fecha = new Date(c.issuedAt);
-              const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-              const fechaStr = `${fecha.getDate()} ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
-              return `
-                <div class="cert-item-card">
-                  <div class="cert-item-card__icon">🏆</div>
-                  <div class="cert-item-card__body">
-                    <div class="cert-item-card__label">CERTIFICADO OFICIAL</div>
-                    <h3>${c.courseTitle}</h3>
-                    <div class="cert-item-card__meta">
-                      <span>📁 ${c.courseArea || 'General'}</span>
-                      <span>📅 ${fechaStr}</span>
-                      <span>🔢 ${c.folio}</span>
-                    </div>
-                    <div class="cert-item-card__actions">
-                      <a href="ver-certificado.html?folio=${c.folio}" target="_blank" class="btn-club" style="width:auto;padding:10px 20px;text-decoration:none;margin:0;">📥 Ver / Descargar</a>
-                      <a href="verificar.html?folio=${c.folio}" target="_blank" class="btn-club-outline" style="width:auto;padding:10px 20px;text-decoration:none;margin:0;">🔗 Link público</a>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>`;
-      } catch (err) {
-        console.error(err);
-        content.innerHTML = '<div class="certs-empty"><h2>Error cargando certificados</h2><p>Intenta recargar la página.</p></div>';
-      }
-    })();
-  </script>
+        <div class="cert-actions">
+          <a href="ver-certificado.html?folio=${c.folio || c.id}" class="btn btn-gold">Ver constancia</a>
+          <a href="verificar.html?folio=${c.folio || c.id}" class="btn btn-outline" target="_blank">Verificar QR</a>
+        </div>
+      </div>`).join('')}
+  </div>`;
+})();
+</script>
 </body>
 </html>
