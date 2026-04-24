@@ -85,7 +85,7 @@ export function renderSidebar(activeKey = '') {
     ]},
     { label: 'Mi cuenta', items: [
       { key:'perfil',       label:'Mi perfil',       href:'club-dashboard.html#perfil',       icon:'👤' },
-      { key:'suscripcion',  label:'Suscripción',     href:'club-dashboard.html#suscripcion',  icon:'💳' },
+      { key:'suscripcion',  label:'Suscripción',     href:'club-suscripcion.html',             icon:'💳' },
       { key:'config',       label:'Configuración',   href:'club-dashboard.html#config',       icon:'⚙️' }
     ]}
   ];

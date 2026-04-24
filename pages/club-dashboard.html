@@ -508,7 +508,7 @@
     <a class="nbtn" href="club-certificados.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>Mis constancias</a>
     <div class="slabel">Mi cuenta</div>
     <button class="nbtn" onclick="sp('perfil',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mi perfil</button>
-    <button class="nbtn" onclick="sp('suscripcion',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Suscripción</button>
+    <a class="nbtn" href="club-suscripcion.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Suscripción</a>
     <button class="nbtn" onclick="sp('config',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</button>
   </aside>
 
@@ -3306,51 +3306,50 @@
     const grid = document.getElementById('noticias-grid');
     const btns = document.getElementById('noticias-source-btns');
     if (!grid) return;
+    console.log('[Noticias] Cargando', FUENTES_NOTICIAS.length, 'fuentes de Google News...');
 
-    // Renderizar botones de fuentes
+    // Renderizar botones de categorías de Google News desde el inicio
     if (btns) {
       const html = ['<button class="noticias-source-btn active" onclick="filtrarNoticiasVet(\'todas\', this)">Todas</button>']
-        .concat(FUENTES_GV.map(f =>
+        .concat(FUENTES_NOTICIAS.map(f =>
           `<button class="noticias-source-btn" onclick="filtrarNoticiasVet('${f.id}', this)">${f.nombre}</button>`
         )).join('');
       btns.innerHTML = html;
     }
 
-    // Intentar traer de Firestore (si el admin ha publicado)
-    let desdeFirestore = [];
-    try {
-      if (window.dbGV && window.firestore) {
-        const { collection, query, orderBy, getDocs } = window.firestore;
-        const snap = await getDocs(query(collection(window.dbGV, 'noticias'), orderBy('fecha', 'desc')));
-        desdeFirestore = snap.docs.map(d => {
-          const data = d.data();
-          return {
-            titulo: data.titulo,
-            fuente: data.fuente || 'GlobalVet',
-            fuenteId: (data.fuente || 'gv').toLowerCase().replace(/\s+/g, ''),
-            cat: data.cat || 'clinica',
-            pubDate: (data.fecha?.toDate() || new Date()).toISOString(),
-            imagen: data.imagen || null,
-            excerpt: data.resumen || '',
-            link: data.url || '#'
-          };
-        });
-        console.log(`[Noticias GV] Firestore: ${desdeFirestore.length} notas`);
-      }
-    } catch (e) { console.log('[Noticias GV] Usando demo:', e.message); }
+    // Cargar las 6 categorías de Google News RSS en paralelo
+    const resultados = await Promise.all(FUENTES_NOTICIAS.map(f =>
+      fetchFeedVet(f).then(items => ({ id: f.id, items }))
+    ));
+    resultados.forEach(r => { NOTICIAS_CACHE[r.id] = r.items; });
+    const totalItems = Object.values(NOTICIAS_CACHE).reduce((a, arr) => a + arr.length, 0);
+    console.log(`[Noticias] Total desde Google News: ${totalItems}`);
 
-    // Si hay menos de 3 noticias en Firestore, mezclar con las demo
-    // para que siempre haya contenido visible
-    const todas = desdeFirestore.length >= 3 ? desdeFirestore : [...desdeFirestore, ...NOTICIAS_DEMO_GV];
-
-    // Mezclar un poco el orden para simular "nuevas al actualizar"
-    const seed = new Date().getDate(); // día del mes como semilla
-    const mezcladas = [...todas].sort(() => (Math.sin(seed * Math.random()) > 0 ? 1 : -1));
-
-    NOTICIAS_CACHE['todas'] = mezcladas;
-    FUENTES_GV.forEach(f => {
-      NOTICIAS_CACHE[f.id] = mezcladas.filter(n => n.fuenteId === f.id);
-    });
+    // Si TODOS los proxies fallan (0 noticias), cargar noticias demo curadas como fallback
+    // para que no se vea vacío
+    if (totalItems === 0) {
+      console.log('[Noticias] Todos los feeds fallaron, usando fallback demo');
+      NOTICIAS_CACHE['todas'] = NOTICIAS_DEMO_GV;
+      // Distribuir las demos en las categorías por afinidad
+      NOTICIAS_CACHE['gnews-vet'] = NOTICIAS_DEMO_GV.filter(n => n.cat === 'clinica');
+      NOTICIAS_CACHE['gnews-peq'] = NOTICIAS_DEMO_GV.filter(n => n.cat === 'clinica' || n.cat === 'farma');
+      NOTICIAS_CACHE['gnews-inv'] = NOTICIAS_DEMO_GV.filter(n => n.cat === 'investigacion');
+      NOTICIAS_CACHE['gnews-omsa'] = NOTICIAS_DEMO_GV.filter(n => n.cat === 'regulatorio');
+    } else {
+      // Consolidar todas las fuentes en 'todas' ordenadas por fecha
+      let todas = [];
+      Object.values(NOTICIAS_CACHE).forEach(arr => { todas = todas.concat(arr); });
+      todas.sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+      // Dedupe por título (a veces las mismas notas salen en varias categorías)
+      const vistos = new Set();
+      todas = todas.filter(n => {
+        const key = (n.titulo || '').substring(0, 60).toLowerCase();
+        if (vistos.has(key)) return false;
+        vistos.add(key);
+        return true;
+      });
+      NOTICIAS_CACHE['todas'] = todas;
+    }
 
     renderNoticiasVet('todas');
     _noticiasCargadas = true;

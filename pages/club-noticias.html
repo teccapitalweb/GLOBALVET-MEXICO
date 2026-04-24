@@ -50,6 +50,8 @@
     display: grid;
     grid-template-columns: 220px 1fr;
     gap: 0;
+    text-decoration: none;
+    color: inherit;
   }
   .news-item:hover {
     transform: translateY(-2px);
@@ -64,8 +66,14 @@
     background-size: cover;
     background-position: center;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    opacity: 0.85;
   }
-  .news-img::after {
+  .news-img.with-img { background-size: cover; }
+  .news-img.with-img::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -93,6 +101,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
   }
   .news-date {
     color: var(--gv-text-dim);
@@ -131,74 +140,35 @@
     }
   }
 
-  /* Modal de lectura de noticia */
-  .noticia-modal {
-    position: fixed; inset: 0;
-    background: rgba(10, 6, 20, 0.92);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center; justify-content: center;
-    z-index: 1000;
-    padding: 1.5rem;
-    overflow-y: auto;
-  }
-  .noticia-modal.open { display: flex; }
-  .noticia-modal-content {
-    background: var(--gv-bg-surface-2);
-    border: 1px solid var(--gv-border-strong);
-    border-radius: var(--gv-radius-lg);
-    max-width: 720px;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .noticia-modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    z-index: 2;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .noticia-modal-close:hover { background: rgba(244,63,94,0.3); border-color: var(--gv-rose); }
-  .noticia-modal-img {
-    width: 100%; height: 280px;
-    background-size: cover; background-position: center;
-    position: relative;
-  }
-  .noticia-modal-img::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 50%, rgba(26,16,64,0.6) 100%);
-  }
-  .noticia-modal-body {
-    padding: 2rem;
-  }
-  .noticia-modal-top {
+  .refresh-bar {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 1rem;
-    gap: 1rem;
+    gap: 1rem; flex-wrap: wrap;
   }
-  .noticia-modal-title {
+  .refresh-info {
+    font-size: 0.82rem;
+    color: var(--gv-text-dim);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .refresh-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid var(--gv-border);
+    border-radius: 50px;
+    color: var(--gv-purple-hover);
     font-family: var(--gv-ff);
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--gv-text);
-    margin-bottom: 1.2rem;
-    line-height: 1.25;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.15s;
   }
-  .noticia-modal-text {
-    color: var(--gv-text-muted);
-    line-height: 1.7;
-    font-size: 0.95rem;
+  .refresh-btn:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--gv-purple);
   }
-  .noticia-modal-text p { margin-bottom: 0.8rem; }
 </style>
 </head>
 <body>
@@ -210,209 +180,211 @@
     <div class="hero-banner">
       <div class="hero-badge">📰 Actualidad</div>
       <h2>Noticias veterinarias</h2>
-      <p>Actualidad en medicina veterinaria, novedades clínicas, avances en diagnóstico y tratamiento, novedades regulatorias.</p>
+      <p>Noticias actualizadas en tiempo real desde Google News sobre medicina veterinaria en México y Latinoamérica.</p>
     </div>
 
-    <div class="news-filters">
+    <div class="refresh-bar">
+      <div class="refresh-info" id="refreshInfo">📡 Cargando noticias desde Google News…</div>
+      <button class="refresh-btn" onclick="window._reload()">🔄 Actualizar</button>
+    </div>
+
+    <div class="news-filters" id="filters">
       <button class="news-filter active" data-cat="todas">Todas</button>
-      <button class="news-filter" data-cat="clinica">Clínica</button>
-      <button class="news-filter" data-cat="farma">Farmacología</button>
-      <button class="news-filter" data-cat="regulatorio">Regulatorio</button>
-      <button class="news-filter" data-cat="investigacion">Investigación</button>
-      <button class="news-filter" data-cat="gremial">Gremial</button>
     </div>
 
     <div id="content" class="news-list"></div>
   </main>
 </div>
 
-<!-- Modal de lectura de noticia -->
-<div class="noticia-modal" id="noticiaModal"></div>
-
 <script type="module">
-import { requireAuth, renderSidebar, renderTopNav, doLogout, db, collection, query, orderBy, getDocs } from '../assets/js/club-extra.js';
+import { requireAuth, renderSidebar, renderTopNav, doLogout } from '../assets/js/club-extra.js';
 
 // ═══════════════════════════════════════════════════════════
-// 12 noticias DEMO con imágenes Unsplash (libres de uso)
+// FUENTES: Google News RSS con queries de medicina veterinaria
 // ═══════════════════════════════════════════════════════════
-const NEWS_DEMO = [
-  {
-    titulo: 'Nuevo protocolo WSAVA 2026 para anestesia en gatos geriátricos',
-    fuente: 'WSAVA', cat: 'clinica',
-    fecha: new Date(Date.now() - 2*86400000),
-    imagen: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=600&q=80',
-    resumen: 'La Asociación Mundial de Veterinarios de Pequeños Animales publica actualización que reduce dosis de dexmedetomidina en 40% para felinos mayores de 12 años, disminuyendo la incidencia de bradicardia severa.',
-    url: '#'
-  },
-  {
-    titulo: 'COFEPRIS actualiza registro sanitario de maropitant inyectable',
-    fuente: 'COFEPRIS', cat: 'regulatorio',
-    fecha: new Date(Date.now() - 4*86400000),
-    imagen: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80',
-    resumen: 'Nuevas presentaciones de maropitant 10 mg/mL ya están disponibles en farmacias veterinarias mexicanas con registro sanitario actualizado. Indicaciones ampliadas a prevención de vómito perioperatorio.',
-    url: '#'
-  },
-  {
-    titulo: 'Estudio mexicano: prevalencia de dirofilariosis en costa del Pacífico aumenta 22%',
-    fuente: 'FMVZ-UNAM', cat: 'investigacion',
-    fecha: new Date(Date.now() - 5*86400000),
-    imagen: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&q=80',
-    resumen: 'Investigación de la Facultad de Medicina Veterinaria de la UNAM documenta aumento significativo de casos de gusano del corazón en perros de estados costeros del Pacífico (Nayarit, Jalisco, Colima, Michoacán).',
-    url: '#'
-  },
-  {
-    titulo: 'Nuevo antiparasitario oral con duración extendida a 3 meses',
-    fuente: 'AVMA', cat: 'farma',
-    fecha: new Date(Date.now() - 7*86400000),
-    imagen: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&q=80',
-    resumen: 'FDA aprueba lotilaner-fluralaner de acción dual contra pulgas y garrapatas con duración extendida a 3 meses en una sola toma. Estudios de fase III muestran eficacia del 99.8%.',
-    url: '#'
-  },
-  {
-    titulo: 'Colegio de Veterinarios México emite comunicado sobre tarifas 2026',
-    fuente: 'Colegio MVZ', cat: 'gremial',
-    fecha: new Date(Date.now() - 9*86400000),
-    imagen: 'https://images.unsplash.com/photo-1584308878768-57d3e1e9abd7?w=600&q=80',
-    resumen: 'Publicación oficial de guía de aranceles recomendados para consulta general, cirugía, hospitalización y procedimientos especializados. Incluye ajuste por inflación del 5.2%.',
-    url: '#'
-  },
-  {
-    titulo: 'Caso clínico: manejo exitoso de torsión gástrica en bulldog francés',
-    fuente: 'Vet Journal LA', cat: 'clinica',
-    fecha: new Date(Date.now() - 12*86400000),
-    imagen: 'https://images.unsplash.com/photo-1581888227599-779811939961?w=600&q=80',
-    resumen: 'Equipo veterinario mexicano documenta protocolo modificado de gastropexia preventiva en razas braquicefálicas con 98% de sobrevida a 12 meses. Revista Latinoamericana de Medicina Veterinaria.',
-    url: '#'
-  },
-  {
-    titulo: 'Alerta: recall de lote específico de meloxicam inyectable',
-    fuente: 'COFEPRIS', cat: 'regulatorio',
-    fecha: new Date(Date.now() - 14*86400000),
-    imagen: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=600&q=80',
-    resumen: 'COFEPRIS emite alerta sanitaria sobre lote L2025-0847 del meloxicam veterinario por desviación en concentración. Veterinarios deben suspender uso y reportar.',
-    url: '#'
-  },
-  {
-    titulo: 'Telemedicina veterinaria: nueva NOM permite consulta virtual inicial',
-    fuente: 'SENASICA', cat: 'regulatorio',
-    fecha: new Date(Date.now() - 18*86400000),
-    imagen: 'https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=600&q=80',
-    resumen: 'Modificación a la NOM veterinaria autoriza primera consulta por telemedicina siempre que el paciente haya sido evaluado presencialmente en los últimos 6 meses. Entra en vigor próximo mes.',
-    url: '#'
-  },
-  {
-    titulo: 'Avance: vacuna contra parvovirus con protección extendida a 3 años',
-    fuente: 'WSAVA', cat: 'investigacion',
-    fecha: new Date(Date.now() - 22*86400000),
-    imagen: 'https://images.unsplash.com/photo-1579165466741-7f35e4755660?w=600&q=80',
-    resumen: 'Nueva vacuna recombinante demuestra títulos protectores de anticuerpos a 36 meses postvacunación en 94% de los perros. Propone nuevo esquema de revacunación.',
-    url: '#'
-  },
-  {
-    titulo: 'Guía práctica: manejo de la pancreatitis canina aguda en consulta',
-    fuente: 'Vet Practice MX', cat: 'clinica',
-    fecha: new Date(Date.now() - 28*86400000),
-    imagen: 'https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?w=600&q=80',
-    resumen: 'Expertos mexicanos publican protocolo actualizado basado en guías ACVIM 2022, incluyendo uso temprano de maropitant, nutrición enteral precoz y manejo del dolor multimodal.',
-    url: '#'
-  },
-  {
-    titulo: 'Cafeína y teobromina: actualización de dosis tóxicas en perros',
-    fuente: 'Tox Vet', cat: 'farma',
-    fecha: new Date(Date.now() - 32*86400000),
-    imagen: 'https://images.unsplash.com/photo-1520637836862-4d197d17c60a?w=600&q=80',
-    resumen: 'Nuevas tablas de toxicidad publicadas por la Asociación Americana de Centros de Intoxicación Animal reducen el umbral de dosis letal para razas pequeñas menores de 5 kg.',
-    url: '#'
-  },
-  {
-    titulo: 'Congreso LATAM de medicina felina: abren registro para mayo 2026',
-    fuente: 'Colegio MVZ', cat: 'gremial',
-    fecha: new Date(Date.now() - 40*86400000),
-    imagen: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80',
-    resumen: 'El Congreso Latinoamericano de Medicina Felina abrirá registros el próximo mes. Sede: Ciudad de México. Miembros del Club VIP GlobalVet tendrán descuento del 20%.',
-    url: '#'
-  }
+const FUENTES = [
+  { id: 'vet',   nombre: '🩺 Medicina veterinaria', rss: 'https://news.google.com/rss/search?q=medicina+veterinaria+mexico+when:7d&hl=es-419&gl=MX&ceid=MX:es-419' },
+  { id: 'peq',   nombre: '🐕 Pequeñas especies',    rss: 'https://news.google.com/rss/search?q=(perros+OR+gatos)+salud+veterinaria+mexico+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+  { id: 'gran',  nombre: '🐄 Grandes especies',     rss: 'https://news.google.com/rss/search?q=(ganado+OR+bovino+OR+porcino)+veterinaria+mexico+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+  { id: 'exo',   nombre: '🦜 Exóticos',             rss: 'https://news.google.com/rss/search?q=(aves+OR+reptiles)+exoticos+veterinaria+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+  { id: 'inv',   nombre: '🔬 Investigación',        rss: 'https://news.google.com/rss/search?q=investigacion+veterinaria+ciencia+animal+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' },
+  { id: 'omsa',  nombre: '🌍 OMSA/OIE',             rss: 'https://news.google.com/rss/search?q=(OMSA+OR+OIE)+salud+animal+when:14d&hl=es-419&gl=MX&ceid=MX:es-419' }
 ];
 
-// Imágenes fallback por categoría (por si admin sube sin imagen)
-const IMG_FALLBACK = {
-  clinica:      'https://images.unsplash.com/photo-1599443015574-be5fe8a05783?w=600&q=80',
-  farma:        'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80',
-  regulatorio:  'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
-  investigacion:'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80',
-  gremial:      'https://images.unsplash.com/photo-1584308878768-57d3e1e9abd7?w=600&q=80'
-};
+const CORS_PROXIES = [
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
+];
 
-function formatFecha(d) {
-  const diff = Date.now() - d.getTime();
-  const dias = Math.floor(diff / 86400000);
-  if (dias === 0) return 'hoy';
-  if (dias === 1) return 'ayer';
-  if (dias < 7) return `hace ${dias} días`;
-  if (dias < 30) return `hace ${Math.floor(dias/7)} sem`;
+// Fallback en caso de que TODO falle
+const FALLBACK_DEMO = [
+  { titulo:'Nuevo protocolo WSAVA 2026 para anestesia en gatos geriátricos', fuente:'WSAVA', fuenteId:'vet', pubDate:new Date(Date.now() - 2*86400000).toISOString(), imagen:'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=600&q=80', excerpt:'La Asociación Mundial de Veterinarios de Pequeños Animales publica actualización que reduce dosis de dexmedetomidina en 40% para felinos mayores.', link:'#' },
+  { titulo:'COFEPRIS actualiza registro sanitario de maropitant inyectable', fuente:'COFEPRIS', fuenteId:'vet', pubDate:new Date(Date.now() - 4*86400000).toISOString(), imagen:'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80', excerpt:'Nuevas presentaciones de maropitant 10 mg/mL ya están disponibles en farmacias veterinarias mexicanas.', link:'#' },
+  { titulo:'Estudio mexicano: prevalencia de dirofilariosis en Pacífico aumenta 22%', fuente:'FMVZ-UNAM', fuenteId:'inv', pubDate:new Date(Date.now() - 5*86400000).toISOString(), imagen:'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&q=80', excerpt:'Investigación de la UNAM documenta aumento significativo de casos de gusano del corazón en perros de estados costeros.', link:'#' }
+];
+
+let noticiasCache = {};
+let filterActive = 'todas';
+
+// ═══ Fetch con CORS proxy ═══
+async function fetchConProxy(url, proxyIndex = 0) {
+  if (proxyIndex >= CORS_PROXIES.length) throw new Error('Proxies agotados');
+  try {
+    const proxyUrl = CORS_PROXIES[proxyIndex](url);
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const text = await resp.text();
+    if (!text || text.length < 50) throw new Error('Vacío');
+    return text;
+  } catch (e) {
+    console.warn(`[Noticias] Proxy ${proxyIndex} falló:`, e.message);
+    return fetchConProxy(url, proxyIndex + 1);
+  }
+}
+
+// ═══ Parsear RSS ═══
+function parsearRss(xmlText, fuente) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, 'text/xml');
+  if (xml.querySelector('parsererror')) return [];
+  const items = Array.from(xml.querySelectorAll('item, entry')).slice(0, 8);
+  return items.map(item => {
+    const titulo = item.querySelector('title')?.textContent?.trim() || '';
+    const link = item.querySelector('link')?.textContent?.trim() ||
+                 item.querySelector('link')?.getAttribute('href') || '';
+    const pubDate = item.querySelector('pubDate, published')?.textContent?.trim() || '';
+    const descripcion = item.querySelector('description, summary, content')?.textContent?.trim() || '';
+    // Buscar imagen en description
+    let imagen = null;
+    const mImg = descripcion.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (mImg) imagen = mImg[1];
+    // Si no hay, usar favicon de Google del dominio
+    if (!imagen && link) {
+      try {
+        const u = new URL(link);
+        let host = u.hostname.replace(/^www\./, '');
+        if (host.includes('news.google.com') && u.searchParams.get('url')) {
+          host = new URL(u.searchParams.get('url')).hostname.replace(/^www\./, '');
+        }
+        imagen = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
+      } catch(e) {}
+    }
+    // Limpiar excerpt
+    const tmp = document.createElement('div');
+    tmp.innerHTML = descripcion;
+    const excerpt = (tmp.textContent || '').trim().replace(/\s+/g, ' ').substring(0, 180) + (descripcion.length > 180 ? '…' : '');
+    return { titulo, link, pubDate, imagen, excerpt, fuente: fuente.nombre, fuenteId: fuente.id };
+  }).filter(n => n.titulo && n.link);
+}
+
+async function fetchFeed(fuente) {
+  try {
+    const xmlText = await fetchConProxy(fuente.rss);
+    const items = parsearRss(xmlText, fuente);
+    console.log(`[Noticias] ${fuente.id}: ${items.length} notas ✓`);
+    return items;
+  } catch (e) {
+    console.warn(`[Noticias] ${fuente.id} falló:`, e.message);
+    return [];
+  }
+}
+
+function formatFecha(pubDate) {
+  if (!pubDate) return '';
+  const d = new Date(pubDate);
+  if (isNaN(d)) return '';
+  const h = (Date.now() - d.getTime()) / 3600000;
+  if (h < 1) return 'hace unos minutos';
+  if (h < 24) return `hace ${Math.floor(h)}h`;
+  const dias = Math.floor(h / 24);
+  if (dias < 7) return `hace ${dias}d`;
   return d.toLocaleDateString('es-MX', { day:'numeric', month:'short' });
 }
 
-let noticiasData = [...NEWS_DEMO];
-
-function render(filter = 'todas') {
+function render() {
   const content = document.getElementById('content');
-  const list = filter === 'todas' ? noticiasData : noticiasData.filter(n => n.cat === filter);
+  let list = noticiasCache[filterActive] || [];
 
   if (list.length === 0) {
     content.innerHTML = `<div class="empty"><div class="empty-icon">📡</div><h3>No hay noticias en esta categoría</h3></div>`;
     return;
   }
 
-  content.innerHTML = list.map((n, i) => {
-    const img = n.imagen || IMG_FALLBACK[n.cat] || IMG_FALLBACK.clinica;
-    const hasRealUrl = n.url && n.url !== '#';
-    const clickHandler = hasRealUrl
-      ? `onclick="window.open('${n.url}','_blank')"`
-      : `onclick="window._openNoticia(${i})"`;
+  content.innerHTML = list.map(n => {
+    const img = n.imagen;
+    const imgStyle = img ? `background-image: url('${img}');` : '';
+    const imgClass = img ? 'news-img with-img' : 'news-img';
+    const icon = img ? '' : '📰';
     return `
-      <article class="news-item" ${clickHandler} style="cursor:pointer;">
-        <div class="news-img" style="background-image: url('${img}');"></div>
+      <a class="news-item" href="${n.link || '#'}" target="_blank" rel="noopener noreferrer">
+        <div class="${imgClass}" style="${imgStyle}">${icon}</div>
         <div class="news-body">
           <div class="news-item-top">
             <span class="news-source">${n.fuente}</span>
-            <span class="news-date">${formatFecha(n.fecha)}</span>
+            <span class="news-date">${formatFecha(n.pubDate)}</span>
           </div>
           <h3 class="news-title">${n.titulo}</h3>
-          <p class="news-summary">${n.resumen}</p>
-          <span class="news-cta">${hasRealUrl ? 'Leer fuente externa →' : 'Leer nota completa →'}</span>
+          <p class="news-summary">${n.excerpt || ''}</p>
+          <span class="news-cta">Leer nota completa →</span>
         </div>
-      </article>`;
+      </a>`;
   }).join('');
 }
 
-// Modal para leer noticia completa (cuando no hay URL externa)
-window._openNoticia = (i) => {
-  const n = (document.querySelector('.news-filter.active')?.dataset?.cat === 'todas')
-    ? noticiasData[i]
-    : noticiasData.filter(x => x.cat === document.querySelector('.news-filter.active').dataset.cat)[i];
-  if (!n) return;
-  const img = n.imagen || IMG_FALLBACK[n.cat] || IMG_FALLBACK.clinica;
-  const modal = document.getElementById('noticiaModal');
-  modal.innerHTML = `
-    <div class="noticia-modal-content">
-      <button class="noticia-modal-close" onclick="document.getElementById('noticiaModal').classList.remove('open')">✕</button>
-      <div class="noticia-modal-img" style="background-image: url('${img}');"></div>
-      <div class="noticia-modal-body">
-        <div class="noticia-modal-top">
-          <span class="news-source">${n.fuente}</span>
-          <span class="news-date">${formatFecha(n.fecha)}</span>
-        </div>
-        <h2 class="noticia-modal-title">${n.titulo}</h2>
-        <div class="noticia-modal-text">
-          <p>${n.resumen}</p>
-          <p style="margin-top:1rem;opacity:0.85;">Esta nota forma parte del boletín informativo del Club GlobalVet México. Los miembros VIP reciben actualizaciones periódicas sobre novedades clínicas, regulatorias y científicas seleccionadas por nuestro equipo editorial veterinario.</p>
-          <p style="margin-top:1rem;opacity:0.85;">Para profundizar en este tema, consulta la biblioteca de cursos o escríbenos en el foro del Club para discutirlo con otros colegas.</p>
-        </div>
-      </div>
-    </div>`;
-  modal.classList.add('open');
-};
+async function cargarNoticias() {
+  const info = document.getElementById('refreshInfo');
+  info.textContent = '📡 Cargando noticias desde Google News…';
+  noticiasCache = {};
+
+  const resultados = await Promise.all(FUENTES.map(f =>
+    fetchFeed(f).then(items => ({ id: f.id, items }))
+  ));
+  resultados.forEach(r => { noticiasCache[r.id] = r.items; });
+
+  const total = Object.values(noticiasCache).reduce((a, arr) => a + arr.length, 0);
+
+  if (total === 0) {
+    // Fallback demo
+    noticiasCache['todas'] = FALLBACK_DEMO;
+    info.textContent = '⚠️ Google News no respondió, mostrando contenido curado';
+  } else {
+    // Consolidar en 'todas'
+    let todas = [];
+    Object.values(noticiasCache).forEach(arr => { todas = todas.concat(arr); });
+    todas.sort((a,b) => new Date(b.pubDate||0) - new Date(a.pubDate||0));
+    // Dedupe por título
+    const vistos = new Set();
+    todas = todas.filter(n => {
+      const key = n.titulo.substring(0, 60).toLowerCase();
+      if (vistos.has(key)) return false;
+      vistos.add(key);
+      return true;
+    });
+    noticiasCache['todas'] = todas;
+    info.textContent = `✅ ${total} noticias actualizadas • Fuente: Google News`;
+  }
+
+  // Renderizar filtros dinámicos
+  const filters = document.getElementById('filters');
+  filters.innerHTML = ['<button class="news-filter active" data-cat="todas">Todas (' + (noticiasCache['todas']?.length || 0) + ')</button>']
+    .concat(FUENTES.filter(f => (noticiasCache[f.id]?.length || 0) > 0).map(f =>
+      `<button class="news-filter" data-cat="${f.id}">${f.nombre} (${noticiasCache[f.id].length})</button>`
+    )).join('');
+
+  filters.querySelectorAll('.news-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filters.querySelectorAll('.news-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterActive = btn.dataset.cat;
+      render();
+    });
+  });
+
+  render();
+}
+
+window._reload = () => cargarNoticias();
 
 (async () => {
   const session = await requireAuth();
@@ -420,47 +392,7 @@ window._openNoticia = (i) => {
   document.getElementById('topnav').innerHTML = renderTopNav(session);
   document.getElementById('sidebar').innerHTML = renderSidebar('noticias');
   document.getElementById('btnLogout')?.addEventListener('click', doLogout);
-
-  // Intentar traer de Firestore primero (si el admin las ha cargado)
-  try {
-    const snap = await getDocs(query(collection(db, 'noticias'), orderBy('fecha', 'desc')));
-    if (snap.size > 0) {
-      noticiasData = snap.docs.map(d => {
-        const data = d.data();
-        return {
-          titulo: data.titulo,
-          fuente: data.fuente || 'GlobalVet',
-          cat: data.cat || 'clinica',
-          fecha: data.fecha?.toDate() || new Date(),
-          imagen: data.imagen || null,
-          resumen: data.resumen || '',
-          url: data.url || '#'
-        };
-      });
-    }
-  } catch (e) { console.log('Usando noticias demo'); }
-
-  render();
-  document.querySelectorAll('.news-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.news-filter').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render(btn.dataset.cat);
-    });
-  });
-
-  // Cerrar modal de noticia al hacer clic fuera
-  document.getElementById('noticiaModal').addEventListener('click', (e) => {
-    if (e.target.id === 'noticiaModal') {
-      e.target.classList.remove('open');
-    }
-  });
-  // Cerrar con Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      document.getElementById('noticiaModal').classList.remove('open');
-    }
-  });
+  await cargarNoticias();
 })();
 </script>
 </body>
