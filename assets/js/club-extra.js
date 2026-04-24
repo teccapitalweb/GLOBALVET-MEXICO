@@ -73,7 +73,6 @@ export function renderSidebar(activeKey = '') {
       { key:'biblioteca',   label:'Biblioteca de cursos',   href:'club-dashboard.html#biblioteca', icon:'📚' },
       { key:'sesiones',     label:'Sesiones en vivo',       href:'club-dashboard.html#sesiones',   icon:'🔴' },
       { key:'pdfs',         label:'PDFs',                   href:'club-dashboard.html#pdfs',       icon:'📄' },
-      { key:'videos',       label:'Videos prácticos',       href:'club-videos.html',               icon:'🎥' },
       { key:'herramientas', label:'Herramientas clínicas',  href:'club-herramientas.html',         icon:'🩺', badge:'NEW', badgeClass:'gold' }
     ]},
     { label: 'Contenido mensual', items: [
