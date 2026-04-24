@@ -80,7 +80,6 @@ export function renderSidebar(activeKey = '') {
     ]},
     { label: 'Comunidad', items: [
       { key:'foro',         label:'Foro',           href:'club-foro.html',         icon:'💬' },
-      { key:'logros',       label:'Logros',         href:'club-logros.html',       icon:'⭐' },
       { key:'referidos',    label:'Referidos',      href:'club-referidos.html',    icon:'🎁' },
       { key:'certificados', label:'Mis constancias', href:'club-certificados.html', icon:'🏆' }
     ]},
