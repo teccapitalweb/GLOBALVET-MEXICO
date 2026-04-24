@@ -2292,6 +2292,41 @@
         lanzarConfeti();
         abrirCompartir(cursoActivo.titulo, cursoActivo.instructor);
       }, 600);
+
+      // 🎓 EMITIR CONSTANCIA OFICIAL en Firestore (con folio único)
+      try {
+        const uid = auth.currentUser?.uid;
+        const email = auth.currentUser?.email;
+        const nombre = (pd && pd.nombre) || auth.currentUser?.displayName || 'Miembro del Club';
+        if (uid && window.firestore) {
+          const { collection, query, where, getDocs, addDoc, serverTimestamp } = window.firestore;
+          // Evitar duplicados: verificar si ya tiene constancia de este curso
+          const existentes = await getDocs(query(
+            collection(db, 'certificados'),
+            where('uid', '==', uid),
+            where('cursoId', '==', cursoActivo.id)
+          ));
+          if (existentes.empty) {
+            const año = new Date().getFullYear();
+            const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+            const folio = `GV-${año}-${rand}`;
+            await addDoc(collection(db, 'certificados'), {
+              folio, uid, nombre, email,
+              cursoId: cursoActivo.id,
+              cursoTitulo: cursoActivo.titulo,
+              cursoArea: cursoActivo.area || cursoActivo.categoria || 'Medicina veterinaria',
+              totalClases: cursoActivo.sesiones.length,
+              completadoEn: serverTimestamp(),
+              emisor: 'GlobalVet México',
+              activo: true
+            });
+            // Toast con folio
+            setTimeout(() => {
+              st(`🏆 Constancia emitida. Folio: ${folio}. Velo en "Mis constancias".`, true);
+            }, 1800);
+          }
+        }
+      } catch (err) { console.warn('No se pudo emitir constancia:', err); }
     }
 
     // Verificar si desbloqueó algún logro nuevo
@@ -2390,12 +2425,18 @@
 
   // 🏆 Catálogo de 6 logros (patrón OdonTeck)
   const LOGROS = [
-    { id: 'primer_paso',     emoji: '🎯', nombre: 'Primer paso',     desc: 'Completa tu primera clase' },
-    { id: 'semana_perfecta', emoji: '🔥', nombre: 'Semana perfecta', desc: '7 días de racha seguidos' },
-    { id: 'estudioso',       emoji: '📚', nombre: 'Estudioso',       desc: 'Completa 10 clases' },
-    { id: 'maestro',         emoji: '🏆', nombre: 'Maestro',         desc: 'Completa un curso al 100%' },
-    { id: 'leyenda',         emoji: '🌟', nombre: 'Leyenda',         desc: '30 días de racha' },
-    { id: 'constante',       emoji: '📅', nombre: 'Constante',       desc: '50 clases completadas' }
+    { id: 'primer_paso',     emoji: '🎯', nombre: 'Primer paso',      desc: 'Completa tu primera clase' },
+    { id: 'cinco_clases',    emoji: '✋', nombre: 'Mano completa',     desc: 'Completa 5 clases' },
+    { id: 'estudioso',       emoji: '📚', nombre: 'Estudioso',        desc: 'Completa 10 clases' },
+    { id: 'constante',       emoji: '📅', nombre: 'Constante',        desc: 'Completa 25 clases' },
+    { id: 'veterano',        emoji: '🎓', nombre: 'Veterano del Club', desc: 'Completa 50 clases' },
+    { id: 'racha_3',         emoji: '⚡', nombre: 'En racha',         desc: '3 días de racha seguidos' },
+    { id: 'semana_perfecta', emoji: '🔥', nombre: 'Semana perfecta',  desc: '7 días de racha seguidos' },
+    { id: 'leyenda',         emoji: '🌟', nombre: 'Leyenda',          desc: '30 días de racha' },
+    { id: 'maestro',         emoji: '🏆', nombre: 'Maestro',          desc: 'Completa un curso al 100%' },
+    { id: 'erudito',         emoji: '👑', nombre: 'Erudito',          desc: 'Completa 3 cursos al 100%' },
+    { id: 'pionero',         emoji: '🚀', nombre: 'Pionero',          desc: 'Completa 5 cursos al 100%' },
+    { id: 'experto',         emoji: '💎', nombre: 'Experto certificado', desc: 'Obtén tu primera constancia oficial' }
   ];
 
   // Almacenamiento: Firestore (si hay sesión) con fallback a localStorage
@@ -2491,13 +2532,35 @@
   window.verificarYMostrarLogros = async function() {
     const s = getStats();
     const yaDesbloqueados = new Set(getLogrosDesbloqueados());
+
+    // Verificar si tiene al menos una constancia emitida (para el logro 'experto')
+    let tieneConstancia = false;
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid && window.firestore) {
+        const { collection, query, where, getDocs } = window.firestore;
+        const snap = await getDocs(query(collection(db, 'certificados'), where('uid', '==', uid)));
+        tieneConstancia = !snap.empty;
+      }
+    } catch(e) {}
+
+    const clases = s.clasesCompletadas || 0;
+    const racha = s.rachaDias || 0;
+    const cursosComp = (s.cursosCompletados || []).length;
+
     const condiciones = {
-      primer_paso:     (s.clasesCompletadas || 0) >= 1,
-      semana_perfecta: (s.rachaDias || 0) >= 7,
-      estudioso:       (s.clasesCompletadas || 0) >= 10,
-      maestro:         (s.cursosCompletados || []).length >= 1,
-      leyenda:         (s.rachaDias || 0) >= 30,
-      constante:       (s.clasesCompletadas || 0) >= 50
+      primer_paso:     clases >= 1,
+      cinco_clases:    clases >= 5,
+      estudioso:       clases >= 10,
+      constante:       clases >= 25,
+      veterano:        clases >= 50,
+      racha_3:         racha >= 3,
+      semana_perfecta: racha >= 7,
+      leyenda:         racha >= 30,
+      maestro:         cursosComp >= 1,
+      erudito:         cursosComp >= 3,
+      pionero:         cursosComp >= 5,
+      experto:         tieneConstancia
     };
     const nuevos = [];
     LOGROS.forEach(l => {
