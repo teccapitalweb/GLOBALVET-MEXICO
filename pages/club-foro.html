@@ -20,6 +20,27 @@
     font-size: 0.88rem;
   }
   .forum-stats strong { color: var(--gv-text); font-family: var(--gv-ff); }
+  .forum-filters {
+    display: flex; gap: 0.4rem; flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+  }
+  .forum-filter {
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--gv-border);
+    border-radius: 50px;
+    color: var(--gv-text-muted);
+    font-family: var(--gv-ff);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .forum-filter.active {
+    background: var(--gv-purple);
+    color: #fff;
+    border-color: var(--gv-purple);
+  }
 
   .post-item {
     background: var(--gv-bg-surface);
@@ -27,9 +48,8 @@
     border-radius: var(--gv-radius);
     padding: 1.3rem 1.5rem;
     margin-bottom: 1rem;
-    transition: border-color 0.15s, transform 0.15s;
+    transition: border-color 0.15s;
   }
-  .post-item:hover { border-color: var(--gv-purple); transform: translateY(-1px); }
   .post-head {
     display: flex; align-items: center; gap: 0.8rem;
     margin-bottom: 0.8rem;
@@ -68,12 +88,14 @@
   }
   .post-title {
     font-family: var(--gv-ff);
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: var(--gv-text);
     line-height: 1.3;
+    cursor: pointer;
   }
+  .post-title:hover { color: var(--gv-gold-hover); }
   .post-body {
     color: var(--gv-text-muted);
     font-size: 0.92rem;
@@ -81,7 +103,7 @@
     margin-bottom: 1rem;
   }
   .post-meta {
-    display: flex; gap: 1.2rem;
+    display: flex; gap: 1rem;
     font-size: 0.82rem;
     color: var(--gv-text-dim);
     padding-top: 0.8rem;
@@ -91,8 +113,91 @@
     display: flex; align-items: center; gap: 0.35rem;
     cursor: pointer;
     transition: color 0.15s;
+    background: none;
+    border: none;
+    color: var(--gv-text-dim);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
   }
-  .post-meta-item:hover { color: var(--gv-purple-hover); }
+  .post-meta-item:hover {
+    color: var(--gv-purple-hover);
+    background: rgba(139, 92, 246, 0.1);
+  }
+  .post-meta-item.liked {
+    color: var(--gv-rose);
+  }
+
+  /* Respuestas */
+  .replies-wrap {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--gv-border);
+    display: none;
+  }
+  .replies-wrap.open { display: block; animation: fadeIn 0.3s; }
+  .reply {
+    display: flex; gap: 0.7rem;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--gv-border);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+  }
+  .reply-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gv-purple), var(--gv-purple-deep));
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-family: var(--gv-ff);
+    font-weight: 800; font-size: 0.72rem;
+    flex-shrink: 0;
+  }
+  .reply-body { flex: 1; min-width: 0; }
+  .reply-head {
+    display: flex; align-items: baseline; gap: 0.5rem;
+    margin-bottom: 0.3rem;
+    flex-wrap: wrap;
+  }
+  .reply-author {
+    font-family: var(--gv-ff);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--gv-text);
+  }
+  .reply-date { font-size: 0.72rem; color: var(--gv-text-dim); }
+  .reply-text {
+    font-size: 0.88rem;
+    color: var(--gv-text-muted);
+    line-height: 1.55;
+  }
+
+  .reply-form {
+    display: flex; gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .reply-form textarea {
+    flex: 1;
+    padding: 0.7rem 0.9rem;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--gv-border);
+    border-radius: 10px;
+    color: var(--gv-text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 50px;
+    max-height: 120px;
+  }
+  .reply-form textarea:focus {
+    outline: none;
+    border-color: var(--gv-purple);
+  }
+  .reply-form button {
+    padding: 0.7rem 1.1rem;
+    align-self: flex-start;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
@@ -110,10 +215,19 @@
     <div class="forum-toolbar">
       <div class="forum-stats">
         <span><strong id="nPosts">—</strong> publicaciones</span>
-        <span><strong>248</strong> veterinarios activos</span>
-        <span><strong>93%</strong> respondidas</span>
+        <span><strong id="nReplies">—</strong> respuestas</span>
+        <span><strong>Activo</strong> ahora</span>
       </div>
       <button class="btn btn-gold" id="btnNew">+ Nueva publicación</button>
+    </div>
+
+    <div class="forum-filters" id="filters">
+      <button class="forum-filter active" data-tag="todas">Todas</button>
+      <button class="forum-filter" data-tag="Caso clínico">Casos clínicos</button>
+      <button class="forum-filter" data-tag="Pregunta">Preguntas</button>
+      <button class="forum-filter" data-tag="Experiencia">Experiencias</button>
+      <button class="forum-filter" data-tag="Recurso compartido">Recursos</button>
+      <button class="forum-filter" data-tag="Discusión">Discusiones</button>
     </div>
 
     <div id="content" class="loading">Cargando foro…</div>
@@ -149,48 +263,157 @@
 </div>
 
 <script type="module">
-import { requireAuth, renderSidebar, renderTopNav, doLogout, toast, db, collection, query, orderBy, getDocs, addDoc, serverTimestamp } from '../assets/js/club-extra.js';
+import { requireAuth, renderSidebar, renderTopNav, doLogout, toast, db, collection, query, orderBy, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc, where } from '../assets/js/club-extra.js';
 
-// Posts de ejemplo
-const POSTS_DEMO = [
-  { titulo:'Caso clínico: Perra schnauzer de 8 años con vómito crónico', body:'Hola colegas. Tengo una paciente que lleva 3 semanas con vómito intermitente postprandial. Ya descarté parásitos (coproparasitoscópico negativo × 3), panel bioquímico normal excepto ALT ligeramente elevada (120 U/L). Radiografía abdominal sin cuerpo extraño. ¿Iniciarían con endoscopía o probarían dieta hipoalergénica primero? Agradezco comentarios.',
-    autor:'Dr. Manuel Ortiz, MVZ', tag:'Caso clínico', views:342, respuestas:8, likes:15, hace:'hace 2 días', especialista: true },
-  { titulo:'¿Cuál protocolo antibiótico usan para piodermas profundas?', body:'Paciente golden de 5 años con pioderma profunda recurrente. Ya hice citología (cocos Gram+), cultivo pendiente. Por mientras, ¿prefieren empezar con cefalexina 30 mg/kg BID por 4 semanas o directo amoxi-clav? Con cuál han tenido mejores resultados. Gracias.',
-    autor:'MVZ. Andrea Velázquez', tag:'Pregunta', views:198, respuestas:12, likes:23, hace:'hace 4 días', especialista: false },
-  { titulo:'Experiencia: uso de maropitant preoperatorio reduce emesis 85%', body:'Compartir una experiencia. Comencé a usar maropitant 1 mg/kg SC 30 min antes de la premedicación anestésica hace 6 meses. De 120 procedimientos quirúrgicos, solo 4 pacientes presentaron vómito postoperatorio (vs 40+ antes). Totalmente recomendado. ¿Alguien más lo está usando?',
-    autor:'Dr. Raúl Méndez, MVZ', tag:'Experiencia', views:456, respuestas:19, likes:67, hace:'hace 1 semana', especialista: true },
-  { titulo:'Guía rápida: interpretación de BUN y creatinina en gatos geriátricos', body:'Les comparto un documento PDF que preparé con algoritmo de interpretación rápida para pacientes felinos mayores de 8 años. Incluye SDMA y criterios IRIS actualizados. Útil para consulta diaria. [Archivo adjunto próximamente]',
-    autor:'MVZ Esp. Lucía Ferrer', tag:'Recurso compartido', views:612, respuestas:24, likes:89, hace:'hace 2 semanas', especialista: true },
-  { titulo:'Urgencia resuelta: torsión gástrica nocturna — protocolo que funcionó', body:'Anoche a las 2 am me llegó un gran danés de 6 años con torsión gástrica clásica. Les cuento el protocolo que seguí: descompresión con trocar abdominal, shock bolus 20 mL/kg Ringer, tramadol+ketamina inducción, sevoflurano mantenimiento, gastropexia y gastrorragia. Paciente salió bien. ¿Ustedes cómo manejan la parte anestésica en estos casos?',
-    autor:'Dr. Eduardo Cruz, MVZ', tag:'Caso clínico', views:289, respuestas:15, likes:42, hace:'hace 3 semanas', especialista: false },
-  { titulo:'Discusión: ¿Vale la pena comprar un ultrasonido portátil en 2026?', body:'Estoy considerando invertir en un ultrasonido portátil (rango $2500–$4500 USD). Para una clínica de volumen medio, ¿lo ven rentable? ¿Qué modelos han probado? Busco algo con buena calidad de imagen pero no extremadamente caro. Opiniones.',
-    autor:'MVZ. Carolina Ruiz', tag:'Discusión', views:521, respuestas:31, likes:38, hace:'hace 1 mes', especialista: false }
+// ═══════════════════════════════════════════════════════════
+// SEEDS: Posts y respuestas demo. Se muestran si Firebase está vacío.
+// ═══════════════════════════════════════════════════════════
+const SEEDS = [
+  {
+    id:'seed-1',
+    titulo:'Caso clínico: Schnauzer de 8 años con vómito crónico',
+    body:'Hola colegas. Tengo una paciente que lleva 3 semanas con vómito intermitente postprandial. Ya descarté parásitos (coproparasitoscópico negativo × 3), panel bioquímico normal excepto ALT ligeramente elevada (120 U/L). Radiografía abdominal sin cuerpo extraño. ¿Iniciarían con endoscopía o probarían dieta hipoalergénica primero? Agradezco comentarios.',
+    autor:'Dr. Manuel Ortiz, MVZ', tag:'Caso clínico', views:342, likes:15, especialista:true,
+    createdAt: new Date(Date.now() - 2*86400000),
+    respuestas:[
+      { autor:'MVZ Esp. Lucía Ferrer', texto:'Yo empezaría con la dieta hipoalergénica por 6-8 semanas. Si no mejora, endoscopía con biopsias múltiples. En mi experiencia, el 40% de estos casos responde solo con cambio dietético.', createdAt: new Date(Date.now() - 1.8*86400000), especialista:true },
+      { autor:'Dr. Raúl Méndez, MVZ', texto:'De acuerdo con Lucía. También consideraría pedir un panel hepático completo incluyendo ácidos biliares pre y postprandiales — con ALT elevada vale la pena descartar hepatopatía de base.', createdAt: new Date(Date.now() - 1.5*86400000) },
+      { autor:'MVZ. Carolina Ruiz', texto:'¿Hiciste prueba de ANTI-IgG/IgM contra Helicobacter? En Schnauzers es más frecuente de lo que parece y el tratamiento empírico con metronidazol + amoxicilina funciona muy bien.', createdAt: new Date(Date.now() - 1*86400000) }
+    ]
+  },
+  {
+    id:'seed-2',
+    titulo:'¿Cuál protocolo antibiótico usan para piodermas profundas?',
+    body:'Paciente golden de 5 años con pioderma profunda recurrente. Ya hice citología (cocos Gram+), cultivo pendiente. Por mientras, ¿prefieren empezar con cefalexina 30 mg/kg BID por 4 semanas o directo amoxi-clav? Con cuál han tenido mejores resultados. Gracias.',
+    autor:'MVZ. Andrea Velázquez', tag:'Pregunta', views:198, likes:23, especialista:false,
+    createdAt: new Date(Date.now() - 4*86400000),
+    respuestas:[
+      { autor:'Dr. Eduardo Cruz, MVZ', texto:'Cefalexina 30 mg/kg BID mínimo 4 semanas, y en piodermas profundas yo extiendo a 6 semanas. Siempre evalúo 2 semanas después de resolución clínica.', createdAt: new Date(Date.now() - 3.5*86400000) },
+      { autor:'MVZ Esp. Lucía Ferrer', texto:'Importante: identifica la causa de fondo (alergia ambiental, alimentaria, endocrinopatía). Sin eso, el pioderma va a recurrir por más antibiótico que des.', createdAt: new Date(Date.now() - 3*86400000), especialista:true }
+    ]
+  },
+  {
+    id:'seed-3',
+    titulo:'Experiencia: uso de maropitant preoperatorio reduce emesis 85%',
+    body:'Compartir una experiencia. Comencé a usar maropitant 1 mg/kg SC 30 min antes de la premedicación anestésica hace 6 meses. De 120 procedimientos quirúrgicos, solo 4 pacientes presentaron vómito postoperatorio (vs 40+ antes). Totalmente recomendado. ¿Alguien más lo está usando?',
+    autor:'Dr. Raúl Méndez, MVZ', tag:'Experiencia', views:456, likes:67, especialista:true,
+    createdAt: new Date(Date.now() - 7*86400000),
+    respuestas:[
+      { autor:'MVZ. Patricia Luna', texto:'Confirmo. Lo uso desde hace 2 años y la diferencia es abismal, sobre todo en gatos y razas braquicefálicas. También noté menos salivación excesiva.', createdAt: new Date(Date.now() - 6.5*86400000) },
+      { autor:'Dr. Fernando Galván, MVZ', texto:'Gran observación. Yo lo combino con ondansetrón 0.5 mg/kg IV en pacientes con historia de reflujo gastroesofágico. Protocolo de oro.', createdAt: new Date(Date.now() - 6*86400000) },
+      { autor:'MVZ. Claudia Mendoza', texto:'Pregunta: ¿con qué edad mínima lo usan? Tengo un cachorro de 4 meses para orquiectomía la próxima semana.', createdAt: new Date(Date.now() - 5*86400000) },
+      { autor:'Dr. Raúl Méndez, MVZ', texto:'@Claudia desde 16 semanas está aprobado. Para cachorros más jóvenes hay alternativas. Consulta el prospecto de tu país.', createdAt: new Date(Date.now() - 4.8*86400000), especialista:true }
+    ]
+  },
+  {
+    id:'seed-4',
+    titulo:'Guía rápida: interpretación de BUN y creatinina en gatos geriátricos',
+    body:'Les comparto un documento PDF que preparé con algoritmo de interpretación rápida para pacientes felinos mayores de 8 años. Incluye SDMA y criterios IRIS actualizados. Útil para consulta diaria.',
+    autor:'MVZ Esp. Lucía Ferrer', tag:'Recurso compartido', views:612, likes:89, especialista:true,
+    createdAt: new Date(Date.now() - 14*86400000),
+    respuestas:[
+      { autor:'Dr. Manuel Ortiz, MVZ', texto:'Excelente aporte Lucía. Muy práctico para consulta. ¿Podrías agregar un apartado sobre interpretación de proteinuria con UPC?', createdAt: new Date(Date.now() - 13*86400000), especialista:true },
+      { autor:'MVZ. Andrea Velázquez', texto:'Mil gracias, lo imprimí y lo tengo en consulta. El apartado de SDMA con creatinina normal es oro puro.', createdAt: new Date(Date.now() - 12*86400000) }
+    ]
+  },
+  {
+    id:'seed-5',
+    titulo:'Urgencia resuelta: torsión gástrica nocturna — protocolo que funcionó',
+    body:'Anoche a las 2 am me llegó un gran danés de 6 años con torsión gástrica clásica. Les cuento el protocolo que seguí: descompresión con trocar abdominal, shock bolus 20 mL/kg Ringer, tramadol+ketamina inducción, sevoflurano mantenimiento, gastropexia y gastrorrafía. Paciente salió bien. ¿Ustedes cómo manejan la parte anestésica en estos casos?',
+    autor:'Dr. Eduardo Cruz, MVZ', tag:'Caso clínico', views:289, likes:42, especialista:false,
+    createdAt: new Date(Date.now() - 21*86400000),
+    respuestas:[
+      { autor:'MVZ Esp. Lucía Ferrer', texto:'Felicidades por el resultado. Yo uso fentanilo en CRI intraoperatorio (0.2-0.4 mcg/kg/min) para reducir el isoflurano. En estos pacientes hipovolémicos funciona muy bien.', createdAt: new Date(Date.now() - 20*86400000), especialista:true }
+    ]
+  }
 ];
 
+let _session;
+let _allPosts = [];
+let _filter = 'todas';
+const _likedKey = 'gv_liked_posts';
+
+// Posts con like por usuario (localStorage)
+function isLiked(id) {
+  try {
+    const arr = JSON.parse(localStorage.getItem(_likedKey) || '[]');
+    return arr.includes(id);
+  } catch(e) { return false; }
+}
+function setLiked(id, liked) {
+  try {
+    let arr = JSON.parse(localStorage.getItem(_likedKey) || '[]');
+    if (liked && !arr.includes(id)) arr.push(id);
+    if (!liked) arr = arr.filter(x => x !== id);
+    localStorage.setItem(_likedKey, JSON.stringify(arr));
+  } catch(e) {}
+}
+
 function initials(n) {
-  return (n || 'U').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  return (n || 'U').split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase();
+}
+
+function formatFecha(d) {
+  if (!d) return '';
+  const date = d.toDate ? d.toDate() : new Date(d);
+  const diff = Date.now() - date.getTime();
+  const h = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  if (h < 1) return 'hace un momento';
+  if (h < 24) return `hace ${h}h`;
+  if (days === 1) return 'ayer';
+  if (days < 7) return `hace ${days} días`;
+  if (days < 30) return `hace ${Math.floor(days/7)} sem`;
+  return date.toLocaleDateString('es-MX', { day:'numeric', month:'short' });
 }
 
 async function loadPosts() {
   const content = document.getElementById('content');
   content.classList.add('loading');
+  content.textContent = 'Cargando foro…';
 
-  let posts = [];
+  let fbPosts = [];
   try {
     const snap = await getDocs(query(collection(db, 'foro'), orderBy('createdAt', 'desc')));
-    posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch (err) { console.log(err.message); }
+    fbPosts = await Promise.all(snap.docs.map(async d => {
+      const data = d.data();
+      // traer respuestas
+      let respuestas = [];
+      try {
+        const rsnap = await getDocs(query(collection(db, 'foro', d.id, 'respuestas'), orderBy('createdAt', 'asc')));
+        respuestas = rsnap.docs.map(r => ({ id: r.id, ...r.data() }));
+      } catch(e) {}
+      return { id: d.id, ...data, respuestas };
+    }));
+  } catch(e) { console.log('Firestore foro:', e.message); }
 
-  // Si no hay posts en Firebase, usar los demo
-  const allPosts = posts.length > 0 ? posts : POSTS_DEMO;
+  // Combinar: primero los de Firestore, luego los seeds (si no hay suficientes)
+  _allPosts = fbPosts.length >= 2 ? fbPosts : [...fbPosts, ...SEEDS];
+
+  // Stats
+  const totalReplies = _allPosts.reduce((s, p) => s + (p.respuestas?.length || 0), 0);
+  document.getElementById('nPosts').textContent = _allPosts.length;
+  document.getElementById('nReplies').textContent = totalReplies;
 
   content.classList.remove('loading');
-  document.getElementById('nPosts').textContent = allPosts.length;
+  renderPosts();
+}
 
-  content.innerHTML = allPosts.map(p => {
-    const fecha = p.hace || (p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('es-MX') : '');
+function renderPosts() {
+  const content = document.getElementById('content');
+  let list = _filter === 'todas' ? _allPosts : _allPosts.filter(p => p.tag === _filter);
+  if (list.length === 0) {
+    content.innerHTML = `<div class="empty"><div class="empty-icon">💬</div><h3>No hay publicaciones en esta categoría</h3><p>Sé el primero en publicar.</p></div>`;
+    return;
+  }
+
+  content.innerHTML = list.map(p => {
+    const fecha = formatFecha(p.createdAt);
+    const liked = isLiked(p.id);
+    const likes = (p.likes || 0) + (liked ? 1 : 0); // si el usuario dio like ahora, mostrarlo localmente
+    const numResp = p.respuestas?.length || 0;
     return `
-      <div class="post-item">
+      <div class="post-item" id="post-${p.id}">
         <div class="post-head">
           <div class="post-avatar">${initials(p.autor)}</div>
           <div>
@@ -199,26 +422,128 @@ async function loadPosts() {
           </div>
           ${p.tag ? `<span class="post-tag">${p.tag}</span>` : ''}
         </div>
-        <h3 class="post-title">${p.titulo}</h3>
+        <h3 class="post-title" onclick="window._togglePost('${p.id}')">${p.titulo}</h3>
         <p class="post-body">${(p.body || '').replace(/\n/g,'<br>')}</p>
         <div class="post-meta">
-          <span class="post-meta-item">👁️ ${p.views || 0}</span>
-          <span class="post-meta-item">💬 ${p.respuestas || 0} respuestas</span>
-          <span class="post-meta-item">👍 ${p.likes || 0}</span>
+          <button class="post-meta-item" onclick="window._togglePost('${p.id}')">💬 <span id="c-${p.id}">${numResp}</span> respuesta${numResp !== 1 ? 's' : ''}</button>
+          <button class="post-meta-item ${liked ? 'liked' : ''}" onclick="window._toggleLike('${p.id}', this)">${liked ? '❤️' : '🤍'} <span id="l-${p.id}">${likes}</span></button>
+          <span class="post-meta-item" style="cursor:default;">👁️ ${(p.views || 0) + 1}</span>
+        </div>
+        <div class="replies-wrap" id="replies-${p.id}">
+          ${(p.respuestas || []).map(r => `
+            <div class="reply">
+              <div class="reply-avatar">${initials(r.autor)}</div>
+              <div class="reply-body">
+                <div class="reply-head">
+                  <span class="reply-author">${r.autor || 'Miembro'} ${r.especialista ? '<span class="post-author-badge">Esp</span>' : ''}</span>
+                  <span class="reply-date">${formatFecha(r.createdAt)}</span>
+                </div>
+                <div class="reply-text">${(r.texto || '').replace(/\n/g,'<br>')}</div>
+              </div>
+            </div>
+          `).join('')}
+          <div class="reply-form">
+            <textarea id="txt-${p.id}" placeholder="Escribe tu respuesta…"></textarea>
+            <button class="btn btn-primary" onclick="window._sendReply('${p.id}')">Responder</button>
+          </div>
         </div>
       </div>`;
   }).join('');
 }
 
-let session;
+window._togglePost = (id) => {
+  const el = document.getElementById('replies-' + id);
+  if (el) el.classList.toggle('open');
+};
+
+window._toggleLike = async (id, btn) => {
+  const liked = isLiked(id);
+  setLiked(id, !liked);
+  btn.classList.toggle('liked', !liked);
+  // Cambiar el icono
+  const spanL = document.getElementById('l-' + id);
+  const current = parseInt(spanL.textContent) || 0;
+  spanL.textContent = liked ? Math.max(0, current - 1) : current + 1;
+  btn.innerHTML = btn.innerHTML.replace(/🤍|❤️/, liked ? '🤍' : '❤️');
+
+  // Intentar guardar en Firestore (si es un post real, no seed)
+  if (!id.startsWith('seed-')) {
+    try {
+      const pref = doc(db, 'foro', id);
+      const snap = await getDoc(pref);
+      if (snap.exists()) {
+        const n = snap.data().likes || 0;
+        await updateDoc(pref, { likes: liked ? Math.max(0, n - 1) : n + 1 });
+      }
+    } catch(e) {}
+  }
+};
+
+window._sendReply = async (postId) => {
+  const txtEl = document.getElementById('txt-' + postId);
+  const texto = txtEl.value.trim();
+  if (!texto) { toast('Escribe algo antes de responder', true); return; }
+
+  // Si es un post seed, solo agregar localmente (no se persiste)
+  if (postId.startsWith('seed-')) {
+    const post = _allPosts.find(p => p.id === postId);
+    if (post) {
+      post.respuestas = post.respuestas || [];
+      post.respuestas.push({
+        autor: _session.name,
+        texto,
+        createdAt: new Date(),
+        especialista: false
+      });
+      toast('✅ Respuesta agregada (demo local)');
+      renderPosts();
+      // Re-abrir el post
+      setTimeout(() => document.getElementById('replies-' + postId)?.classList.add('open'), 50);
+    }
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, 'foro', postId, 'respuestas'), {
+      autor: _session.name,
+      uid: _session.uid,
+      texto,
+      createdAt: serverTimestamp()
+    });
+    // Actualizar contador en el post
+    try {
+      const pref = doc(db, 'foro', postId);
+      const snap = await getDoc(pref);
+      if (snap.exists()) {
+        await updateDoc(pref, { respuestas: (snap.data().respuestas || 0) + 1 });
+      }
+    } catch(e) {}
+    toast('✅ Respuesta publicada');
+    txtEl.value = '';
+    await loadPosts();
+    setTimeout(() => document.getElementById('replies-' + postId)?.classList.add('open'), 100);
+  } catch(err) {
+    toast('Error: ' + err.message, true);
+  }
+};
+
 (async () => {
-  session = await requireAuth();
-  if (!session) return;
-  document.getElementById('topnav').innerHTML = renderTopNav(session);
+  _session = await requireAuth();
+  if (!_session) return;
+  document.getElementById('topnav').innerHTML = renderTopNav(_session);
   document.getElementById('sidebar').innerHTML = renderSidebar('foro');
   document.getElementById('btnLogout')?.addEventListener('click', doLogout);
   await loadPosts();
 })();
+
+document.querySelectorAll('.forum-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.forum-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _filter = btn.dataset.tag;
+    renderPosts();
+  });
+});
 
 document.getElementById('btnNew').addEventListener('click', () => {
   document.getElementById('modal').classList.add('open');
@@ -234,17 +559,18 @@ document.getElementById('btnPublish').addEventListener('click', async () => {
   try {
     await addDoc(collection(db, 'foro'), {
       titulo, body, tag,
-      uid: session.uid,
-      autor: session.name,
+      uid: _session.uid,
+      autor: _session.name,
       createdAt: serverTimestamp(),
-      views: 0, respuestas: 0, likes: 0
+      views: 0, respuestas: 0, likes: 0,
+      especialista: false
     });
     toast('✅ Publicación creada');
     document.getElementById('modal').classList.remove('open');
     document.getElementById('pTitle').value = '';
     document.getElementById('pBody').value = '';
     await loadPosts();
-  } catch (err) { toast('Error al publicar', true); }
+  } catch (err) { toast('Error al publicar: ' + err.message, true); }
 });
 </script>
 </body>
