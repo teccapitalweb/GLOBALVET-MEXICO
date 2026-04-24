@@ -130,6 +130,75 @@
       max-height: 200px;
     }
   }
+
+  /* Modal de lectura de noticia */
+  .noticia-modal {
+    position: fixed; inset: 0;
+    background: rgba(10, 6, 20, 0.92);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 1000;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  .noticia-modal.open { display: flex; }
+  .noticia-modal-content {
+    background: var(--gv-bg-surface-2);
+    border: 1px solid var(--gv-border-strong);
+    border-radius: var(--gv-radius-lg);
+    max-width: 720px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .noticia-modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .noticia-modal-close:hover { background: rgba(244,63,94,0.3); border-color: var(--gv-rose); }
+  .noticia-modal-img {
+    width: 100%; height: 280px;
+    background-size: cover; background-position: center;
+    position: relative;
+  }
+  .noticia-modal-img::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(26,16,64,0.6) 100%);
+  }
+  .noticia-modal-body {
+    padding: 2rem;
+  }
+  .noticia-modal-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+  .noticia-modal-title {
+    font-family: var(--gv-ff);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--gv-text);
+    margin-bottom: 1.2rem;
+    line-height: 1.25;
+  }
+  .noticia-modal-text {
+    color: var(--gv-text-muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+  .noticia-modal-text p { margin-bottom: 0.8rem; }
 </style>
 </head>
 <body>
@@ -156,6 +225,9 @@
     <div id="content" class="news-list"></div>
   </main>
 </div>
+
+<!-- Modal de lectura de noticia -->
+<div class="noticia-modal" id="noticiaModal"></div>
 
 <script type="module">
 import { requireAuth, renderSidebar, renderTopNav, doLogout, db, collection, query, orderBy, getDocs } from '../assets/js/club-extra.js';
@@ -292,10 +364,14 @@ function render(filter = 'todas') {
     return;
   }
 
-  content.innerHTML = list.map(n => {
+  content.innerHTML = list.map((n, i) => {
     const img = n.imagen || IMG_FALLBACK[n.cat] || IMG_FALLBACK.clinica;
+    const hasRealUrl = n.url && n.url !== '#';
+    const clickHandler = hasRealUrl
+      ? `onclick="window.open('${n.url}','_blank')"`
+      : `onclick="window._openNoticia(${i})"`;
     return `
-      <article class="news-item" ${n.url && n.url !== '#' ? `onclick="window.open('${n.url}','_blank')"` : ''}>
+      <article class="news-item" ${clickHandler} style="cursor:pointer;">
         <div class="news-img" style="background-image: url('${img}');"></div>
         <div class="news-body">
           <div class="news-item-top">
@@ -304,11 +380,39 @@ function render(filter = 'todas') {
           </div>
           <h3 class="news-title">${n.titulo}</h3>
           <p class="news-summary">${n.resumen}</p>
-          ${n.url && n.url !== '#' ? `<span class="news-cta">Leer más →</span>` : ''}
+          <span class="news-cta">${hasRealUrl ? 'Leer fuente externa →' : 'Leer nota completa →'}</span>
         </div>
       </article>`;
   }).join('');
 }
+
+// Modal para leer noticia completa (cuando no hay URL externa)
+window._openNoticia = (i) => {
+  const n = (document.querySelector('.news-filter.active')?.dataset?.cat === 'todas')
+    ? noticiasData[i]
+    : noticiasData.filter(x => x.cat === document.querySelector('.news-filter.active').dataset.cat)[i];
+  if (!n) return;
+  const img = n.imagen || IMG_FALLBACK[n.cat] || IMG_FALLBACK.clinica;
+  const modal = document.getElementById('noticiaModal');
+  modal.innerHTML = `
+    <div class="noticia-modal-content">
+      <button class="noticia-modal-close" onclick="document.getElementById('noticiaModal').classList.remove('open')">✕</button>
+      <div class="noticia-modal-img" style="background-image: url('${img}');"></div>
+      <div class="noticia-modal-body">
+        <div class="noticia-modal-top">
+          <span class="news-source">${n.fuente}</span>
+          <span class="news-date">${formatFecha(n.fecha)}</span>
+        </div>
+        <h2 class="noticia-modal-title">${n.titulo}</h2>
+        <div class="noticia-modal-text">
+          <p>${n.resumen}</p>
+          <p style="margin-top:1rem;opacity:0.85;">Esta nota forma parte del boletín informativo del Club GlobalVet México. Los miembros VIP reciben actualizaciones periódicas sobre novedades clínicas, regulatorias y científicas seleccionadas por nuestro equipo editorial veterinario.</p>
+          <p style="margin-top:1rem;opacity:0.85;">Para profundizar en este tema, consulta la biblioteca de cursos o escríbenos en el foro del Club para discutirlo con otros colegas.</p>
+        </div>
+      </div>
+    </div>`;
+  modal.classList.add('open');
+};
 
 (async () => {
   const session = await requireAuth();
@@ -343,6 +447,19 @@ function render(filter = 'todas') {
       btn.classList.add('active');
       render(btn.dataset.cat);
     });
+  });
+
+  // Cerrar modal de noticia al hacer clic fuera
+  document.getElementById('noticiaModal').addEventListener('click', (e) => {
+    if (e.target.id === 'noticiaModal') {
+      e.target.classList.remove('open');
+    }
+  });
+  // Cerrar con Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.getElementById('noticiaModal').classList.remove('open');
+    }
   });
 })();
 </script>

@@ -2298,8 +2298,7 @@
         const uid = auth.currentUser?.uid;
         const email = auth.currentUser?.email;
         const nombre = (pd && pd.nombre) || auth.currentUser?.displayName || 'Miembro del Club';
-        if (uid && window.firestore) {
-          const { collection, query, where, getDocs, addDoc, serverTimestamp } = window.firestore;
+        if (uid) {
           // Evitar duplicados: verificar si ya tiene constancia de este curso
           const existentes = await getDocs(query(
             collection(db, 'certificados'),
@@ -2320,13 +2319,22 @@
               emisor: 'GlobalVet México',
               activo: true
             });
-            // Toast con folio
+            // Toast con folio y link a Mis constancias
             setTimeout(() => {
-              st(`🏆 Constancia emitida. Folio: ${folio}. Velo en "Mis constancias".`, true);
+              st(`🏆 ¡Constancia oficial emitida! Folio: ${folio}`, true);
             }, 1800);
+            // Segundo toast con instrucción (4 seg después)
+            setTimeout(() => {
+              st(`📋 Ve tu constancia en "Mis constancias" del sidebar`, true);
+            }, 5500);
+          } else {
+            console.log('Usuario ya tiene constancia de este curso');
           }
         }
-      } catch (err) { console.warn('No se pudo emitir constancia:', err); }
+      } catch (err) {
+        console.warn('No se pudo emitir constancia:', err);
+        st('⚠️ Error al emitir constancia: ' + err.message, true);
+      }
     }
 
     // Verificar si desbloqueó algún logro nuevo
@@ -2537,8 +2545,7 @@
     let tieneConstancia = false;
     try {
       const uid = auth.currentUser?.uid;
-      if (uid && window.firestore) {
-        const { collection, query, where, getDocs } = window.firestore;
+      if (uid) {
         const snap = await getDocs(query(collection(db, 'certificados'), where('uid', '==', uid)));
         tieneConstancia = !snap.empty;
       }
@@ -3399,8 +3406,13 @@
         thumb = `<span class="noticia-thumb-fallback">${emojiCat}</span>`;
       }
       const link = n.link ? n.link.replace(/"/g, '&quot;') : '#';
+      // Si la noticia no tiene URL real (link='#'), redirigir a la página completa de noticias
+      // Si tiene URL real (feed externo o admin), abrir en nueva pestaña
+      const hasRealLink = link && link !== '#' && link !== '';
+      const href = hasRealLink ? link : 'club-noticias.html';
+      const targetAttr = hasRealLink ? 'target="_blank" rel="noopener noreferrer"' : '';
       return `
-        <a class="noticia-card" href="${link}" target="_blank" rel="noopener noreferrer">
+        <a class="noticia-card" href="${href}" ${targetAttr}>
           <div class="noticia-thumb">${thumb}</div>
           <div class="noticia-body">
             <div>
@@ -3411,7 +3423,7 @@
               <div class="noticia-title">${n.titulo}</div>
               <div class="noticia-excerpt">${n.excerpt}</div>
             </div>
-            <span class="noticia-cta">Leer nota completa →</span>
+            <span class="noticia-cta">${hasRealLink ? 'Leer nota completa →' : 'Ver todas las noticias →'}</span>
           </div>
         </a>`;
     }).join('');
@@ -3479,6 +3491,14 @@
     <div class="share-preview">
       <canvas id="shareCanvas" width="1080" height="1080"></canvas>
     </div>
+
+    <!-- Botón destacado: Ver constancia oficial -->
+    <div style="padding:0 1.2rem 0.8rem;">
+      <a href="club-certificados.html" class="btn btn-gold btn-block" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.9rem;background:linear-gradient(135deg,var(--gold),#d97706);color:#1a0f04;border-radius:12px;font-family:var(--ff);font-weight:800;font-size:0.95rem;text-decoration:none;box-shadow:0 8px 20px rgba(245,158,11,0.3);">
+        🏆 Ver mi constancia oficial con folio →
+      </a>
+    </div>
+
     <div class="share-buttons">
       <button class="share-btn wa" onclick="compartirRed('whatsapp')">
         <span class="ic">📱</span>
@@ -3494,7 +3514,7 @@
       </button>
       <button class="share-btn dl" onclick="descargarCertificado()">
         <span class="ic">💾</span>
-        Descargar
+        Descargar imagen
       </button>
     </div>
   </div>
