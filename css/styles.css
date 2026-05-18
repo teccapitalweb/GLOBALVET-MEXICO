@@ -679,3 +679,75 @@ h1, h2, h3, h4 { font-weight: 800; }
 }
 
 
+
+/* ============================================================
+   BOTÓN CLUB — destacado en navbar
+   ============================================================ */
+.nav-menu a.nav-club {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: linear-gradient(135deg, #3b2b86 0%, #5f45c8 50%, #7b5cff 100%);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: #fff !important;
+  font-weight: 800;
+  font-size: .85rem;
+  padding: .55rem 1.2rem;
+  border-radius: 999px;
+  letter-spacing: .015em;
+  box-shadow: 0 4px 14px rgba(95, 69, 200, .35);
+  transition: transform .2s ease, box-shadow .25s ease, background-position .6s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.nav-menu a.nav-club::before {
+  content: '★';
+  font-size: .8rem;
+  margin-right: .15rem;
+  display: inline-block;
+  transition: transform .35s ease;
+}
+.nav-menu a.nav-club::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+  transition: left .55s ease;
+}
+.nav-menu a.nav-club:hover {
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(123, 92, 255, .55);
+  color: #fff !important;
+}
+.nav-menu a.nav-club:hover::before {
+  transform: rotate(72deg) scale(1.15);
+}
+.nav-menu a.nav-club:hover::after {
+  left: 130%;
+}
+.nav-menu a.nav-club:active {
+  transform: translateY(0) scale(.97);
+}
+/* Pulso sutil de atención cada cierto tiempo */
+@keyframes nav-club-pulse {
+  0%, 92%, 100% { box-shadow: 0 4px 14px rgba(95, 69, 200, .35); }
+  96%           { box-shadow: 0 4px 14px rgba(95, 69, 200, .35), 0 0 0 8px rgba(123, 92, 255, 0); }
+  94%           { box-shadow: 0 4px 14px rgba(95, 69, 200, .35), 0 0 0 0 rgba(123, 92, 255, .55); }
+}
+.nav-menu a.nav-club {
+  animation: nav-club-pulse 4.5s ease-in-out infinite;
+}
+.nav-menu a.nav-club:hover {
+  animation: none;
+}
+/* Cuando estás dentro de la página del club, mostrarlo distinto */
+.nav-menu a.nav-club.active {
+  background: linear-gradient(135deg, #2a1763 0%, #3b2b86 100%);
+  box-shadow: 0 4px 14px rgba(40, 25, 100, .5), inset 0 1px 0 rgba(255,255,255,.15);
+}
