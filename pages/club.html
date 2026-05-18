@@ -3,414 +3,410 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Club GlobalVet — Formación veterinaria continua</title>
-  <meta name="description" content="Casos clínicos reales cada semana. Comunidad profesional. Recursos exclusivos. Por $199/mes.">
+  <title>Club GlobalVet México | Educación Continua Veterinaria</title>
+  <meta name="description" content="Únete al Club GlobalVet México: cursos ilimitados, webinars en vivo, certificados oficiales, foro privado y herramientas profesionales. Membresía desde $179 MXN al mes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/responsive.css">
   <script defer src="../js/script.js"></script>
   <style>
-    :root {
-      --gv-bg:      #f2f4f9;
-      --gv-white:   #ffffff;
-      --gv-dark:    #12103a;
-      --gv-purple:  #3b2b86;
-      --gv-purple2: #5f45c8;
-      --gv-purple3: #7c63e0;
-      --gv-gold:    #e8a020;
-      --gv-gold2:   #f5c842;
-      --gv-red:     #c0392b;
-      --gv-green:   #1e8a50;
-      --gv-muted:   #5d6b82;
-      --gv-line:    #dde4ef;
-      --ff:  'Space Grotesk', system-ui, sans-serif;
-      --ffb: 'DM Sans', system-ui, sans-serif;
-    }
-    .cp *, .cp *::before, .cp *::after { box-sizing: border-box; }
-    .cp { font-family: var(--ffb); color: var(--gv-dark); line-height: 1.65; }
-    .cp p { margin: 0 0 1rem; }
-    .cp h1,.cp h2,.cp h3,.cp h4 { font-family: var(--ff); line-height: 1.1; margin: 0; }
-    .cp a { text-decoration: none; color: inherit; }
-    .w  { max-width: 980px; margin: 0 auto; padding: 0 1.5rem; }
-    .wn { max-width: 700px; margin: 0 auto; padding: 0 1.5rem; }
-    .sec { padding: 6rem 0; }
-    .sec.tight { padding: 4rem 0; }
-    .sec.white { background: var(--gv-white); }
-    .sec.gray  { background: var(--gv-bg); }
-
-    /* ======= URGENCY BAR ======= */
-    .ubar {
-      background: var(--gv-dark);
-      text-align: center; padding: .65rem 1rem;
-      font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.75);
-      letter-spacing: .01em;
-    }
-    .ubar strong { color: var(--gv-gold2); }
-
-    /* ======= HERO ======= */
-    .hero {
-      background: #ffffff;
-      border-bottom: 1px solid var(--gv-line);
-      padding: 6rem 0 5rem; text-align: center;
-    }
-    .hero-pill {
-      display: inline-flex; align-items: center; gap: .45rem;
-      background: rgba(232,160,32,.13); border: 1px solid rgba(232,160,32,.45);
-      color: #7a4800; font-size: .74rem; font-weight: 700;
-      padding: .32rem .95rem; border-radius: 50px; margin-bottom: 2rem;
-      letter-spacing: .05em; text-transform: uppercase;
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 5.5vw, 4.2rem); font-weight: 800;
-      color: var(--gv-dark); letter-spacing: -.03em;
-      max-width: 720px; margin: 0 auto .7rem; line-height: 1.06;
-    }
-    .hero h1 em { font-style: normal; color: var(--gv-purple2); }
-    .hero-sub {
-      font-size: 1.08rem; color: var(--gv-muted);
-      max-width: 500px; margin: 0 auto 2.8rem; line-height: 1.7;
-      text-align: center; display: block; width: 100%;
-    }
-    .hero-actions {
-      display: flex; align-items: center; justify-content: center;
-      gap: .9rem; flex-wrap: wrap; margin-bottom: 2.2rem;
-    }
-    .cp .btn-primary {
-      display: inline-flex !important; align-items: center; gap: .5rem;
-      background: var(--gv-purple2) !important; color: #fff !important;
-      font-family: var(--ff); font-weight: 700; font-size: .97rem;
-      padding: .88rem 2rem; border-radius: 50px; border: none; cursor: pointer;
-      transition: transform .15s, box-shadow .15s; text-decoration: none;
-      box-shadow: 0 4px 18px rgba(95,69,200,.35);
-    }
-    .cp .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(95,69,200,.5); }
-    .btn-ghost {
-      display: inline-flex; align-items: center; gap: .5rem;
-      background: transparent; color: var(--gv-dark);
-      font-family: var(--ff); font-weight: 600; font-size: .95rem;
-      padding: .85rem 1.8rem; border-radius: 50px; border: 2px solid var(--gv-line);
-      cursor: pointer; transition: border-color .2s, color .2s; text-decoration: none;
-    }
-    .btn-ghost:hover { border-color: var(--gv-purple2); color: var(--gv-purple2); }
-    .hero-trust {
-      display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 1.5rem; font-size: .83rem; color: var(--gv-muted);
-    }
-    .hero-trust span::before { content: '• '; color: var(--gv-purple2); }
-
-    /* ======= EYEBROW ======= */
-    .eyebrow {
-      display: flex; align-items: center; gap: .55rem;
-      font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--gv-purple2);
-      margin-bottom: .9rem;
-    }
-    .eyebrow::before { content: '—'; }
-
-    /* ======= SECTION HEAD ======= */
-    .sh { text-align: center; margin-bottom: 3.5rem; }
-    .sh h2 {
-      font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800;
-      letter-spacing: -.025em; margin-bottom: .6rem;
-    }
-    .sh p { font-size: 1rem; color: var(--gv-muted); max-width: 480px; margin: 0 auto; }
-
-    /* ======= PROBLEMA — 4 CARDS ======= */
-    .problem-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem;
-    }
-    .problem-card {
-      background: var(--gv-white); border: 1px solid var(--gv-line);
-      border-radius: 20px; padding: 1.6rem 1.8rem;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .problem-card:hover {
-      border-color: rgba(95,69,200,.3);
-      box-shadow: 0 8px 28px rgba(59,43,134,.08);
-    }
-    .problem-icon { font-size: 1.8rem; margin-bottom: .8rem; }
-    .problem-card h4 {
-      font-family: var(--ff); font-size: 1rem; font-weight: 700;
-      margin-bottom: .4rem; color: var(--gv-dark);
-    }
-    .problem-card p { font-size: .86rem; color: var(--gv-muted); margin: 0 0 .7rem; }
-    .problem-link {
-      font-size: .82rem; font-weight: 700; color: var(--gv-purple2);
-      display: flex; align-items: center; gap: .3rem;
-    }
-
-    /* ======= COMPARATIVA ======= */
-    .vs-grid {
-      display: grid; grid-template-columns: 1fr 52px 1fr; gap: 1.2rem; align-items: start;
-    }
-    .vs-col {
-      border-radius: 20px; padding: 1.8rem 1.8rem;
-    }
-    .vs-col.bad  { background: #fff5f5; border: 1.5px solid #fecaca; }
-    .vs-col.good { background: #f0fdf6; border: 1.5px solid #a7f3c8; }
-    .vs-col-label {
-      font-size: .74rem; font-weight: 800; letter-spacing: .07em;
-      text-transform: uppercase; margin-bottom: 1.1rem;
-      display: flex; align-items: center; gap: .4rem;
-    }
-    .vs-col.bad  .vs-col-label { color: var(--gv-red); }
-    .vs-col.good .vs-col-label { color: var(--gv-green); }
-    .vs-list { list-style: none; padding: 0; margin: 0; }
-    .vs-list li {
-      font-size: .9rem; padding: .5rem 0;
-      border-bottom: 1px solid rgba(0,0,0,.06);
-      display: flex; align-items: flex-start; gap: .6rem; color: var(--gv-dark);
-    }
-    .vs-list li:last-child { border-bottom: none; }
-    .vs-ico { font-size: .85rem; flex-shrink: 0; margin-top: .1rem; }
-    .vs-arrow {
-      width: 44px; height: 44px; background: var(--gv-dark); color: #fff;
-      border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; margin-top: 2.5rem; font-size: 1.1rem; flex-shrink: 0;
-    }
-
-    /* ======= CONTENIDO MENSUAL ======= */
-    .content-cards {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-bottom: 3rem;
-    }
-    .content-card {
-      border-radius: 20px; overflow: hidden; border: 1px solid var(--gv-line);
-      background: var(--gv-white); transition: transform .2s, box-shadow .2s;
-    }
-    .content-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(59,43,134,.1); }
-    .cc-img {
-      height: 160px; display: flex; align-items: center;
-      justify-content: center; font-size: 2.4rem; overflow: hidden;
-    }
-    .cc-img img {
-      width: 100%; height: 100%; object-fit: cover; object-position: center center;
-      display: block;
-    }
-    .cc-img.purple { background: linear-gradient(135deg, #1e1060, #5f45c8); }
-    .cc-img.navy   { background: linear-gradient(135deg, #12103a, #3b2b86); }
-    .cc-img.teal   { background: linear-gradient(135deg, #0d2f45, #0a7c6e); }
-    .cc-body { padding: 1.2rem; }
-    .cc-freq {
-      font-size: .7rem; font-weight: 700; letter-spacing: .06em;
-      text-transform: uppercase; color: var(--gv-purple2); margin-bottom: .35rem;
-    }
-    .cc-body h4 { font-size: .97rem; font-weight: 700; margin-bottom: .3rem; }
-    .cc-body p  { font-size: .84rem; color: var(--gv-muted); margin: 0; }
-
-    /* ======= FEED SEMANAL ======= */
-    .feed {
-      background: var(--gv-white); border: 1px solid var(--gv-line);
-      border-radius: 20px; overflow: hidden;
-    }
-    .feed-head {
-      background: var(--gv-dark); color: rgba(255,255,255,.85);
-      font-family: var(--ff); font-size: .84rem; font-weight: 700;
-      padding: .95rem 1.6rem; display: flex; justify-content: space-between; align-items: center;
-    }
-    .feed-head span { color: rgba(255,255,255,.4); font-weight: 400; }
-    .feed-row {
-      display: flex; align-items: center; gap: 1.2rem;
-      padding: .9rem 1.6rem; border-bottom: 1px solid var(--gv-line);
-      cursor: pointer; transition: background .15s;
-    }
-    .feed-row:last-child { border-bottom: none; }
-    .feed-row:hover { background: #fafbff; }
-    .feed-day {
-      font-size: .7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .05em; color: var(--gv-muted); width: 80px; flex-shrink: 0;
-    }
-    .feed-title { font-size: .9rem; font-weight: 600; flex: 1; }
-    .feed-meta  { font-size: .78rem; color: var(--gv-muted); }
-    .ftag {
-      font-size: .69rem; font-weight: 700; padding: .18rem .55rem;
-      border-radius: 50px; flex-shrink: 0; white-space: nowrap;
-    }
-    .ftag-v  { background: rgba(192,57,43,.1); color: var(--gv-red); }
-    .ftag-p  { background: rgba(95,69,200,.1); color: var(--gv-purple2); }
-    .ftag-l  { background: rgba(232,160,32,.15); color: #7a4800; }
-    .ftag-n  { background: var(--gv-dark); color: #fff; }
-    .feed-row.hl { background: rgba(95,69,200,.03); }
-
-    /* ======= TESTIMONIO ======= */
-    .sec-testi { background: var(--gv-bg); }
-    .testi-wrap { max-width: 700px; margin: 0 auto; text-align: center; }
-    .testi-quote {
-      font-family: var(--ff); font-size: clamp(1.2rem,2.8vw,1.65rem);
-      font-weight: 600; line-height: 1.5; color: var(--gv-dark); margin-bottom: 1.6rem;
-    }
-    .testi-quote::before { content: '"'; color: var(--gv-purple2); }
-    .testi-quote::after  { content: '"'; color: var(--gv-purple2); }
-    .testi-author { display: flex; align-items: center; justify-content: center; gap: .8rem; }
-    .testi-avatar {
-      width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--gv-purple), var(--gv-purple2));
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-    }
-    .testi-name { font-weight: 700; font-size: .92rem; }
-    .testi-role { font-size: .8rem; color: var(--gv-muted); }
-
-    /* ======= PLANES ======= */
-    .sec-planes { background: var(--gv-white); }
-    .counter-bar {
-      display: flex; justify-content: center;
-      margin-bottom: 2.8rem;
-    }
-    .counter-pill-wrap {
-      display: inline-flex; align-items: stretch;
-      background: var(--gv-white); border: 1px solid var(--gv-line);
-      border-radius: 50px; overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
-    }
-    .counter-seg {
-      display: flex; align-items: center; gap: .5rem;
-      padding: .6rem 1.2rem; white-space: nowrap;
-    }
-    .counter-seg.active { background: var(--gv-purple2); }
-    .counter-seg.muted  { opacity: .45; }
-    .counter-sep { width: 1px; background: var(--gv-line); flex-shrink: 0; }
-    .counter-seg-val {
-      font-family: var(--ff); font-size: .85rem; font-weight: 700;
-      color: var(--gv-dark);
-    }
-    .counter-seg.active .counter-seg-val { color: #fff; }
-    .counter-seg.muted  .counter-seg-val { color: var(--gv-muted); text-decoration: line-through; }
-    .counter-seg-lbl {
-      font-size: .78rem; font-weight: 500; color: var(--gv-muted);
-    }
-    .counter-seg.active .counter-seg-lbl { color: rgba(255,255,255,.65); }
-    .counter-seg.muted  .counter-seg-lbl { color: var(--gv-muted); }
-    .plan-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1.5rem; max-width: 740px; margin: 0 auto 2rem;
-    }
-    .plan-box {
-      border: 2px solid var(--gv-line); border-radius: 24px;
-      padding: 2rem 1.9rem; position: relative; background: var(--gv-white);
-      transition: border-color .2s;
-    }
-    .plan-box:hover { border-color: rgba(95,69,200,.3); }
-    .plan-box.featured {
-      border-color: var(--gv-purple2);
-      background: linear-gradient(160deg, #f5f2ff, #ffffff);
-    }
-    .plan-popular {
-      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-      background: var(--gv-purple2); color: #fff;
-      font-family: var(--ff); font-size: .71rem; font-weight: 800;
-      padding: .22rem .9rem; border-radius: 50px; white-space: nowrap;
-      letter-spacing: .04em;
-    }
-    .plan-name {
-      font-size: .78rem; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .07em; color: var(--gv-muted); margin-bottom: .5rem;
-    }
-    .plan-strike { font-size: .83rem; color: #bbb; text-decoration: line-through; margin-bottom: .15rem; }
-    .plan-price {
-      font-family: var(--ff); font-size: 3rem; font-weight: 800;
-      color: var(--gv-dark); line-height: 1; margin-bottom: .2rem;
-    }
-    .plan-price sup { font-size: 1.3rem; vertical-align: super; }
-    .plan-price sub { font-size: .9rem; font-weight: 500; color: var(--gv-muted); }
-    .plan-save {
-      display: inline-block; background: rgba(95,69,200,.1); color: var(--gv-purple2);
-      font-size: .74rem; font-weight: 700; padding: .18rem .6rem;
-      border-radius: 50px; margin-bottom: .9rem;
-    }
-    .plan-desc { font-size: .84rem; color: var(--gv-muted); margin-bottom: 1.2rem; }
-    .plan-ul { list-style: none; padding: 0; margin: 0 0 1.6rem; }
-    .plan-ul li {
-      font-size: .87rem; padding: .4rem 0;
-      border-bottom: 1px solid var(--gv-line);
-      display: flex; align-items: flex-start; gap: .55rem;
-    }
-    .plan-ul li:last-child { border-bottom: none; }
-    .plan-ul .ck   { color: var(--gv-green); font-size: .85rem; }
-    .plan-ul .star { color: var(--gv-gold); font-size: .85rem; }
-    .btn-plan {
-      width: 100%; padding: .88rem; border-radius: 14px;
-      font-family: var(--ff); font-weight: 700; font-size: .93rem;
-      cursor: pointer; transition: transform .15s, box-shadow .15s, background .15s;
-      text-decoration: none; display: block; text-align: center;
-    }
-    .btn-plan.outline {
-      background: transparent; border: 2px solid var(--gv-dark); color: var(--gv-dark);
-    }
-    .btn-plan.outline:hover { background: var(--gv-dark); color: #fff; }
-    .btn-plan.solid {
-      background: var(--gv-purple2); color: #fff; border: none;
-      box-shadow: 0 4px 18px rgba(95,69,200,.3);
-    }
-    .btn-plan.solid:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(95,69,200,.45); }
-    .plan-note { text-align: center; font-size: .82rem; color: var(--gv-muted); }
-    .plan-note a { color: var(--gv-purple2); font-weight: 700; }
-
-    /* ======= FAQ ======= */
-    .sec-faq { background: var(--gv-bg); }
-    .faq-list { max-width: 680px; margin: 0 auto; }
-    .faq-item { border-bottom: 1px solid var(--gv-line); }
-    .faq-q {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.1rem 0; cursor: pointer; font-weight: 600; font-size: .96rem; gap: 1rem;
-      background: none; border: none; width: 100%; text-align: left; color: var(--gv-dark);
-      font-family: var(--ffb);
-    }
-    .faq-q::after {
-      content: '+'; font-size: 1.4rem; color: var(--gv-muted); flex-shrink: 0;
-      transition: transform .2s; font-family: var(--ff);
-    }
-    .faq-item.open .faq-q::after { transform: rotate(45deg); color: var(--gv-purple2); }
-    .faq-a {
-      font-size: .88rem; color: var(--gv-muted); line-height: 1.7;
-      max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s;
-    }
-    .faq-item.open .faq-a { max-height: 200px; padding-bottom: 1rem; }
-
-    /* ======= CTA FINAL ======= */
-    .sec-cta {
+    /* ============================================================
+       Estilos específicos de la landing del Club
+       (todo nuevo, no toca styles.css global)
+       ============================================================ */
+    .club-hero {
+      padding: 5.2rem 0 4rem;
       background:
-        radial-gradient(ellipse at 20% 50%, rgba(95,69,200,.25) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 30%, rgba(124,99,224,.2) 0%, transparent 50%),
-        var(--gv-dark);
-      padding: 5.5rem 0; text-align: center;
+        radial-gradient(circle at 15% 20%, rgba(123,92,255,.18), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(95,69,200,.18), transparent 40%),
+        linear-gradient(135deg, #1a0f4a 0%, #2a1763 50%, #3b2b86 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
     }
-    .sec-cta h2 {
-      font-size: clamp(1.9rem,4vw,2.9rem); font-weight: 800;
-      color: #fff; margin-bottom: .6rem; letter-spacing: -.025em;
+    .club-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -10%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(169,143,255,.25), transparent 70%);
+      pointer-events: none;
     }
-    .sec-cta h2 em { font-style: normal; color: var(--gv-gold2); }
-    .sec-cta p { color: rgba(255,255,255,.55); margin-bottom: 2.2rem; font-size: .98rem; }
-    .btn-gold {
-      display: inline-flex; align-items: center; gap: .55rem;
-      background: linear-gradient(135deg, var(--gv-gold2), var(--gv-gold));
-      color: #1a0f00; font-family: var(--ff); font-weight: 800; font-size: 1.02rem;
-      padding: 1.05rem 2.4rem; border-radius: 50px; border: none; cursor: pointer;
-      text-decoration: none; box-shadow: 0 6px 24px rgba(232,160,32,.4);
-      transition: transform .15s, box-shadow .15s;
+    .club-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
     }
-    .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(232,160,32,.55); }
+    .club-hero .eyebrow {
+      color: #c9b8ff;
+      background: rgba(169,143,255,.15);
+      border: 1px solid rgba(169,143,255,.3);
+      padding: .4rem 1rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: .72rem;
+    }
+    .club-hero .eyebrow::before {
+      content: '⭐';
+      font-size: .85rem;
+    }
+    .club-hero h1 {
+      font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+      line-height: 1.1;
+      margin: 1.4rem 0 1.1rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .club-hero h1 span {
+      background: linear-gradient(90deg, #a98fff, #c9b8ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .club-hero p.lead {
+      font-size: 1.12rem;
+      color: #d6cff1;
+      line-height: 1.65;
+      max-width: 640px;
+      margin-bottom: 2rem;
+    }
+    .club-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-club-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: linear-gradient(135deg, #7b5cff, #a98fff);
+      color: #fff !important;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 1.05rem 2rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 32px rgba(123,92,255,.45);
+      transition: transform .2s ease, box-shadow .2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-club-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(123,92,255,.6);
+    }
+    .btn-club-cta::after {
+      content: '→';
+      font-size: 1.15rem;
+      transition: transform .2s ease;
+    }
+    .btn-club-cta:hover::after {
+      transform: translateX(4px);
+    }
+    .club-hero-note {
+      color: #d6cff1;
+      font-size: .88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .club-hero-note::before {
+      content: '✓';
+      color: #a98fff;
+      font-weight: 800;
+    }
+    .club-hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 2.4rem;
+    }
+    .club-hero-pills span {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      padding: .45rem 1rem;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: #e8e2ff;
+    }
 
-    /* ======= RESPONSIVE ======= */
-    @media (max-width: 760px) {
-      .problem-grid  { grid-template-columns: 1fr; }
-      .vs-grid       { grid-template-columns: 1fr; }
-      .vs-arrow      { display: none; }
-      .content-cards { grid-template-columns: 1fr; }
-      .plan-grid     { grid-template-columns: 1fr; }
-      .feed-meta     { display: none; }
-      .feed-day      { width: 60px; }
+    /* ─── Beneficios ─── */
+    .club-benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
     }
-    @media (max-width: 480px) {
-      .sec { padding: 4rem 0; }
-      .hero { padding: 4rem 0 3.5rem; }
-      .hero h1 { font-size: 2.1rem; }
+    .club-benefit {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 1.8rem;
+      transition: all .3s ease;
+      position: relative;
+    }
+    .club-benefit:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent-2);
+    }
+    .club-benefit-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .club-benefit h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: .5rem;
+    }
+    .club-benefit p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.6;
+    }
+
+    /* ─── Planes ─── */
+    .club-plans {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 820px;
+      margin: 2.5rem auto 0;
+    }
+    @media (max-width: 700px) {
+      .club-plans { grid-template-columns: 1fr; }
+    }
+    .club-plan {
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 26px;
+      padding: 2.2rem 1.8rem;
+      position: relative;
+      transition: all .3s ease;
+    }
+    .club-plan:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+    .club-plan--featured {
+      border-color: var(--primary);
+      background: linear-gradient(180deg, #fff, #f3efff);
+      box-shadow: 0 24px 60px rgba(95,69,200,.18);
+    }
+    .club-plan-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      color: #fff;
+      padding: .42rem 1rem;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .club-plan-name {
+      font-size: .95rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: .6rem;
+    }
+    .club-plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: .35rem;
+      margin-bottom: .3rem;
+    }
+    .club-plan-price strong {
+      font-size: 2.7rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -.02em;
+    }
+    .club-plan-price span {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    .club-plan-billing {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-bottom: 1.4rem;
+    }
+    .club-plan-saving {
+      display: inline-block;
+      background: #e0f7e9;
+      color: #1a7a3e;
+      font-size: .76rem;
+      font-weight: 700;
+      padding: .35rem .8rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .club-plan ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.6rem;
+      display: grid;
+      gap: .7rem;
+    }
+    .club-plan li {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      color: var(--text);
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+    .club-plan li::before {
+      content: '✓';
+      color: var(--primary);
+      font-weight: 800;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: #ede9ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .78rem;
+      margin-top: 2px;
+    }
+    .club-plan .btn-club-cta {
+      width: 100%;
+      justify-content: center;
+      font-size: .95rem;
+      padding: .95rem 1.5rem;
+    }
+
+    /* ─── Features adicionales ─── */
+    .club-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .club-feature {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all .25s ease;
+    }
+    .club-feature:hover {
+      border-color: var(--accent-2);
+      transform: translateX(4px);
+    }
+    .club-feature-icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #ede9ff, #d5cbff);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .club-feature h4 {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: .15rem;
+    }
+    .club-feature p {
+      color: var(--muted);
+      font-size: .82rem;
+      margin: 0;
+    }
+
+    /* ─── CTA final ─── */
+    .club-cta-final {
+      background:
+        radial-gradient(circle at 30% 30%, rgba(169,143,255,.15), transparent 50%),
+        linear-gradient(135deg, #1a0f4a 0%, #3b2b86 100%);
+      color: #fff;
+      border-radius: 36px;
+      padding: 4rem 2rem;
+      text-align: center;
+      margin: 1rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .club-cta-final h2 {
+      font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+      margin-bottom: 1rem;
+      color: #fff;
+      letter-spacing: -.02em;
+    }
+    .club-cta-final p {
+      color: #d6cff1;
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+    .club-cta-final .btn-club-cta {
+      font-size: 1.05rem;
+      padding: 1.15rem 2.4rem;
+    }
+
+    /* ─── Sección header ─── */
+    .club-section-head {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 1rem;
+    }
+    .club-section-head .eyebrow {
+      color: var(--primary);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .78rem;
+      margin-bottom: .8rem;
+      display: inline-block;
+    }
+    .club-section-head h2 {
+      font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+      margin-bottom: .9rem;
+      letter-spacing: -.02em;
+    }
+    .club-section-head p {
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.65;
     }
   </style>
 </head>
 <body>
-
-<!-- ===== NAV ===== -->
 <div class="topbar">
   <div class="container topbar-inner">
     <span>Educación veterinaria con enfoque profesional y accesible</span>
@@ -422,340 +418,218 @@
 </div>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="../index.html">
-      <img src="../assets/logo/globalvet-logo.jpg" alt="Logo GlobalVet México">
-      <span><strong>GlobalVet</strong> México</span>
-    </a>
-    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="nav-menu">
-      <a href="../index.html">Inicio</a>
-      <a href="servicios.html">Servicios</a>
-      <a href="cursos.html">Cursos</a>
-      <a href="nosotros.html">Nosotros</a>
-      <a href="testimonios.html">Testimonios</a>
-      <a href="galeria.html">Galería</a>
-      <a href="contacto.html">Contacto</a>
-      <a class="btn-club" href="club.html" aria-label="Club GlobalVet">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        Club GlobalVet
-      </a>
-      <a class="btn btn-primary nav-cta" href="https://wa.me/5212381500864" target="_blank" rel="noopener">WhatsApp</a>
-    </nav>
+
+<a class="brand" href="../index.html">
+  <img src="../assets/logo/globalvet-logo.jpg" alt="Logo GlobalVet México">
+  <span><strong>GlobalVet</strong> México</span>
+</a>
+<button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+<nav class="nav-menu">
+  <a href="../index.html">Inicio</a>
+  <a href="servicios.html">Servicios</a>
+  <a href="cursos.html">Cursos</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="testimonios.html">Testimonios</a>
+  <a href="galeria.html">Galería</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="club.html" class="active">Club</a>
+            <a class="btn btn-primary nav-cta" href="https://wa.me/5212381500864" target="_blank" rel="noopener">WhatsApp</a>
+</nav>
+
   </div>
 </header>
 
-<div class="cp">
+<main>
 
-  <!-- URGENCY BAR -->
-  <div class="ubar">
-    <strong>12 lugares de fundador disponibles</strong> &nbsp;·&nbsp; El precio sube cuando se acaben &nbsp;·&nbsp; <strong>$199/mes ahora</strong>
+<!-- HERO -->
+<section class="club-hero">
+  <div class="container club-hero-inner">
+    <span class="eyebrow">Membresía exclusiva</span>
+    <h1>Lleva tu carrera veterinaria al <span>siguiente nivel</span></h1>
+    <p class="lead">Únete al Club GlobalVet México y accede a cursos ilimitados, webinars en vivo con expertos, herramientas profesionales y una comunidad de médicos veterinarios comprometidos con la excelencia.</p>
+    <div class="club-hero-actions">
+      <a class="btn-club-cta" href="https://club.globalvetmexico.com" target="_blank" rel="noopener">Registrarme ahora</a>
+      <span class="club-hero-note">Acceso inmediato · Cancela cuando quieras</span>
+    </div>
+    <div class="club-hero-pills">
+      <span>📚 Biblioteca de cursos</span>
+      <span>🎓 Certificados oficiales</span>
+      <span>🎙️ Webinars en vivo</span>
+      <span>💬 Foro privado</span>
+      <span>🛠️ Herramientas vet</span>
+    </div>
   </div>
+</section>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <div class="w" style="display:flex;flex-direction:column;align-items:center;">
-      <div class="hero-pill">🐾 El 80% de los veterinarios deja de actualizarse</div>
-      <h1>Tus pacientes merecen un veterinario que <em>nunca deja de aprender</em></h1>
-      <p class="hero-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Cada semana un caso clínico real que puedes aplicar el lunes en tu consultorio. Sin diplomados de 6 meses.</p>
-      <div class="hero-actions">
-        <a class="btn-primary" href="club-registro.html">Quiero unirme — $199/mes</a>
-        <a class="btn-ghost" href="#club-problemas">¿Por qué lo necesito?</a>
+<!-- BENEFICIOS -->
+<section class="section">
+  <div class="container">
+    <div class="club-section-head reveal">
+      <span class="eyebrow">¿Qué incluye tu membresía?</span>
+      <h2>Todo lo que necesitas para crecer profesionalmente</h2>
+      <p>Cinco beneficios diseñados para acompañarte en cada etapa de tu desarrollo veterinario.</p>
+    </div>
+    <div class="club-benefits-grid reveal">
+      <div class="club-benefit">
+        <div class="club-benefit-icon">📚</div>
+        <h3>Acceso ilimitado</h3>
+        <p>Toda nuestra biblioteca de cursos grabados disponible 24/7. Aprende a tu ritmo, desde cualquier dispositivo.</p>
       </div>
-      <div class="hero-trust">
-        <span>Sin compromiso largo</span>
-        <span>Acceso inmediato al contenido</span>
-        <span>47 veterinarios ya son miembros</span>
+      <div class="club-benefit">
+        <div class="club-benefit-icon">🎙️</div>
+        <h3>Webinars en vivo</h3>
+        <p>Cuatro sesiones mensuales con expertos veterinarios. Resuelve dudas en tiempo real y conecta con la comunidad.</p>
+      </div>
+      <div class="club-benefit">
+        <div class="club-benefit-icon">📄</div>
+        <h3>Material PDF</h3>
+        <p>Protocolos clínicos, guías de manejo y documentos profesionales descargables, listos para tu práctica diaria.</p>
+      </div>
+      <div class="club-benefit">
+        <div class="club-benefit-icon">💸</div>
+        <h3>20% de descuento</h3>
+        <p>Beneficio exclusivo de miembros en productos seleccionados, consultas especializadas y eventos presenciales.</p>
+      </div>
+      <div class="club-benefit">
+        <div class="club-benefit-icon">💬</div>
+        <h3>Canal exclusivo</h3>
+        <p>Comunidad privada de miembros donde puedes intercambiar casos, recibir mentoría y construir tu red profesional.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== EL PROBLEMA ===== -->
-  <section class="sec white" id="club-problemas">
-    <div class="w">
-      <div class="sh">
-        <div class="eyebrow">El problema</div>
-        <h2>¿Te identificas con alguno?</h2>
-        <p>Si respondiste "sí" a al menos uno, el Club es para ti.</p>
+<!-- PLANES -->
+<section class="section light">
+  <div class="container">
+    <div class="club-section-head reveal">
+      <span class="eyebrow">Elige tu plan</span>
+      <h2>Una inversión accesible en tu carrera</h2>
+      <p>Sin contratos forzosos. Cancela cuando quieras. Renueva automáticamente.</p>
+    </div>
+    <div class="club-plans reveal">
+      <div class="club-plan">
+        <div class="club-plan-name">Plan Mensual</div>
+        <div class="club-plan-price">
+          <strong>$179</strong>
+          <span>MXN / mes</span>
+        </div>
+        <p class="club-plan-billing">Facturación mensual recurrente</p>
+        <ul>
+          <li>Acceso completo a la biblioteca</li>
+          <li>Webinars en vivo cada mes</li>
+          <li>Material PDF descargable</li>
+          <li>Foro privado de miembros</li>
+          <li>20% de descuento exclusivo</li>
+        </ul>
+        <a class="btn-club-cta" href="https://club.globalvetmexico.com" target="_blank" rel="noopener">Empezar mensual</a>
       </div>
-      <div class="problem-grid">
-        <div class="problem-card">
-          <div class="problem-icon">😰</div>
-          <h4>Te llega un caso complejo y no sabes resolverlo</h4>
-          <p>Buscas en YouTube videos viejos, o refieres y pierdes ingreso.</p>
-          <div class="problem-link">En el Club: ves cómo especialistas resuelven esos casos →</div>
+      <div class="club-plan club-plan--featured">
+        <span class="club-plan-badge">Más popular</span>
+        <div class="club-plan-name">Plan Anual</div>
+        <div class="club-plan-price">
+          <strong>$1,788</strong>
+          <span>MXN / año</span>
         </div>
-        <div class="problem-card">
-          <div class="problem-icon">💸</div>
-          <h4>Los diplomados cuestan $15,000+ y duran meses</h4>
-          <p>Horarios imposibles y la mitad es teoría que ya sabes.</p>
-          <div class="problem-link">En el Club: contenido práctico semanal por $199/mes →</div>
-        </div>
-        <div class="problem-card">
-          <div class="problem-icon">🦴</div>
-          <h4>No tienes colegas para consultar un caso difícil</h4>
-          <p>Trabajas solo y no hay a quién preguntar en ese momento.</p>
-          <div class="problem-link">En el Club: 47 veterinarios en WhatsApp →</div>
-        </div>
-        <div class="problem-card">
-          <div class="problem-icon">🐕</div>
-          <h4>Tus pacientes se van con quien ofrece más</h4>
-          <p>No ofreces ciertos procedimientos o técnicas actualizadas.</p>
-          <div class="problem-link">En el Club: aprendes técnicas que amplían tus servicios →</div>
-        </div>
+        <p class="club-plan-billing">Equivale a $149 MXN al mes</p>
+        <span class="club-plan-saving">Ahorras 2 meses · 17% menos</span>
+        <ul>
+          <li>Todos los beneficios del mensual</li>
+          <li>Dos meses gratis al año</li>
+          <li>Prioridad en webinars en vivo</li>
+          <li>Soporte prioritario</li>
+          <li>Acceso anticipado a contenido nuevo</li>
+        </ul>
+        <a class="btn-club-cta" href="https://club.globalvetmexico.com" target="_blank" rel="noopener">Empezar anual</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== COMPARATIVA ===== -->
-  <section class="sec gray">
-    <div class="w">
-      <div class="sh">
-        <div class="eyebrow">La diferencia</div>
-        <h2>Tu práctica sin el Club vs con el Club</h2>
-      </div>
-      <div class="vs-grid">
-        <div class="vs-col bad">
-          <div class="vs-col-label">✕ Sin el Club</div>
-          <ul class="vs-list">
-            <li><span class="vs-ico">✕</span>Resuelves por intuición y YouTube</li>
-            <li><span class="vs-ico">✕</span>Refieres casos y pierdes ingreso</li>
-            <li><span class="vs-ico">✕</span>Te actualizas 1–2 veces al año</li>
-            <li><span class="vs-ico">✕</span>Trabajas aislado sin colegas</li>
-            <li><span class="vs-ico">✕</span>Mismos servicios desde la facultad</li>
-          </ul>
-        </div>
-        <div class="vs-arrow">→</div>
-        <div class="vs-col good">
-          <div class="vs-col-label">✓ Con el Club</div>
-          <ul class="vs-list">
-            <li><span class="vs-ico">✓</span>Ves cómo especialistas resuelven casos</li>
-            <li><span class="vs-ico">✓</span>Tratas más casos = más ingresos</li>
-            <li><span class="vs-ico">✓</span>Te actualizas cada semana en 15 min</li>
-            <li><span class="vs-ico">✓</span>47 veterinarios en WhatsApp</li>
-            <li><span class="vs-ico">✓</span>Aprendes técnicas nuevas cada mes</li>
-          </ul>
-        </div>
-      </div>
+<!-- FEATURES ADICIONALES -->
+<section class="section">
+  <div class="container">
+    <div class="club-section-head reveal">
+      <span class="eyebrow">Más herramientas profesionales</span>
+      <h2>Recursos diseñados por veterinarios, para veterinarios</h2>
+      <p>Funciones extra incluidas en tu membresía, sin costo adicional.</p>
     </div>
-  </section>
-
-  <!-- ===== LO QUE RECIBES ===== -->
-  <section class="sec white">
-    <div class="w">
-      <div class="sh">
-        <div class="eyebrow">Tu membresía incluye</div>
-        <h2>Lo que recibes cada mes</h2>
-        <p>Contenido que complementa tu práctica — no la reemplaza.</p>
-      </div>
-      <div class="content-cards">
-        <div class="content-card">
-          <div class="cc-img purple">
-            <img src="../assets/img/132.webp" alt="Caso clínico en video">
-          </div>
-          <div class="cc-body">
-            <div class="cc-freq">Cada semana</div>
-            <h4>Caso clínico en video</h4>
-            <p>Especialista resuelve caso real en 10–15 min. Como estar al lado del especialista.</p>
-          </div>
-        </div>
-        <div class="content-card">
-          <div class="cc-img navy">
-            <img src="../assets/img/veterinaria-yorkshire.png" alt="Sesión en vivo" style="object-position:top center;">
-          </div>
-          <div class="cc-body">
-            <div class="cc-freq">Cada mes</div>
-            <h4>Sesión en vivo con especialista</h4>
-            <p>Trae TU caso, obtén respuesta directa. Un especialista de guardia para ti.</p>
-          </div>
-        </div>
-        <div class="content-card">
-          <div class="cc-img teal">
-            <img src="../assets/img/redessociales02.jpg" alt="Comunidad" style="object-position:center 30%;">
-          </div>
-          <div class="cc-body">
-            <div class="cc-freq">Siempre</div>
-            <h4>Comunidad + recursos + descuentos</h4>
-            <p>WhatsApp privado, PDFs, 20% en cursos, certificado mensual. Nunca más solo ante un caso difícil.</p>
-          </div>
+    <div class="club-features-grid reveal">
+      <div class="club-feature">
+        <div class="club-feature-icon">🎓</div>
+        <div>
+          <h4>Certificados oficiales</h4>
+          <p>Folio único y QR verificable</p>
         </div>
       </div>
-
-      <!-- Feed semanal -->
-      <div class="sh" style="margin-bottom:1.5rem;">
-        <div class="eyebrow">Contenido real</div>
-        <h2>Esto se publicó esta semana</h2>
-        <p>Si no eres miembro, te lo estás perdiendo.</p>
+      <div class="club-feature">
+        <div class="club-feature-icon">🏆</div>
+        <div>
+          <h4>Sistema de logros</h4>
+          <p>Avanza, desbloquea y celebra</p>
+        </div>
       </div>
-      <div class="feed">
-        <div class="feed-head">Contenido de esta semana <span>Semana 14 — Abril 2026</span></div>
-        <div class="feed-row">
-          <div class="feed-day">Lunes</div>
-          <div class="feed-title">Diagnóstico diferencial: vómito crónico en felinos</div>
-          <div class="feed-meta">Dr. Morales · 12 min · Caso real</div>
-          <span class="ftag ftag-v">● Video</span>
+      <div class="club-feature">
+        <div class="club-feature-icon">🐾</div>
+        <div>
+          <h4>Ficha del paciente</h4>
+          <p>Herramienta clínica integrada</p>
         </div>
-        <div class="feed-row">
-          <div class="feed-day">Miércoles</div>
-          <div class="feed-title">Los 5 errores en anestesia local más comunes</div>
-          <div class="feed-meta">PDF · 6 páginas</div>
-          <span class="ftag ftag-p">● PDF</span>
+      </div>
+      <div class="club-feature">
+        <div class="club-feature-icon">🚑</div>
+        <div>
+          <h4>Guía de urgencias</h4>
+          <p>Protocolos al instante</p>
         </div>
-        <div class="feed-row">
-          <div class="feed-day">Jueves</div>
-          <div class="feed-title">Q&A Cirugía de tejidos blandos — traigan sus casos</div>
-          <div class="feed-meta">Dr. Juárez · 9:00 PM</div>
-          <span class="ftag ftag-l">● En vivo</span>
+      </div>
+      <div class="club-feature">
+        <div class="club-feature-icon">⚖️</div>
+        <div>
+          <h4>Score corporal</h4>
+          <p>Evaluación nutricional rápida</p>
         </div>
-        <div class="feed-row hl">
-          <div class="feed-day">Nuevo hoy</div>
-          <div class="feed-title">Fractura expuesta en perro: manejo de urgencia paso a paso</div>
-          <div class="feed-meta">Dra. Mendez · 18 min · Hoy</div>
-          <span class="ftag ftag-n">Nuevo</span>
+      </div>
+      <div class="club-feature">
+        <div class="club-feature-icon">💉</div>
+        <div>
+          <h4>Tabla de vacunación</h4>
+          <p>Esquemas actualizados</p>
+        </div>
+      </div>
+      <div class="club-feature">
+        <div class="club-feature-icon">📰</div>
+        <div>
+          <h4>Noticias del sector</h4>
+          <p>Actualidad veterinaria</p>
+        </div>
+      </div>
+      <div class="club-feature">
+        <div class="club-feature-icon">📲</div>
+        <div>
+          <h4>App PWA</h4>
+          <p>Instálala en tu teléfono</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== TESTIMONIO ===== -->
-  <section class="sec sec-testi">
-    <div class="w">
-      <div class="sh"><div class="eyebrow">Lo que dicen nuestros miembros</div></div>
-      <div class="testi-wrap">
-        <div class="testi-quote">Vi el caso de vómito crónico el lunes. El jueves me llegó una paciente con el mismo problema. Sabía exactamente qué hacer. Eso vale más que cualquier diplomado.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">🐾</div>
-          <div>
-            <div class="testi-name">Dra. Karla Fuentes</div>
-            <div class="testi-role">Miembro fundadora · Médico veterinario general, Puebla</div>
-          </div>
-        </div>
-      </div>
+<!-- CTA FINAL -->
+<section class="section">
+  <div class="container">
+    <div class="club-cta-final reveal">
+      <h2>Únete hoy al Club GlobalVet</h2>
+      <p>Forma parte de la comunidad de profesionales veterinarios que están transformando la práctica clínica en México.</p>
+      <a class="btn-club-cta" href="https://club.globalvetmexico.com" target="_blank" rel="noopener">Registrarme ahora</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== PLANES ===== -->
-  <section class="sec sec-planes" id="club-planes">
-    <div class="w">
-      <div class="sh">
-        <div class="eyebrow">Membresía</div>
-        <h2>Invierte en tu carrera</h2>
-        <p>Menos de lo que cobras por una consulta. Elige tu plan:</p>
-      </div>
+</main>
 
-      <div class="counter-bar">
-        <div class="counter-pill-wrap">
-          <div class="counter-seg">
-            <span class="counter-seg-val">12</span>
-            <span class="counter-seg-lbl">Lugares</span>
-          </div>
-          <div class="counter-sep"></div>
-          <div class="counter-seg active">
-            <span class="counter-seg-val">$199</span>
-            <span class="counter-seg-lbl">ahora</span>
-          </div>
-          <div class="counter-sep"></div>
-          <div class="counter-seg muted">
-            <span class="counter-seg-val">$249</span>
-            <span class="counter-seg-lbl">después</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="plan-grid">
-        <!-- Mensual -->
-        <div class="plan-box">
-          <div class="plan-name">Mensual</div>
-          <div class="plan-strike">$249/mes</div>
-          <div class="plan-price"><sup>$</sup>199<sub>/mes</sub></div>
-          <div class="plan-save" style="visibility:hidden;">–</div>
-          <p class="plan-desc">Precio de fundador. Sin compromiso largo.</p>
-          <ul class="plan-ul">
-            <li><span class="ck">✓</span>4 casos clínicos en video</li>
-            <li><span class="ck">✓</span>1 sesión en vivo mensual</li>
-            <li><span class="ck">✓</span>Grupo WhatsApp privado</li>
-            <li><span class="ck">✓</span>Plantillas y protocolos</li>
-            <li><span class="ck">✓</span>20% en cursos y diplomados</li>
-            <li><span class="ck">✓</span>Certificado mensual</li>
-            <li><span class="ck">✓</span>Biblioteca completa</li>
-          </ul>
-          <a href="club-registro.html?plan=mensual" class="btn-plan outline">Elegir plan mensual — $199/mes</a>
-          <div style="text-align:center;font-size:.75rem;color:#aaa;margin-top:.6rem;">3 meses mínimo · Después cancela cuando quieras</div>
-        </div>
-        <!-- Anual -->
-        <div class="plan-box featured">
-          <div class="plan-popular">⭐ Mejor precio</div>
-          <div class="plan-name">Anual</div>
-          <div class="plan-strike">$2,988 al año</div>
-          <div class="plan-price"><sup>$</sup>1,788<sub>/año</sub></div>
-          <div class="plan-save">Ahorra $1,200 (40% OFF)</div>
-          <p class="plan-desc">Equivale a $149/mes · Renovación anual.</p>
-          <ul class="plan-ul">
-            <li><span class="ck">✓</span>Todo lo del plan mensual</li>
-            <li><span class="ck">✓</span>4 casos clínicos en video</li>
-            <li><span class="ck">✓</span>1 sesión en vivo mensual</li>
-            <li><span class="ck">✓</span>Grupo WhatsApp privado</li>
-            <li><span class="ck">✓</span>Plantillas y protocolos</li>
-            <li><span class="ck">✓</span>20% en cursos y diplomados</li>
-            <li><span class="star">★</span>Acceso anticipado a contenido</li>
-            <li><span class="star">★</span>1 mentoría grupal extra al mes</li>
-          </ul>
-          <a href="club-registro.html?plan=anual" class="btn-plan solid">Elegir plan anual — Ahorra $1,200</a>
-          <div style="text-align:center;font-size:.75rem;color:#aaa;margin-top:.6rem;">Pago único de $1,788 · Renueva cada año</div>
-        </div>
-      </div>
-      <p class="plan-note">¿Tienes dudas? <a href="https://wa.me/5212381500864" target="_blank">Escríbenos por WhatsApp</a></p>
-    </div>
-  </section>
-
-  <!-- ===== FAQ ===== -->
-  <section class="sec sec-faq tight">
-    <div class="wn">
-      <div class="sh">
-        <div class="eyebrow">Preguntas frecuentes</div>
-        <h2>Antes de decidir</h2>
-      </div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-q">¿Es lo mismo que los cursos de GlobalVet?</button>
-          <div class="faq-a">No. Los cursos son formación puntual. El Club es formación continua: casos nuevos cada semana, sesiones en vivo y comunidad activa. Se complementan perfectamente.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">No tengo tiempo para ver contenido cada semana</button>
-          <div class="faq-a">Los videos duran 10–15 minutos. Puedes verlos entre consultas, en el carro o mientras comes. Todo queda grabado y disponible cuando tú puedas.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">¿Puedo cancelar cuando quiera?</button>
-          <div class="faq-a">Sí, en el plan mensual puedes cancelar después de los 3 meses iniciales. En el plan anual se paga de una sola vez y el acceso dura todo el año.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">¿El precio de fundador es para siempre?</button>
-          <div class="faq-a">Mientras mantengas tu suscripción activa, conservas el precio de $199/mes. Si cancelas y quieres regresar, pagas el precio vigente en ese momento.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">¿Diferencia entre plan mensual y anual?</button>
-          <div class="faq-a">El contenido base es igual. El anual incluye acceso anticipado a contenido nuevo y una mentoría grupal extra al mes. Y ahorras $1,200 al año.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CTA FINAL ===== -->
-  <section class="sec-cta">
-    <div class="wn">
-      <h2>Únete hoy. <em>Aplícalo el lunes.</em></h2>
-      <p>47 veterinarios ya están viendo casos nuevos cada semana. Quedan 12 lugares al precio de fundador.</p>
-      <a class="btn-gold" href="club-registro.html">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Quiero unirme al Club GlobalVet
-      </a>
-    </div>
-  </section>
-
-</div><!-- /cp -->
-
-<!-- ===== FOOTER ===== -->
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
@@ -772,33 +646,22 @@
         <li><a href="cursos.html">Cursos</a></li>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="club.html">Club</a></li>
       </ul>
     </div>
     <div>
       <h4>Contacto</h4>
       <ul>
+        <li><a href="https://wa.me/5212381500864" target="_blank" rel="noopener">+52 1 238 150 0864</a></li>
         <li><a href="mailto:globalvetmexico@gmail.com">globalvetmexico@gmail.com</a></li>
-        <li><a href="https://wa.me/5212381500864" target="_blank" rel="noopener">WhatsApp</a></li>
-        <li><a href="testimonios.html">Testimonios</a></li>
-        <li><a href="galeria.html">Galería</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=61567207022036" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
     </div>
   </div>
   <div class="container footer-bottom">
-    <small>© 2026 GlobalVet México. Todos los derechos reservados.</small>
+    <p>© 2026 GlobalVet México. Todos los derechos reservados.</p>
   </div>
 </footer>
-
-<script>
-  document.querySelectorAll('.faq-q').forEach(q => {
-    q.addEventListener('click', () => {
-      const item = q.closest('.faq-item');
-      const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      if (!wasOpen) item.classList.add('open');
-    });
-  });
-</script>
 
 </body>
 </html>
