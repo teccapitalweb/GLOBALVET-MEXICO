@@ -88,7 +88,31 @@
       .reg-title{font-size:1.05rem;}
       .reg-btn{padding:.85rem;font-size:.88rem;}
     }
-  </style>
+  
+/* ===== Carrusel + venta en el registro (GlobalVet) ===== */
+.gv-sell{margin:.2rem 0 1.1rem;text-align:left}
+.gv-cine{position:relative;margin:0 0 .6rem;overflow:hidden;border-radius:12px;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.gv-track{display:flex;gap:10px;width:max-content;animation:gvscroll 30s linear infinite}
+.gv-track:hover{animation-play-state:paused}
+@keyframes gvscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.gv-flyer{flex:0 0 auto;width:128px;border-radius:10px;overflow:hidden;border:1px solid var(--reg-line);box-shadow:0 4px 14px rgba(0,0,0,.14)}
+.gv-flyer img{width:100%;height:100%;display:block;aspect-ratio:1/1;object-fit:cover}
+.gv-h{font-weight:800;font-size:1rem;margin:.9rem 0 .55rem;color:var(--reg-dark)}
+.gv-h span{color:var(--reg-teal)}
+.gv-benes{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin:0;padding:0}
+.gv-bene{display:flex;gap:.55rem;align-items:flex-start;font-size:.84rem;color:var(--reg-dark);line-height:1.4;min-width:0}
+.gv-bene span{min-width:0;overflow-wrap:anywhere}
+.gv-bene .ck{width:20px;height:20px;border-radius:50%;flex:none;background:var(--reg-teal);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.gv-bene b{color:var(--reg-teal)}
+.gv-refs{display:flex;flex-direction:column;gap:.6rem;margin-top:.9rem}
+.gv-ref{display:flex;gap:.55rem;align-items:flex-start}
+.gv-av{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.74rem;color:#fff;background:var(--reg-teal)}
+.gv-bub{background:rgba(127,127,160,.08);border:1px solid var(--reg-line);border-radius:5px 12px 12px 12px;padding:.5rem .7rem;flex:1;min-width:0}
+.gv-bub .nm{font-weight:700;font-size:.82rem;color:var(--reg-dark)}
+.gv-bub .rl{font-size:.7rem;color:var(--reg-teal);margin-left:3px}
+.gv-bub p{font-size:.79rem;color:var(--reg-muted);line-height:1.45;margin:.2rem 0 0;overflow-wrap:anywhere}
+.gv-bub .act{font-size:.66rem;color:var(--reg-muted);margin-top:.35rem}
+</style>
 </head>
 <body>
 <div class="topbar">
@@ -129,6 +153,7 @@
     </div>
     <h1 class="reg-title">Club GlobalVet</h1>
     <p class="reg-subtitle">Regístrate para activar tu membresía</p>
+<div class="gv-sell"><div class="gv-cine"><div class="gv-track" id="gvTrack"></div></div><div class="gv-h">Todo esto por <span>menos de $7 al día</span>:</div><ul class="gv-benes"><li class="gv-bene"><span class="ck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><b>Biblioteca completa</b> de cursos: clínica, etología, exóticos, bovinos y más</span></li><li class="gv-bene"><span class="ck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><b>Clases en vivo</b> con médicos veterinarios especialistas</span></li><li class="gv-bene"><span class="ck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><b>Material descargable premium</b> y casos clínicos reales</span></li><li class="gv-bene"><span class="ck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><b>Certificados con folio oficial</b> verificables</span></li><li class="gv-bene"><span class="ck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><b>Asesoría personalizada</b> y canal VIP · sin permanencia</span></li></ul><div class="gv-refs"><div class="gv-ref"><div class="gv-av">RM</div><div class="gv-bub"><span class="nm">MVZ. Ricardo Maldonado</span><span class="rl">· Clínica de pequeñas especies</span><p>Los casos clínicos y las clases en vivo me ayudaron a resolver consultas que antes refería. El certificado con folio lo validé sin problema.</p><div class="act">👍 13 · Me gusta · Responder · 2 sem</div></div></div><div class="gv-ref"><div class="gv-av">PC</div><div class="gv-bub"><span class="nm">MVZ. Paola Cruz</span><span class="rl">· Animales exóticos</span><p>El curso de exóticos me abrió un nicho nuevo en mi consultorio. Material excelente y muy aplicable.</p><div class="act">👍 10 · Me gusta · Responder · 1 mes</div></div></div><div class="gv-ref"><div class="gv-av">JR</div><div class="gv-bub"><span class="nm">MVZ. Javier Ríos</span><span class="rl">· Ganado bovino</span><p>El manejo clínico en bovinos me ordenó el trabajo de campo. Recomendado para todo MVZ que va en serio.</p><div class="act">👍 8 · Me gusta · Responder · 3 sem</div></div></div></div></div>
 
     <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--reg-muted);margin-bottom:.7rem;">Elige tu plan</div>
     <div class="plan-grid">
@@ -603,6 +628,15 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('Escribe tu correo arriba para recuperarlo.'); return; }
     try { await sendPasswordResetEmail(auth, email); showToast('📧 Revisa tu correo.', true); } catch(e) { showAlert(errMap(e.code)); }
   };
+</script>
+<script>
+(function(){
+  var t=document.getElementById('gvTrack');
+  if(!t) return;
+  var html='';
+  for(var i=1;i<=7;i++){var n=(i<10?'0':'')+i;html+='<div class="gv-flyer"><img src="../assets/img/cursos/curso-'+n+'.jpg" alt="Curso '+i+'" loading="lazy"></div>';}
+  t.innerHTML=html+html;
+})();
 </script>
 </body>
 </html>
