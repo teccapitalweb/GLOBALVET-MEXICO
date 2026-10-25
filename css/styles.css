@@ -777,5 +777,16 @@ h1, h2, h3, h4 { font-weight: 800; }
 .hero--video .hero-metrics span{color:rgba(255,255,255,.82)}
 .hero--video .btn-primary{background:#fff;color:var(--primary)}
 .hero--video .btn-secondary{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.32);color:#fff}
-@media(max-width:640px){.hero--video{min-height:94svh}.hero--video .hero-metrics{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .hero--video{min-height:86svh}
+  .hero--video .hero-shell{padding:1.25rem 0}
+  .hero--video .hero-grid{gap:0}
+  /* En móvil el hero se mantiene a ~1 pantalla: métricas y lead-card se ocultan
+     aquí (siguen en desktop) y reaparecen más abajo si se quisiera. */
+  .hero--video .hero-metrics,
+  .hero--video .lead-card{display:none}
+  .hero--video .hero-copy h1{font-size:clamp(2.2rem,8.5vw,3rem)}
+  .hero--video .hero-actions{margin-top:1.3rem;gap:.6rem}
+  .hero--video .hero-actions .btn{width:100%;justify-content:center}
+}
 @media(prefers-reduced-motion:reduce){.hero-video{transition:none}}
