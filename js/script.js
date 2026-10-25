@@ -143,3 +143,17 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   (function raf(){ tick(); requestAnimationFrame(raf); })();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) play(a); });
 })();
+
+/* Botón "Entrar" visible en el header móvil (el menú completo se oculta tras el
+   hamburguesa; así el acceso al club no queda escondido). Aplica a todas las páginas. */
+(() => {
+  const inner = document.querySelector('.header-inner');
+  const toggle = document.querySelector('.nav-toggle');
+  if (!inner || inner.querySelector('.header-login')) return;
+  const a = document.createElement('a');
+  a.className = 'btn btn-primary header-login';
+  a.href = 'https://club.globalvetmexico.com/';
+  a.rel = 'noopener';
+  a.textContent = 'Entrar';
+  inner.insertBefore(a, toggle || null);
+})();
