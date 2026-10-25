@@ -751,3 +751,31 @@ h1, h2, h3, h4 { font-weight: 800; }
   background: linear-gradient(135deg, #2a1763 0%, #3b2b86 100%);
   box-shadow: 0 4px 14px rgba(40, 25, 100, .5), inset 0 1px 0 rgba(255,255,255,.15);
 }
+
+/* ───────── Hero con video de fondo (3 clips en secuencia) ───────── */
+.hero--video{position:relative;padding:0;min-height:88vh;display:flex;align-items:center;overflow:hidden;color:#fff}
+.hero--video::before,.hero--video::after{display:none}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s cubic-bezier(.22,.61,.36,1);will-change:opacity;z-index:0}
+.hero-video.is-active{opacity:1}
+.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(13,10,30,.88),rgba(13,10,30,.58) 40%,rgba(13,10,30,.1) 72%,transparent),
+    linear-gradient(0deg,rgba(13,10,30,.72),transparent 55%),
+    radial-gradient(120% 90% at 85% 8%,rgba(59,43,134,.5),transparent 55%)}
+.hero--video .hero-shell{position:relative;z-index:2;background:none;border:0;box-shadow:none;padding:clamp(1.5rem,5vw,3.5rem) 0}
+.hero--video .hero-grid{grid-template-columns:1fr;max-width:760px;gap:0}
+.hero--video .hero-copy{padding:0}
+.hero--video .eyebrow{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);color:#fff;backdrop-filter:blur(6px)}
+.hero--video .hero-copy h1{color:#fff;text-shadow:0 2px 40px rgba(0,0,0,.4)}
+.hero--video .hero-hl{background:linear-gradient(100deg,#fff 30%,var(--accent-2) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero--video .hero-copy p{color:rgba(255,255,255,.9)}
+.hero--video .hero-pills span{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.26);color:#fff;backdrop-filter:blur(6px)}
+.hero--video .lead-card{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);color:#fff;backdrop-filter:blur(6px)}
+.hero--video .lead-card strong{color:#fff}
+.hero--video .hero-metrics div{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(6px);box-shadow:none}
+.hero--video .hero-metrics strong{color:#fff}
+.hero--video .hero-metrics span{color:rgba(255,255,255,.82)}
+.hero--video .btn-primary{background:#fff;color:var(--primary)}
+.hero--video .btn-secondary{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.32);color:#fff}
+@media(max-width:640px){.hero--video{min-height:94svh}.hero--video .hero-metrics{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hero-video{transition:none}}

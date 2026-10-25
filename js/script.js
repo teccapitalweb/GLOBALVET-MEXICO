@@ -115,3 +115,31 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     resizeTimer = setTimeout(() => { buildDots(); goTo(0); }, 150);
   });
 })();
+
+/* Hero: 3 videos en secuencia con crossfade y loop (GlobalVet México) */
+(() => {
+  const VIDEOS = ['assets/videos/hero-1.mp4', 'assets/videos/hero-2.mp4', 'assets/videos/hero-3.mp4'];
+  const CROSSFADE = 1.0;
+  let a = document.getElementById('heroVidA');
+  let b = document.getElementById('heroVidB');
+  if (!a || !b) return;
+  let idx = 0, fading = false;
+  const play = (v) => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  a.src = VIDEOS[0]; a.classList.add('is-active'); a.load(); play(a);
+  b.src = VIDEOS[1]; b.load();
+  function cross(next) {
+    if (fading) return; fading = true;
+    b.currentTime = 0; play(b);
+    b.classList.add('is-active'); a.classList.remove('is-active');
+    setTimeout(() => {
+      const after = (next + 1) % VIDEOS.length;
+      a.pause(); a.src = VIDEOS[after]; a.load();
+      const t = a; a = b; b = t; idx = next; fading = false;
+    }, CROSSFADE * 1000 + 60);
+  }
+  const tick = () => { if (!fading && a.duration && a.currentTime >= a.duration - CROSSFADE - 0.05) cross((idx + 1) % VIDEOS.length); };
+  const onEnded = () => { if (!fading) cross((idx + 1) % VIDEOS.length); };
+  [a, b].forEach(v => { v.addEventListener('timeupdate', tick); v.addEventListener('ended', onEnded); });
+  (function raf(){ tick(); requestAnimationFrame(raf); })();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) play(a); });
+})();
